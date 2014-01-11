@@ -54,3 +54,6 @@
 /server.log
 /server.properties
 /white-list.txt
+/.scalastyle
+/.repository
+/.cache
