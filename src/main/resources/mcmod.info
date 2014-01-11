@@ -1,0 +1,16 @@
+[
+{
+  "modid": "nullpower",
+  "name": "NullPower",
+  "description": "Free energy mod.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["Tachyony"],
+  "credits": "Tachyony",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
