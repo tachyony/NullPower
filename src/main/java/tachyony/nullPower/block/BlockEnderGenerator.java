@@ -65,8 +65,13 @@ public class BlockEnderGenerator extends BlockContainer {
           return false;
       }
       
+      if (world.isRemote)
+      {
+          return true;
+      }
+      
       tileEntity.setOwner(EnergyItems.getOwnerName(playerItem));
-      player.addChatMessage(new ChatComponentText("Current Power: " + tileEntity.getPower() + tileEntity.getOwner()));
+      player.addChatMessage(new ChatComponentText("Current Power: " + tileEntity.getPower() + "/ " + tileEntity.getOwner()));
       world.markBlockForUpdate(x, y, z);
       return true;
   }

@@ -43,6 +43,7 @@ public class TileEntityEnderGenerator extends TileEntity implements
      */
     public TileEntityEnderGenerator()
     {
+        super();
         owner = "";
     }
     
@@ -64,6 +65,7 @@ public class TileEntityEnderGenerator extends TileEntity implements
 
     @Override
     public void onChunkUnload() {
+        super.onChunkUnload();
         this.ic2EnergySource.onChunkUnload();
     }
 
@@ -82,34 +84,35 @@ public class TileEntityEnderGenerator extends TileEntity implements
         }
         
         this.ic2EnergySource.updateEntity();
-        if (this.storage.getEnergyStored() >= this.storage.getMaxEnergyStored()) {
+        if (this.storage.getEnergyStored() < this.storage.getMaxEnergyStored()) {
             this.storage.receiveEnergy(20, false);
         } else if (this.ic2EnergySource.getFreeCapacity() > 0) {
             this.ic2EnergySource.addEnergy(5);
         }
-        
-        int worldTime = (int) (worldObj.getWorldTime() % 24000);
-        if (worldTime % 1 == 0)
-        {
-            String ownerName = owner;
-            if (ownerName.equals("")) {
-                return;
-            }
-            
-            World world = MinecraftServer.getServer().worldServers[0];
-            PowerNetwork data = (PowerNetwork) world.loadItemData(PowerNetwork.class, ownerName);
-            if (data == null) {
-                data = new PowerNetwork(ownerName);
-                world.setItemData(ownerName, data);
-            }
-            
-            int powerDrained = Math.min(powerDrain, this.storage.getEnergyStored());
-            data.currentPower = powerDrained + data.currentPower;
-            data.markDirty();
-            
-            if (worldObj != null)
+        else {
+            int worldTime = (int) (worldObj.getWorldTime() % 24000);
+            if (worldTime % 1 == 0)
             {
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                String ownerName = owner;
+                if (ownerName.equals("")) {
+                    return;
+                }
+                
+                World world = MinecraftServer.getServer().worldServers[0];
+                PowerNetwork data = (PowerNetwork) world.loadItemData(PowerNetwork.class, ownerName);
+                if (data == null) {
+                    data = new PowerNetwork(ownerName);
+                    world.setItemData(ownerName, data);
+                }
+                
+                int powerDrained = Math.min(powerDrain, this.storage.getEnergyStored());
+                data.currentPower = powerDrained + data.currentPower;
+                data.markDirty();
+                
+                if (worldObj != null)
+                {
+                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                }
             }
         }
     }
@@ -164,6 +167,6 @@ public class TileEntityEnderGenerator extends TileEntity implements
      */
     public String getPower()
     {
-        return "" + this.storage.getEnergyStored() + this.ic2EnergySource.getEnergyStored();
+        return this.storage.getEnergyStored() + "/ " + (int)this.ic2EnergySource.getEnergyStored();
     }
 }
