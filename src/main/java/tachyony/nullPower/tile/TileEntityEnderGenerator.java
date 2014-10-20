@@ -37,6 +37,8 @@ public abstract class TileEntityEnderGenerator extends TileEntity implements IEn
     
     private String owner;
     
+    public int MAXNETWORKPOWER = 10000000;
+    
     /**
      * 
      */
@@ -160,8 +162,8 @@ public abstract class TileEntityEnderGenerator extends TileEntity implements IEn
                     world.setItemData(ownerName, data);
                 }
                 
-                int powerDrained = Math.min(powerDrain, this.storage.getEnergyStored());
-                data.currentPower = powerDrained + data.currentPower;
+                int powerAdd = Math.min(addRfEnergy(), MAXNETWORKPOWER - data.currentPower);
+                data.currentPower = powerAdd + data.currentPower;
                 data.markDirty();
                 
                 if (worldObj != null)
