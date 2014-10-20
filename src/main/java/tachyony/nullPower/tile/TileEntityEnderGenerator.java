@@ -44,7 +44,7 @@ public abstract class TileEntityEnderGenerator extends TileEntity implements IEn
     {
         super();
         owner = "";
-        storage = new EnergyStorage(1024);
+        storage = new EnergyStorage(1000);
         ic2EnergySource = new BasicSource(this, 2048, getIc2Tier());
     }
 
@@ -140,9 +140,9 @@ public abstract class TileEntityEnderGenerator extends TileEntity implements IEn
         
         this.ic2EnergySource.updateEntity();
         if (this.storage.getEnergyStored() < this.storage.getMaxEnergyStored()) {
-            this.storage.receiveEnergy(20, false);
+            this.storage.receiveEnergy(addRfEnergy(), false);
         } else if (this.ic2EnergySource.getFreeCapacity() > 0) {
-            this.ic2EnergySource.addEnergy(5);
+            this.ic2EnergySource.addEnergy(addIc2Energy());
         }
         else {
             int worldTime = (int) (worldObj.getWorldTime() % 24000);
@@ -171,4 +171,8 @@ public abstract class TileEntityEnderGenerator extends TileEntity implements IEn
             }
         }
     }
+
+    protected abstract int addIc2Energy();
+
+    protected abstract int addRfEnergy();
 }

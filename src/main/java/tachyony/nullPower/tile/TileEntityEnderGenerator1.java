@@ -31,4 +31,14 @@ public class TileEntityEnderGenerator1 extends TileEntityEnderGenerator {
     protected int getIc2Tier() {
         return 1;
     }
+
+    @Override
+    protected int addIc2Energy() {
+        return 5;
+    }
+
+    @Override
+    protected int addRfEnergy() {
+        return 20;
+    }
 }
