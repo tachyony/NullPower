@@ -15,25 +15,24 @@
  */
 package tachyony.nullPower.tile;
 
+import tachyony.nullPower.powerNetwork.PowerNetwork;
 import ic2.api.energy.prefab.BasicSource;
+import cofh.api.energy.EnergyStorage;
+import cofh.api.energy.IEnergyHandler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import tachyony.nullPower.powerNetwork.PowerNetwork;
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
 
 /**
  * Ender generator
  */
-public class TileEntityEnderGenerator extends TileEntity implements
-        IEnergyHandler {
-    private BasicSource ic2EnergySource = new BasicSource(this, 2048, 1);
+public abstract class TileEntityEnderGenerator extends TileEntity implements IEnergyHandler {
+    protected BasicSource ic2EnergySource;
 
-    private EnergyStorage storage = new EnergyStorage(1024);
-
+    protected EnergyStorage storage;
+    
     private int powerDrain = 10;
     
     private String owner;
@@ -45,6 +44,74 @@ public class TileEntityEnderGenerator extends TileEntity implements
     {
         super();
         owner = "";
+        storage = new EnergyStorage(1024);
+        ic2EnergySource = new BasicSource(this, 2048, getIc2Tier());
+    }
+
+    protected abstract int getIc2Tier();
+
+    /**
+     * @param owner
+     */
+    public void setOwner(String owner)
+    {
+        this.owner = owner;
+    }
+    
+    /**
+     * @param owner
+     * @return Owner
+     */
+    public String getOwner()
+    {
+        return owner;
+    }
+
+    @Override
+    public boolean canConnectEnergy(ForgeDirection from) {
+        return true;
+    }
+    
+    @Override
+    public int extractEnergy(ForgeDirection from, int maxExtract,
+            boolean simulate) {
+        return this.storage.extractEnergy(maxExtract, simulate);
+    }
+
+    @Override
+    public int getEnergyStored(ForgeDirection from) {
+        return this.storage.getEnergyStored();
+    }
+
+    @Override
+    public int getMaxEnergyStored(ForgeDirection from) {
+        return this.storage.getMaxEnergyStored();
+    }
+    
+    /**
+     * @param owner
+     * @return Owner
+     */
+    public String getPower()
+    {
+        return this.storage.getEnergyStored() + "/ " + (int)this.ic2EnergySource.getEnergyStored();
+    }
+
+    @Override
+    public void onChunkUnload() {
+        super.onChunkUnload();
+        this.ic2EnergySource.onChunkUnload();
+    }
+
+    @Override
+    public void invalidate() {
+        this.ic2EnergySource.invalidate();
+        super.invalidate();
+    }
+    
+    @Override
+    public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+        return this.storage.receiveEnergy(maxReceive, simulate);
     }
     
     @Override
@@ -61,18 +128,6 @@ public class TileEntityEnderGenerator extends TileEntity implements
         owner = par1.getString("owner");
         this.ic2EnergySource.readFromNBT(par1);
         this.storage.readFromNBT(par1);
-    }
-
-    @Override
-    public void onChunkUnload() {
-        super.onChunkUnload();
-        this.ic2EnergySource.onChunkUnload();
-    }
-
-    @Override
-    public void invalidate() {
-        this.ic2EnergySource.invalidate();
-        super.invalidate();
     }
 
     @Override
@@ -115,58 +170,5 @@ public class TileEntityEnderGenerator extends TileEntity implements
                 }
             }
         }
-    }
-
-    @Override
-    public int receiveEnergy(ForgeDirection from, int maxReceive,
-            boolean simulate) {
-        return this.storage.receiveEnergy(maxReceive, simulate);
-    }
-
-    @Override
-    public int extractEnergy(ForgeDirection from, int maxExtract,
-            boolean simulate) {
-        return this.storage.extractEnergy(maxExtract, simulate);
-    }
-
-    @Override
-    public boolean canConnectEnergy(ForgeDirection from) {
-        return true;
-    }
-
-    @Override
-    public int getEnergyStored(ForgeDirection from) {
-        return this.storage.getEnergyStored();
-    }
-
-    @Override
-    public int getMaxEnergyStored(ForgeDirection from) {
-        return this.storage.getMaxEnergyStored();
-    }
-
-    /**
-     * @param owner
-     */
-    public void setOwner(String owner)
-    {
-        this.owner = owner;
-    }
-    
-    /**
-     * @param owner
-     * @return Owner
-     */
-    public String getOwner()
-    {
-        return owner;
-    }
-    
-    /**
-     * @param owner
-     * @return Owner
-     */
-    public String getPower()
-    {
-        return this.storage.getEnergyStored() + "/ " + (int)this.ic2EnergySource.getEnergyStored();
     }
 }

@@ -13,22 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package tachyony.nullPower.tile;
+package tachyony.nullPower.block;
+
+import net.minecraft.block.material.Material;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import tachyony.nullPower.tile.TileEntityEnderGenerator1;
 
 /**
  * Ender generator
  */
-public class TileEntityEnderGenerator2 extends TileEntityEnderGenerator {
-    /**
-     * 
-     */
-    public TileEntityEnderGenerator2()
-    {
-        super();
-    }
+public class BlockEnderGenerator1 extends BlockEnderGenerator {
+  /**
+   * @param itemId Item id
+   * @param material Material
+   */
+  public BlockEnderGenerator1(Material material) {
+	super(material);
+  }
 
-    @Override
-    protected int getIc2Tier() {
-        return 2;
-    }
+  @Override
+  public TileEntity createNewTileEntity(World world, int metadata)
+  {
+      return new TileEntityEnderGenerator1();
+  }
 }

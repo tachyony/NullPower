@@ -33,7 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import tachyony.nullPower.block.BlockEnderGenerator;
+import tachyony.nullPower.block.BlockEnderGenerator1;
 import tachyony.nullPower.block.BlockEnderGenerator2;
 import tachyony.nullPower.block.BlockEnderGenerator3;
 import tachyony.nullPower.block.BlockEnderReed;
@@ -41,7 +41,7 @@ import tachyony.nullPower.entity.EntityRifleBolt;
 import tachyony.nullPower.item.ItemDynamitePickaxe;
 import tachyony.nullPower.item.ItemEnderReed;
 import tachyony.nullPower.item.ItemHuntingRifle;
-import tachyony.nullPower.tile.TileEntityEnderGenerator;
+import tachyony.nullPower.tile.TileEntityEnderGenerator1;
 import tachyony.nullPower.tile.TileEntityEnderGenerator2;
 import tachyony.nullPower.tile.TileEntityEnderGenerator3;
 import cpw.mods.fml.common.Mod;
@@ -197,7 +197,7 @@ public class NullPower {
                 .setCreativeTab(CreativeTabs.tabMaterials)
                 .setUnlocalizedName("enderIronDust")
                 .setTextureName("nullpower:enderIronDust");
-        enderGenerator = new BlockEnderGenerator(
+        enderGenerator = new BlockEnderGenerator1(
                 Material.iron).setHardness(1F)
                 .setStepSound(Block.soundTypeMetal)
                 .setBlockName("enderGenerator")
@@ -286,7 +286,7 @@ public class NullPower {
         GameRegistry.addRecipe(new ItemStack(enderGenerator2, 1, 0), "iii",
                 "i i", "aga", 'i', enderIron, 'a', enderGeneratorCoreAdvanced,
                 'g', IC2Items.getItem("generator"));
-        GameRegistry.registerTileEntity(TileEntityEnderGenerator.class, "EnderGenerator");
+        GameRegistry.registerTileEntity(TileEntityEnderGenerator1.class, "EnderGenerator");
         GameRegistry.registerTileEntity(TileEntityEnderGenerator2.class, "EnderGenerator2");
         GameRegistry.registerTileEntity(TileEntityEnderGenerator3.class, "EnderGenerator3");
         EntityRegistry.registerGlobalEntityID(EntityRifleBolt.class, "RifleBoltD", EntityRegistry.findGlobalUniqueEntityId());

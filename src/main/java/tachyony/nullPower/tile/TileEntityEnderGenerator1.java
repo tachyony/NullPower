@@ -18,17 +18,17 @@ package tachyony.nullPower.tile;
 /**
  * Ender generator
  */
-public class TileEntityEnderGenerator2 extends TileEntityEnderGenerator {
+public class TileEntityEnderGenerator1 extends TileEntityEnderGenerator {
     /**
      * 
      */
-    public TileEntityEnderGenerator2()
+    public TileEntityEnderGenerator1()
     {
         super();
     }
 
     @Override
     protected int getIc2Tier() {
-        return 2;
+        return 1;
     }
 }

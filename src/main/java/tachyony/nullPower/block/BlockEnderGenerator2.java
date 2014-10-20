@@ -15,9 +15,7 @@
  */
 package tachyony.nullPower.block;
 
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import tachyony.nullPower.tile.TileEntityEnderGenerator2;
@@ -25,7 +23,7 @@ import tachyony.nullPower.tile.TileEntityEnderGenerator2;
 /**
  * Ender generator
  */
-public class BlockEnderGenerator2 extends BlockContainer {
+public class BlockEnderGenerator2 extends BlockEnderGenerator {
   /**
    * @param itemId Item id
    * @param material Material
@@ -38,15 +36,5 @@ public class BlockEnderGenerator2 extends BlockContainer {
   public TileEntity createNewTileEntity(World world, int metadata)
   {
     return new TileEntityEnderGenerator2();
-  }
-
-  @Override
-  public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float px, float py, float pz)
-  {
-    if (world.isRemote) {
-      return true;
-    }
-    
-    return false;
   }
 }

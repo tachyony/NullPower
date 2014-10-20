@@ -30,49 +30,59 @@ import tachyony.nullPower.tile.TileEntityEnderGenerator;
 /**
  * Ender generator
  */
-public class BlockEnderGenerator extends BlockContainer {
-  /**
-   * @param itemId Item id
-   * @param material Material
-   */
-  public BlockEnderGenerator(Material material) {
-	super(material);
-  }
+public abstract class BlockEnderGenerator extends BlockContainer {
+    /**
+     * @param itemId Item id
+     * @param material Material
+     */
+    public BlockEnderGenerator(Material material) {
+      super(material);
+    }
+    
+    /**
+     * Determines if the player can harvest this block, obtaining it's drops when the block is destroyed.
+     *
+     * @param player The player damaging the block, may be null
+     * @param meta The block's current metadata
+     * @return True to spawn the drops
+     */
+    @Override
+    public boolean canHarvestBlock(EntityPlayer player, int meta)
+    {
+        return true;
+    }
 
-  @Override
-  public TileEntity createNewTileEntity(World world, int metadata)
-  {
-      return new TileEntityEnderGenerator();
-  }
+    @Override
+    public abstract TileEntity createNewTileEntity(World world, int metadata);
 
-  @Override
-  public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float px, float py, float pz)
-  {
-      TileEntityEnderGenerator tileEntity = (TileEntityEnderGenerator)world.getTileEntity(x, y, z);
-      if  ((tileEntity == null) || player.isSneaking()) {
-          return false;
-      }
-      
-      ItemStack playerItem = player.getCurrentEquippedItem();
-      if (playerItem == null)
-      {
-          return false;
-      }
-      
-      Item item = playerItem.getItem();
-      if (!(item instanceof ItemDynamitePickaxe))
-      {
-          return false;
-      }
-      
-      if (world.isRemote)
-      {
-          return true;
-      }
-      
-      tileEntity.setOwner(EnergyItems.getOwnerName(playerItem));
-      player.addChatMessage(new ChatComponentText("Current Power: " + tileEntity.getPower() + "/ " + tileEntity.getOwner()));
-      world.markBlockForUpdate(x, y, z);
-      return true;
-  }
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float px, float py, float pz)
+    {
+        TileEntityEnderGenerator tileEntity = (TileEntityEnderGenerator)world.getTileEntity(x, y, z);
+        if  ((tileEntity == null) || player.isSneaking()) {
+            return false;
+        }
+        
+        ItemStack playerItem = player.getCurrentEquippedItem();
+        if (playerItem == null)
+        {
+            return false;
+        }
+        
+        Item item = playerItem.getItem();
+        if (!(item instanceof ItemDynamitePickaxe))
+        {
+            return false;
+        }
+        
+        if (world.isRemote)
+        {
+            return true;
+        }
+        
+        tileEntity.setOwner(EnergyItems.getOwnerName(playerItem));
+        player.addChatMessage(new ChatComponentText("Current Power: " + tileEntity.getPower() + "/ " + tileEntity.getOwner()));
+        world.markBlockForUpdate(x, y, z);
+        return true;
+    }
 }
