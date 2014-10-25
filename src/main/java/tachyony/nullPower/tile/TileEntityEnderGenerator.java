@@ -33,10 +33,11 @@ public abstract class TileEntityEnderGenerator extends TileEntity implements IEn
 
     protected EnergyStorage storage;
     
-    private int powerDrain = 10;
-    
     private String owner;
     
+    /**
+     * 
+     */
     public int MAXNETWORKPOWER = 10000000;
     
     /**
