@@ -15,10 +15,6 @@
  */
 package tachyony.nullPower;
 
-import ic2.api.item.IC2Items;
-import ic2.api.recipe.RecipeInputItemStack;
-import ic2.api.recipe.Recipes;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,21 +25,20 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import tachyony.nullPower.block.BlockEnderGenerator1;
-import tachyony.nullPower.block.BlockEnderGenerator2;
-import tachyony.nullPower.block.BlockEnderGenerator3;
+import tachyony.nullPower.block.BlockEnderGenerator;
 import tachyony.nullPower.block.BlockEnderReed;
 import tachyony.nullPower.entity.EntityRifleBolt;
 import tachyony.nullPower.item.ItemDynamitePickaxe;
 import tachyony.nullPower.item.ItemEnderReed;
 import tachyony.nullPower.item.ItemHuntingRifle;
-import tachyony.nullPower.tile.TileEntityEnderGenerator1;
-import tachyony.nullPower.tile.TileEntityEnderGenerator2;
-import tachyony.nullPower.tile.TileEntityEnderGenerator3;
+import tachyony.nullPower.item.NullArmor;
+import tachyony.nullPower.tile.TileEntityEnderGenerator;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
@@ -55,7 +50,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 /**
  * Mod class
  */
-@Mod(name = "NullPower", modid = "NullPower", version = "1.0.4", dependencies = "required-after:IC2;required-after:CoFHLib")
+@Mod(name = "NullPower", modid = "NullPower", version = "1.0.4"
+/*, dependencies = "required-after:IC2;required-after:CoFHLib"*/)
 public class NullPower {
     /**
      * Common proxy
@@ -133,16 +129,6 @@ public class NullPower {
      * Ender generator
      */
     public static Block enderGenerator;
-
-    /**
-     * Ender generator
-     */
-    public static Block enderGenerator2;
-
-    /**
-     * Ender generator
-     */
-    public static Block enderGenerator3;
     
     /**
      * Ender core
@@ -164,6 +150,34 @@ public class NullPower {
      */
     public static ToolMaterial cheatMaterial = EnumHelper.addToolMaterial("CheatIron", 4, 8000, 40.0F, 100.0F, 30);
 
+    /**
+     * Null armour material
+     */
+    public static ArmorMaterial nullArmour = EnumHelper.addArmorMaterial("nullArmour",
+            237, new int[]{3, 9, 7, 3}, 40);
+    
+    public static int nullArmourRenderer = 5;
+    
+    /**
+     * Null armour
+     */
+    public static Item nullHelmet;
+    
+    /**
+     * Null armour
+     */
+    public static Item nullChestplate;
+    
+    /**
+     * Null armour
+     */
+    public static Item nullLeggings;
+    
+    /**
+     * Null armour
+     */
+    public static Item nullBoots;
+    
     /**
      * @param event Forge event
      */
@@ -197,24 +211,12 @@ public class NullPower {
                 .setCreativeTab(CreativeTabs.tabMaterials)
                 .setUnlocalizedName("enderIronDust")
                 .setTextureName("nullpower:enderIronDust");
-        enderGenerator = new BlockEnderGenerator1(
+        enderGenerator = new BlockEnderGenerator(
                 Material.iron).setHardness(1F)
                 .setStepSound(Block.soundTypeMetal)
                 .setBlockName("enderGenerator")
                 .setCreativeTab(CreativeTabs.tabMaterials)
                 .setBlockTextureName("nullpower:enderGenerator");
-        enderGenerator2 = new BlockEnderGenerator2(
-                Material.iron).setHardness(1F)
-                .setStepSound(Block.soundTypeMetal)
-                .setBlockName("enderGenerator2")
-                .setCreativeTab(CreativeTabs.tabMaterials)
-                .setBlockTextureName("nullpower:enderGenerator2");
-        enderGenerator3 = new BlockEnderGenerator3(
-                Material.iron).setHardness(1F)
-                .setStepSound(Block.soundTypeMetal)
-                .setBlockName("enderGenerator3")
-                .setCreativeTab(CreativeTabs.tabMaterials)
-                .setBlockTextureName("nullpower:enderGenerator3");
         blockEnderReed = new BlockEnderReed(Material.plants)
                 .setHardness(1F).setStepSound(Block.soundTypeGrass)
                 .setBlockName("enderReed")
@@ -234,6 +236,26 @@ public class NullPower {
         .setUnlocalizedName("enderGeneratorCoreAdvanced")
         .setCreativeTab(CreativeTabs.tabMaterials)
         .setTextureName("nullpower:enderGeneratorCoreAdvanced");
+        
+        // Null armour
+        nullHelmet = new NullArmor(nullArmour, nullArmourRenderer, 0)
+            .setUnlocalizedName("nullHelmet")
+            .setCreativeTab(CreativeTabs.tabCombat)
+            .setTextureName("nullpower:nullHelmet");
+        nullChestplate = new NullArmor(nullArmour, nullArmourRenderer, 1)
+            .setUnlocalizedName("nullChestplate")
+            .setCreativeTab(CreativeTabs.tabCombat)
+            .setTextureName("nullpower:nullChestplate");
+        nullLeggings = new NullArmor(nullArmour, nullArmourRenderer, 2)
+            .setUnlocalizedName("nullLeggings")
+            .setCreativeTab(CreativeTabs.tabCombat)
+            .setTextureName("nullpower:nullLeggings");
+        nullBoots = new NullArmor(nullArmour, nullArmourRenderer, 3)
+            .setUnlocalizedName("nullBoots")
+            .setCreativeTab(CreativeTabs.tabCombat)
+            .setTextureName("nullpower:nullBoots");
+        
+        // Register items
         GameRegistry.registerItem(rifleAmmo, "item.rifleAmmo");
         GameRegistry.registerItem(huntingRifle, "item.huntingRifle");
         GameRegistry.registerItem(huntingRifleB, "item.huntingRifleB");
@@ -242,13 +264,15 @@ public class NullPower {
         GameRegistry.registerItem(enderIron, "item.enderIron");
         GameRegistry.registerItem(enderIronDust, "item.enderIronDust");
         GameRegistry.registerBlock(enderGenerator, "block.enderGenerator");
-        GameRegistry.registerBlock(enderGenerator2, "block.enderGenerator2");
-        GameRegistry.registerBlock(enderGenerator3, "block.enderGenerator3");
         GameRegistry.registerItem(itemEnderReed, "item.enderReed");
         GameRegistry.registerBlock(blockEnderReed, "block.enderReed");
         GameRegistry.registerItem(enderGeneratorCore, "item.enderGeneratorCore");
         GameRegistry.registerItem(enderGeneratorCoreAdvanced, "item.enderGeneratorCoreAdvanced");
         GameRegistry.registerItem(itemDynamitePickaxe, "item.dynamitePickaxe");
+        GameRegistry.registerItem(nullHelmet, "item.nullHelmet");
+        GameRegistry.registerItem(nullChestplate, "item.nullChestplate");
+        GameRegistry.registerItem(nullLeggings, "item.nullLeggings");
+        GameRegistry.registerItem(nullBoots, "item.nullBoots");
     }
 
     /**
@@ -270,7 +294,6 @@ public class NullPower {
                 1, 0), "iii", "css", "w  ", 'i', enderIron, 'c',
                 enderGeneratorCore, 's', Item.diamond, 'w', "plankWood"));*/
         GameRegistry.addShapelessRecipe(new ItemStack(enderIronDust, 1, 0), new Object[]{new ItemStack(itemEnderReed)});
-        Recipes.macerator.addRecipe(new RecipeInputItemStack(new ItemStack(itemEnderReed, 1, 0)), null, new ItemStack(enderIronDust, 2, 0));
         GameRegistry.addRecipe(new ItemStack(Items.spawn_egg, 1, 58), "wbw",
                 "brb", "wbw", 'w', Items.water_bucket, 'r', Items.reeds, 'b', Blocks.iron_bars);
         GameRegistry.addRecipe(new ItemStack(itemEnderReed, 1, 0), " e ",
@@ -280,17 +303,13 @@ public class NullPower {
                 "ewe", "eee", 'e', enderIron, 'w', Items.water_bucket);
         GameRegistry.addRecipe(new ItemStack(enderGeneratorCoreAdvanced, 1, 0), "ewe",
                 "wew", "ewe", 'e', enderGeneratorCore, 'w', Items.water_bucket);
-        GameRegistry.addRecipe(new ItemStack(enderGenerator, 1, 0), " w ",
-                "wew", " c ", 'w', Items.water_bucket, 'e', enderGeneratorCore,
-                'c', IC2Items.getItem("generator"));
-        GameRegistry.addRecipe(new ItemStack(enderGenerator2, 1, 0), "iii",
-                "i i", "aga", 'i', enderIron, 'a', enderGeneratorCoreAdvanced,
-                'g', IC2Items.getItem("generator"));
-        GameRegistry.registerTileEntity(TileEntityEnderGenerator1.class, "EnderGenerator");
-        GameRegistry.registerTileEntity(TileEntityEnderGenerator2.class, "EnderGenerator2");
-        GameRegistry.registerTileEntity(TileEntityEnderGenerator3.class, "EnderGenerator3");
+        GameRegistry.registerTileEntity(TileEntityEnderGenerator.class, "EnderGenerator");
         EntityRegistry.registerGlobalEntityID(EntityRifleBolt.class, "RifleBoltD", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityRifleBolt.class, "RifleBoltD", 3, instance, 160, 1, true);
+        
+        // Add armour renderer
+        RenderingRegistry.addNewArmourRendererPrefix("5");
+        
         proxy.registerTextures();
     }
 

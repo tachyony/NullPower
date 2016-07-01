@@ -25,7 +25,8 @@ group= "tachyony.nullPower" // http://maven.apache.org/guides/mini/guide-naming-
 archivesBaseName = "NullPower"
 
 minecraft {
-	version = "1.7.10-10.13.0.1180"
+	version = "1.7.10-10.13.2.1230"
+	runDir = "eclipse/assets"
 }
 
 sourceSets {
@@ -54,13 +55,13 @@ processResources
 
 repositories {
 	mavenCentral()
-	maven {
-        name = "ic2"
-        url = "http://maven.ic2.player.to"
-    }
+	//maven {
+    //    name = "ic2"
+    //    url = "http://maven.ic2.player.to"
+    //}
 }
 
 dependencies {
-    compile files("bacon/CoFHLib-[1.7.10]1.0.0B6-dev-26.jar")
-    compile "net.industrial-craft:industrialcraft-2:2.2.509-experimental:api"
+    //compile files("bacon/CoFHLib-[1.7.10]1.0.0B6-dev-26.jar")
+    //compile "net.industrial-craft:industrialcraft-2:2.2.509-experimental:api"
 }

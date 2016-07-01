@@ -30,9 +30,8 @@ import tachyony.nullPower.tile.TileEntityEnderGenerator;
 /**
  * Ender generator
  */
-public abstract class BlockEnderGenerator extends BlockContainer {
+public class BlockEnderGenerator extends BlockContainer {
     /**
-     * @param itemId Item id
      * @param material Material
      */
     public BlockEnderGenerator(Material material) {
@@ -52,8 +51,14 @@ public abstract class BlockEnderGenerator extends BlockContainer {
         return true;
     }
 
+    /**
+     * Create new tile entity
+     */
     @Override
-    public abstract TileEntity createNewTileEntity(World world, int metadata);
+    public TileEntity createNewTileEntity(World world, int metadata)
+    {
+        return new TileEntityEnderGenerator();
+    }
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float px, float py, float pz)
@@ -81,7 +86,7 @@ public abstract class BlockEnderGenerator extends BlockContainer {
         }
         
         tileEntity.setOwner(EnergyItems.getOwnerName(playerItem));
-        player.addChatMessage(new ChatComponentText("Current Power: " + tileEntity.getPower() + "/ " + tileEntity.getOwner()));
+        player.addChatMessage(new ChatComponentText("Current owner: " + tileEntity.getOwner()));
         world.markBlockForUpdate(x, y, z);
         return true;
     }

@@ -29,5 +29,4 @@ public class PowerNetworkHandler {
     {
         return player.getDisplayName();
     }
-
 }
