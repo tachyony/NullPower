@@ -84,8 +84,8 @@ public class ItemDynamitePickaxe extends EnergyItems {
 		        return false;
 		    }
 			
-		    par3World.createExplosion(par2EntityPlayer, p4, p5, p6, 3.0F, true);
-		    return true;
+		    //par3World.createExplosion(par2EntityPlayer, p4, p5, p6, 3.0F, true);
+		    //return true;
 		}
 		
 		return false;

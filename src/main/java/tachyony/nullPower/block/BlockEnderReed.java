@@ -54,9 +54,9 @@ public class BlockEnderReed extends Block implements IPlantable {
                     ;
                 }
 
-                if (l < 6) {
+                if (l < 11) {
                     int i1 = par1World.getBlockMetadata(par2, par3, par4);
-                    if (i1 == 15) {
+                    if (i1 >= 7) {
                         par1World.setBlock(par2, par3 + 1, par4, this);
                         par1World.setBlockMetadataWithNotify(par2, par3, par4,
                                 0, 4);

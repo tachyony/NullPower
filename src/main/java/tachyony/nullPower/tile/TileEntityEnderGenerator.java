@@ -16,24 +16,20 @@
 package tachyony.nullPower.tile;
 
 import tachyony.nullPower.powerNetwork.PowerNetwork;
-import ic2.api.energy.prefab.BasicSource;
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyHandler;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Ender generator
  */
-public abstract class TileEntityEnderGenerator extends TileEntity implements IEnergyHandler {
-    protected BasicSource ic2EnergySource;
-
-    protected EnergyStorage storage;
-    
+public class TileEntityEnderGenerator extends TileEntity {    
     private String owner;
+    
+    //IC2 protected BasicSource ic2EnergySource;
+
+    //RF protected EnergyStorage storage;
     
     /**
      * 
@@ -47,11 +43,7 @@ public abstract class TileEntityEnderGenerator extends TileEntity implements IEn
     {
         super();
         owner = "";
-        storage = new EnergyStorage(1000);
-        ic2EnergySource = new BasicSource(this, 2048, getIc2Tier());
     }
-
-    protected abstract int getIc2Tier();
 
     /**
      * @param owner
@@ -71,66 +63,25 @@ public abstract class TileEntityEnderGenerator extends TileEntity implements IEn
     }
 
     @Override
-    public boolean canConnectEnergy(ForgeDirection from) {
-        return true;
-    }
-    
-    @Override
-    public int extractEnergy(ForgeDirection from, int maxExtract,
-            boolean simulate) {
-        return this.storage.extractEnergy(maxExtract, simulate);
-    }
-
-    @Override
-    public int getEnergyStored(ForgeDirection from) {
-        return this.storage.getEnergyStored();
-    }
-
-    @Override
-    public int getMaxEnergyStored(ForgeDirection from) {
-        return this.storage.getMaxEnergyStored();
-    }
-    
-    /**
-     * @param owner
-     * @return Owner
-     */
-    public String getPower()
-    {
-        return this.storage.getEnergyStored() + "/ " + (int)this.ic2EnergySource.getEnergyStored();
-    }
-
-    @Override
     public void onChunkUnload() {
         super.onChunkUnload();
-        this.ic2EnergySource.onChunkUnload();
     }
 
     @Override
     public void invalidate() {
-        this.ic2EnergySource.invalidate();
         super.invalidate();
-    }
-    
-    @Override
-    public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-        return this.storage.receiveEnergy(maxReceive, simulate);
     }
     
     @Override
     public void writeToNBT(NBTTagCompound par1) {
         super.writeToNBT(par1);
         par1.setString("owner", owner);
-        this.ic2EnergySource.writeToNBT(par1);
-        this.storage.writeToNBT(par1);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound par1) {
         super.readFromNBT(par1);
         owner = par1.getString("owner");
-        this.ic2EnergySource.readFromNBT(par1);
-        this.storage.readFromNBT(par1);
     }
 
     @Override
@@ -141,41 +92,36 @@ public abstract class TileEntityEnderGenerator extends TileEntity implements IEn
             return;
         }
         
-        this.ic2EnergySource.updateEntity();
-        if (this.storage.getEnergyStored() < this.storage.getMaxEnergyStored()) {
-            this.storage.receiveEnergy(addRfEnergy(), false);
-        } else if (this.ic2EnergySource.getFreeCapacity() > 0) {
-            this.ic2EnergySource.addEnergy(addIc2Energy());
-        }
-        else {
-            int worldTime = (int) (worldObj.getWorldTime() % 24000);
-            if (worldTime % 1 == 0)
+        int worldTime = (int) (worldObj.getWorldTime() % 24000);
+        if (worldTime % 1 == 0)
+        {
+            String ownerName = owner;
+            if (ownerName.equals("")) {
+                return;
+            }
+            
+            World world = MinecraftServer.getServer().worldServers[0];
+            PowerNetwork data = (PowerNetwork) world.loadItemData(PowerNetwork.class, ownerName);
+            if (data == null) {
+                data = new PowerNetwork(ownerName);
+                world.setItemData(ownerName, data);
+            }
+            
+            int powerAdd = Math.min(addRfEnergy(), MAXNETWORKPOWER - data.currentPower);
+            data.currentPower = powerAdd + data.currentPower;
+            data.markDirty();
+            
+            if (worldObj != null)
             {
-                String ownerName = owner;
-                if (ownerName.equals("")) {
-                    return;
-                }
-                
-                World world = MinecraftServer.getServer().worldServers[0];
-                PowerNetwork data = (PowerNetwork) world.loadItemData(PowerNetwork.class, ownerName);
-                if (data == null) {
-                    data = new PowerNetwork(ownerName);
-                    world.setItemData(ownerName, data);
-                }
-                
-                int powerAdd = Math.min(addRfEnergy(), MAXNETWORKPOWER - data.currentPower);
-                data.currentPower = powerAdd + data.currentPower;
-                data.markDirty();
-                
-                if (worldObj != null)
-                {
-                    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-                }
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
     }
 
-    protected abstract int addIc2Energy();
-
-    protected abstract int addRfEnergy();
+    /**
+     * Power to add
+     * @return Added power
+     */
+    private int addRfEnergy() {
+    }
 }
