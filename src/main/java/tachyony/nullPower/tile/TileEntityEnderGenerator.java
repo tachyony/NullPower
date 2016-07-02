@@ -123,5 +123,6 @@ public class TileEntityEnderGenerator extends TileEntity {
      * @return Added power
      */
     private int addRfEnergy() {
+        return 100;
     }
 }
