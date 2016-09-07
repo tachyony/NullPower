@@ -3,13 +3,13 @@
 ##/build
 
 ## ForgeGradle
-/run
+##/run
 
 ## eclipse
 /.settings
-/.metadata
+##/.metadata
 /.classpath
-/.project
+##/.project
 /bin
 
 ## intellij
@@ -64,16 +64,10 @@
 /*.2
 /*.4
 /*.5
-buildcraft
-screenshots
 *.1
 *.xdsl
 /logs
-/lib
-/bacon
 Thumbs.db
-/asm
-usernamecache.json
 .gradle/1.11/taskArtifacts/cache.properties
 .gradle/1.11/taskArtifacts/cache.properties.lock
 .gradle/2.0/taskArtifacts/taskArtifacts.bin
@@ -86,3 +80,15 @@ usernamecache.json
 .gradle/1.11/taskArtifacts/fileHashes.bin
 .gradle/2.0/taskArtifacts/cache.properties.lock
 .gradle/1.11/taskArtifacts/outputFileStates.bin
+asm/ccl_modular/net#minecraft#nbt#NBTTagCompound.txt
+asm/ccl_modular/net#minecraft#inventory#ContainerWorkbench.txt
+asm/ccl_modular/net#minecraft#client#gui#inventory#GuiContainer.txt
+usernamecache.json
+asm/ccl_modular/net#minecraft#nbt#NBTTagList.txt
+asm/ccl_modular/net#minecraft#block#Block.txt
+asm/ccl_modular/net#minecraft#client#gui#inventory#GuiContainerCreative.txt
+asm/ccl_modular/codechicken#nei#guihook#DefaultSlotClickHandler.txt
+asm/ccl_modular/net#minecraft#block#BlockMobSpawner.txt
+asm/ccl_modular/net#minecraft#tileentity#MobSpawnerBaseLogic.txt
+asm/ccl_modular/codechicken#nei#guihook#GuiContainerManager.txt
+asm/ccl_modular/net#minecraft#block#BlockFire.txt
