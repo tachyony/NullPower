@@ -111,3 +111,5 @@ NullPower_Server.launch
 /bin/assets/*
 /bin/tachyony/*
 bin/com/example/examplemod/ExampleMod.class
+build/retromapping/replacedMain.rangemap
+build/retromapping/retromappedReplacedMain.jar

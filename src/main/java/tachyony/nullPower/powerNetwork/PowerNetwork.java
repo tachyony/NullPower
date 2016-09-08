@@ -40,7 +40,8 @@ public class PowerNetwork extends net.minecraft.world.WorldSavedData {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbttagcompound) {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
         nbttagcompound.setInteger("currentPower", currentPower);
+        return nbttagcompound;
     }
 }
