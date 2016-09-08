@@ -23,12 +23,15 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -43,24 +46,25 @@ import tachyony.nullPower.entity.EntityRifleBolt;
 import tachyony.nullPower.item.ItemDynamitePickaxe;
 import tachyony.nullPower.item.ItemEnderReed;
 import tachyony.nullPower.item.ItemHuntingRifle;
+import tachyony.nullPower.item.NullArmor;
 import tachyony.nullPower.tile.TileEntityEnderGenerator;
 
 /**
  * Mod class
  */
-@Mod(name = "NullPower", modid = "NullPower", version = "1.0.4"
-/*, dependencies = "required-after:IC2;required-after:CoFHLib"*/)
+@Mod(name = "NullPower", modid = "nullpower", version = "1.0.4", acceptedMinecraftVersions="[1.10.2]")
+/*, dependencies = "required-after:IC2;required-after:CoFHLib"*/
 public class NullPower {
     /**
      * Common proxy
      */
-    @SidedProxy(clientSide = "tachyony.nullPower.client.ClientProxy", serverSide = "tachyony.nullPower.CommonProxy")
+    @SidedProxy(clientSide = "tachyony.nullPower.client.ClientProxy", serverSide = "tachyony.nullPower.CommonProxy", modId="nullpower")
     public static CommonProxy proxy;
 
     /**
      * Mod instance
      */
-    @Mod.Instance("NullPower")
+    @Mod.Instance("nullpower")
     public static NullPower instance;
 
     /**
@@ -151,10 +155,9 @@ public class NullPower {
     /**
      * Null armour material
      */
-    public static ArmorMaterial nullArmour; ////= EnumHelper.addArmorMaterial("nullArmour",
-            ////237, new int[]{3, 9, 7, 3}, 40);
+    public static ArmorMaterial nullArmour = EnumHelper.addArmorMaterial("nullArmour", "nullpower:nullArmour", 25, new int[]{3, 9, 7, 3}, 20, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1);
     
-    public static int nullArmourRenderer = 5;
+    public static Integer nullArmourRenderer = 5;
     
     /**
      * Null armour
@@ -187,90 +190,68 @@ public class NullPower {
         configuration.save();
 
         // Ranged weapons
-        rifleAmmo = new Item().setCreativeTab(CreativeTabs.MATERIALS)
-                .setUnlocalizedName("rifleAmmo");////.setTextureName("nullpower:rifleAmmo");
-        huntingRifle = new ItemHuntingRifle(ToolMaterial.IRON)
-                .setUnlocalizedName("huntingRifle");////.setTextureName("nullpower:huntingRifle");
-        huntingRifleB = new ItemHuntingRifle(ToolMaterial.DIAMOND)
-                .setUnlocalizedName("huntingRifleB");////.setTextureName("nullpower:huntingRifleB");
-        huntingRifleC = new ItemHuntingRifle(enderIronMaterial)
-                .setUnlocalizedName("huntingRifleC");////.setTextureName("nullpower:huntingRifleC");
-        huntingRifleD = new ItemHuntingRifle(cheatMaterial)
-                .setUnlocalizedName("huntingRifleD");////.setTextureName("nullpower:huntingRifleD");
-        itemDynamitePickaxe = new ItemDynamitePickaxe().setCreativeTab(CreativeTabs.TOOLS)
-                .setUnlocalizedName("dynamitePickaxe");////.setTextureName("nullpower:dynamitePickaxe");
-
+        rifleAmmo = new Item().setCreativeTab(CreativeTabs.MATERIALS).setRegistryName("rifleAmmo");   
+        huntingRifle = new ItemHuntingRifle(ToolMaterial.IRON).setRegistryName("huntingRifle");
+        huntingRifleB = new ItemHuntingRifle(ToolMaterial.DIAMOND).setRegistryName("huntingRifleB");
+        huntingRifleC = new ItemHuntingRifle(enderIronMaterial).setRegistryName("huntingRifleC");
+        huntingRifleD = new ItemHuntingRifle(cheatMaterial).setRegistryName("huntingRifleD");
+        itemDynamitePickaxe = new ItemDynamitePickaxe().setCreativeTab(CreativeTabs.TOOLS).setRegistryName("dynamitePickaxe");
+        
         // Mod items for crafting
-        enderIron = new Item()
-                .setCreativeTab(CreativeTabs.MATERIALS)
-                .setUnlocalizedName("enderIron");
-                ////.setTextureName("nullpower:enderIron");
-        enderIronDust = new Item()
-                .setCreativeTab(CreativeTabs.MATERIALS)
-                .setUnlocalizedName("enderIronDust");
-                ////.setTextureName("nullpower:enderIronDust");
-        enderGenerator = new BlockEnderGenerator(
-                Material.IRON).setHardness(1F)
-                ////.setStepSound(Block.soundTypeMetal)
-                ////.setBlockName("enderGenerator")
-                .setCreativeTab(CreativeTabs.MATERIALS);
-                ////.setBlockTextureName("nullpower:enderGenerator");
-        blockEnderReed = new BlockEnderReed(Material.PLANTS)
-                .setHardness(1F);////.setStepSound(Block.soundTypeGrass)
-                ////.setBlockName("enderReed")
-                ////.setBlockTextureName("nullpower:blockEnderReed");
-        ////blockEnderReed.setBlockBounds(0.5F - 0.375F, 0.0F, 0.5F - 0.375F,
-        ////        0.5F + 0.375F, 1.0F, 0.5F + 0.375F);
+        enderIron = new Item().setCreativeTab(CreativeTabs.MATERIALS).setRegistryName("enderIron");
+        enderIronDust = new Item().setCreativeTab(CreativeTabs.MATERIALS).setRegistryName("enderIronDust");
+        enderGenerator = new BlockEnderGenerator(Material.IRON).setHardness(1F)//.setStepSound(Block.soundTypeMetal)
+                .setRegistryName("enderGenerator").setCreativeTab(CreativeTabs.MATERIALS);
+        blockEnderReed = new BlockEnderReed(Material.PLANTS).setHardness(1F)//.setStepSound(Block.soundTypeGrass)
+                .setRegistryName("enderReed").setCreativeTab(CreativeTabs.MATERIALS);
+        ////blockEnderReed.setBlockBounds(0.5F - 0.375F, 0.0F, 0.5F - 0.375F, 0.5F + 0.375F, 1.0F, 0.5F + 0.375F);
         blockEnderReed.setTickRandomly(true);
-        itemEnderReed = new ItemEnderReed(
-                blockEnderReed).setUnlocalizedName("enderReed")
-                .setCreativeTab(CreativeTabs.MATERIALS);
-                ////.setTextureName("nullpower:itemEnderReed");
-        enderGeneratorCore = new Item()
-                .setUnlocalizedName("enderGeneratorCore")
-                .setCreativeTab(CreativeTabs.MATERIALS);
-                ////.setTextureName("nullpower:enderGeneratorCore");
-        enderGeneratorCoreAdvanced = new Item()
-        .setUnlocalizedName("enderGeneratorCoreAdvanced")
-        .setCreativeTab(CreativeTabs.MATERIALS);
-        ////.setTextureName("nullpower:enderGeneratorCoreAdvanced");
+        itemEnderReed = new ItemEnderReed(blockEnderReed).setRegistryName("enderReed").setCreativeTab(CreativeTabs.MATERIALS);
+        enderGeneratorCore = new Item().setRegistryName("enderGeneratorCore").setCreativeTab(CreativeTabs.MATERIALS);
+        enderGeneratorCoreAdvanced = new Item().setRegistryName("enderGeneratorCoreAdvanced").setCreativeTab(CreativeTabs.MATERIALS);
         
         // Null armour
-        /*nullHelmet = new NullArmor(nullArmour, nullArmourRenderer, 0)
-            .setUnlocalizedName("nullHelmet")
-            .setCreativeTab(CreativeTabs.COMBAT);
-            ////.setTextureName("nullpower:nullHelmet");
-        nullChestplate = new NullArmor(nullArmour, nullArmourRenderer, 1)
-            .setUnlocalizedName("nullChestplate")
-            .setCreativeTab(CreativeTabs.COMBAT);
-            ////.setTextureName("nullpower:nullChestplate");
-        nullLeggings = new NullArmor(nullArmour, nullArmourRenderer, 2)
-            .setUnlocalizedName("nullLeggings")
-            .setCreativeTab(CreativeTabs.COMBAT);
-            ////.setTextureName("nullpower:nullLeggings");
-        nullBoots = new NullArmor(nullArmour, nullArmourRenderer, 3)
-            .setUnlocalizedName("nullBoots")
-            .setCreativeTab(CreativeTabs.COMBAT);*/
-            ////.setTextureName("nullpower:nullBoots");
+        nullHelmet = new NullArmor(nullArmour, nullArmourRenderer, EntityEquipmentSlot.HEAD).setRegistryName("nullHelmet").setCreativeTab(CreativeTabs.COMBAT);
+        nullChestplate = new NullArmor(nullArmour, nullArmourRenderer, EntityEquipmentSlot.CHEST).setRegistryName("nullChestplate").setCreativeTab(CreativeTabs.COMBAT);
+        nullLeggings = new NullArmor(nullArmour, nullArmourRenderer, EntityEquipmentSlot.LEGS).setRegistryName("nullLeggings").setCreativeTab(CreativeTabs.COMBAT);
+        nullBoots = new NullArmor(nullArmour, nullArmourRenderer, EntityEquipmentSlot.FEET).setRegistryName("nullBoots").setCreativeTab(CreativeTabs.COMBAT);
+        
+        rifleAmmo.setUnlocalizedName(rifleAmmo.getRegistryName().toString());
+        huntingRifle.setUnlocalizedName(huntingRifle.getRegistryName().toString());
+        huntingRifleB.setUnlocalizedName(huntingRifleB.getRegistryName().toString());
+        huntingRifleC.setUnlocalizedName(huntingRifleC.getRegistryName().toString());
+        huntingRifleD.setUnlocalizedName(huntingRifleD.getRegistryName().toString());
+        itemDynamitePickaxe.setUnlocalizedName(itemDynamitePickaxe.getRegistryName().toString());
+        enderIron.setUnlocalizedName(enderIron.getRegistryName().toString());
+        enderIronDust.setUnlocalizedName(enderIronDust.getRegistryName().toString());
+        enderGenerator.setUnlocalizedName(enderGenerator.getRegistryName().toString());
+        blockEnderReed.setUnlocalizedName(blockEnderReed.getRegistryName().toString());
+        itemEnderReed.setUnlocalizedName(itemEnderReed.getRegistryName().toString());
+        enderGeneratorCore.setUnlocalizedName(enderGeneratorCore.getRegistryName().toString());
+        enderGeneratorCoreAdvanced.setUnlocalizedName(enderGeneratorCoreAdvanced.getRegistryName().toString());
+        nullHelmet.setUnlocalizedName(nullHelmet.getRegistryName().toString());
+        nullChestplate.setUnlocalizedName(nullChestplate.getRegistryName().toString());
+        nullLeggings.setUnlocalizedName(nullLeggings.getRegistryName().toString());
+        nullBoots.setUnlocalizedName(nullBoots.getRegistryName().toString());
         
         // Register items
-        GameRegistry.registerItem(rifleAmmo, "item.rifleAmmo");
-        GameRegistry.registerItem(huntingRifle, "item.huntingRifle");
-        GameRegistry.registerItem(huntingRifleB, "item.huntingRifleB");
-        GameRegistry.registerItem(huntingRifleC, "item.huntingRifleC");
-        GameRegistry.registerItem(huntingRifleD, "item.huntingRifleD");
-        GameRegistry.registerItem(enderIron, "item.enderIron");
-        GameRegistry.registerItem(enderIronDust, "item.enderIronDust");
-        GameRegistry.registerBlock(enderGenerator, "block.enderGenerator");
-        GameRegistry.registerItem(itemEnderReed, "item.enderReed");
-        GameRegistry.registerBlock(blockEnderReed, "block.enderReed");
-        GameRegistry.registerItem(enderGeneratorCore, "item.enderGeneratorCore");
-        GameRegistry.registerItem(enderGeneratorCoreAdvanced, "item.enderGeneratorCoreAdvanced");
-        GameRegistry.registerItem(itemDynamitePickaxe, "item.dynamitePickaxe");
-        GameRegistry.registerItem(nullHelmet, "item.nullHelmet");
-        GameRegistry.registerItem(nullChestplate, "item.nullChestplate");
-        GameRegistry.registerItem(nullLeggings, "item.nullLeggings");
-        GameRegistry.registerItem(nullBoots, "item.nullBoots");
+        GameRegistry.register(rifleAmmo);
+        GameRegistry.register(huntingRifle);
+        GameRegistry.register(huntingRifleB);
+        GameRegistry.register(huntingRifleC);
+        GameRegistry.register(huntingRifleD);
+        GameRegistry.register(enderIron);
+        GameRegistry.register(enderIronDust);
+        GameRegistry.register(enderGenerator);
+        GameRegistry.register(itemEnderReed);
+        GameRegistry.register(blockEnderReed);
+        GameRegistry.register(enderGeneratorCore);
+        GameRegistry.register(enderGeneratorCoreAdvanced);
+        GameRegistry.register(itemDynamitePickaxe);
+        GameRegistry.register(nullHelmet);
+        GameRegistry.register(nullChestplate);
+        GameRegistry.register(nullLeggings);
+        GameRegistry.register(nullBoots);
     }
 
     /**
@@ -306,7 +287,7 @@ public class NullPower {
         EntityRegistry.registerModEntity(EntityRifleBolt.class, "RifleBoltD", 3, instance, 160, 1, true);
         
         // Add armour renderer
-        ////RenderingRegistry.addNewArmourRendererPrefix("5");
+        ////RenderingRegistry.addNewArmourRendererPrefix(nullArmourRenderer.toString());
         
         proxy.registerTextures();
     }
