@@ -19,10 +19,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
-import tachyony.nullPower.powerNetwork.PowerNetwork;
-import tachyony.nullPower.powerNetwork.PowerNetworkHandler;
 
 /**
  * 
@@ -33,18 +29,18 @@ public class EnergyItems extends Item {
      * @return Essence
      */
     public static int getCurrentPower(String ownerName) {
-        if (MinecraftServer.getServer() == null) {
+        /*if (MinecraftServer.getServer() == null) {
             return 0;
-        }
+        }*/
         
-        World world = MinecraftServer.getServer().worldServers[0];
-        PowerNetwork data = (PowerNetwork) world.loadItemData(PowerNetwork.class, ownerName);
-        if (data == null) {
-            data = new PowerNetwork(ownerName);
-            world.setItemData(ownerName, data);
-        }
+        ////World world = MinecraftServer.getServer().worldServers[0];
+        ////PowerNetwork data = (PowerNetwork) world.loadItemData(PowerNetwork.class, ownerName);
+        ////if (data == null) {
+            ////data = new PowerNetwork(ownerName);
+            ////world.setItemData(ownerName, data);
+        ////}
         
-        return data.currentPower;
+        return 0;////data.currentPower;
     }
 
     /**
@@ -52,13 +48,13 @@ public class EnergyItems extends Item {
      * @param player
      */
     public static void checkAndSetItemOwner(ItemStack item, EntityPlayer player) {
-        if (item.stackTagCompound == null) {
+        /*if (item.stackTagCompound == null) {
             item.setTagCompound(new NBTTagCompound());
         }
         
         if (item.stackTagCompound.getString("ownerName").equals("")) {
             item.stackTagCompound.setString("ownerName", PowerNetworkHandler.getUsername(player));
-        }
+        }*/
         
         initializePlayer(player);
     }
@@ -78,10 +74,10 @@ public class EnergyItems extends Item {
      * @return Owner
      */
     public static String getOwnerName(ItemStack item) {
-        if (item.stackTagCompound == null) {
+        /*if (item.stackTagCompound == null) {
             item.setTagCompound(new NBTTagCompound());
-        }
+        }*/
         
-        return item.stackTagCompound.getString("ownerName");
+        return "";////item.stackTagCompound.getString("ownerName");
     }
 }

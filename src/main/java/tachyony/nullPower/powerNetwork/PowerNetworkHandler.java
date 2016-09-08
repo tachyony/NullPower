@@ -27,6 +27,6 @@ public class PowerNetworkHandler {
      */
     public static String getUsername(EntityPlayer player)
     {
-        return player.getDisplayName();
+        return "";//player.getDisplayName();
     }
 }

@@ -29,7 +29,6 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -44,7 +43,6 @@ import tachyony.nullPower.entity.EntityRifleBolt;
 import tachyony.nullPower.item.ItemDynamitePickaxe;
 import tachyony.nullPower.item.ItemEnderReed;
 import tachyony.nullPower.item.ItemHuntingRifle;
-import tachyony.nullPower.item.NullArmor;
 import tachyony.nullPower.tile.TileEntityEnderGenerator;
 
 /**
@@ -153,8 +151,8 @@ public class NullPower {
     /**
      * Null armour material
      */
-    public static ArmorMaterial nullArmour = EnumHelper.addArmorMaterial("nullArmour",
-            237, new int[]{3, 9, 7, 3}, 40);
+    public static ArmorMaterial nullArmour; ////= EnumHelper.addArmorMaterial("nullArmour",
+            ////237, new int[]{3, 9, 7, 3}, 40);
     
     public static int nullArmourRenderer = 5;
     
@@ -190,70 +188,70 @@ public class NullPower {
 
         // Ranged weapons
         rifleAmmo = new Item().setCreativeTab(CreativeTabs.MATERIALS)
-                .setUnlocalizedName("rifleAmmo").setTextureName("nullpower:rifleAmmo");
+                .setUnlocalizedName("rifleAmmo");////.setTextureName("nullpower:rifleAmmo");
         huntingRifle = new ItemHuntingRifle(ToolMaterial.IRON)
-                .setUnlocalizedName("huntingRifle").setTextureName("nullpower:huntingRifle");
+                .setUnlocalizedName("huntingRifle");////.setTextureName("nullpower:huntingRifle");
         huntingRifleB = new ItemHuntingRifle(ToolMaterial.DIAMOND)
-                .setUnlocalizedName("huntingRifleB").setTextureName("nullpower:huntingRifleB");
+                .setUnlocalizedName("huntingRifleB");////.setTextureName("nullpower:huntingRifleB");
         huntingRifleC = new ItemHuntingRifle(enderIronMaterial)
-                .setUnlocalizedName("huntingRifleC").setTextureName("nullpower:huntingRifleC");
+                .setUnlocalizedName("huntingRifleC");////.setTextureName("nullpower:huntingRifleC");
         huntingRifleD = new ItemHuntingRifle(cheatMaterial)
-                .setUnlocalizedName("huntingRifleD").setTextureName("nullpower:huntingRifleD");
+                .setUnlocalizedName("huntingRifleD");////.setTextureName("nullpower:huntingRifleD");
         itemDynamitePickaxe = new ItemDynamitePickaxe().setCreativeTab(CreativeTabs.TOOLS)
-                .setUnlocalizedName("dynamitePickaxe").setTextureName("nullpower:dynamitePickaxe");
+                .setUnlocalizedName("dynamitePickaxe");////.setTextureName("nullpower:dynamitePickaxe");
 
         // Mod items for crafting
         enderIron = new Item()
                 .setCreativeTab(CreativeTabs.MATERIALS)
-                .setUnlocalizedName("enderIron")
-                .setTextureName("nullpower:enderIron");
+                .setUnlocalizedName("enderIron");
+                ////.setTextureName("nullpower:enderIron");
         enderIronDust = new Item()
                 .setCreativeTab(CreativeTabs.MATERIALS)
-                .setUnlocalizedName("enderIronDust")
-                .setTextureName("nullpower:enderIronDust");
+                .setUnlocalizedName("enderIronDust");
+                ////.setTextureName("nullpower:enderIronDust");
         enderGenerator = new BlockEnderGenerator(
                 Material.IRON).setHardness(1F)
-                .setStepSound(Block.soundTypeMetal)
-                .setBlockName("enderGenerator")
-                .setCreativeTab(CreativeTabs.MATERIALS)
-                .setBlockTextureName("nullpower:enderGenerator");
+                ////.setStepSound(Block.soundTypeMetal)
+                ////.setBlockName("enderGenerator")
+                .setCreativeTab(CreativeTabs.MATERIALS);
+                ////.setBlockTextureName("nullpower:enderGenerator");
         blockEnderReed = new BlockEnderReed(Material.PLANTS)
-                .setHardness(1F).setStepSound(Block.soundTypeGrass)
-                .setBlockName("enderReed")
-                .setBlockTextureName("nullpower:blockEnderReed");
-        blockEnderReed.setBlockBounds(0.5F - 0.375F, 0.0F, 0.5F - 0.375F,
-                0.5F + 0.375F, 1.0F, 0.5F + 0.375F);
+                .setHardness(1F);////.setStepSound(Block.soundTypeGrass)
+                ////.setBlockName("enderReed")
+                ////.setBlockTextureName("nullpower:blockEnderReed");
+        ////blockEnderReed.setBlockBounds(0.5F - 0.375F, 0.0F, 0.5F - 0.375F,
+        ////        0.5F + 0.375F, 1.0F, 0.5F + 0.375F);
         blockEnderReed.setTickRandomly(true);
         itemEnderReed = new ItemEnderReed(
                 blockEnderReed).setUnlocalizedName("enderReed")
-                .setCreativeTab(CreativeTabs.MATERIALS)
-                .setTextureName("nullpower:itemEnderReed");
+                .setCreativeTab(CreativeTabs.MATERIALS);
+                ////.setTextureName("nullpower:itemEnderReed");
         enderGeneratorCore = new Item()
                 .setUnlocalizedName("enderGeneratorCore")
-                .setCreativeTab(CreativeTabs.MATERIALS)
-                .setTextureName("nullpower:enderGeneratorCore");
+                .setCreativeTab(CreativeTabs.MATERIALS);
+                ////.setTextureName("nullpower:enderGeneratorCore");
         enderGeneratorCoreAdvanced = new Item()
         .setUnlocalizedName("enderGeneratorCoreAdvanced")
-        .setCreativeTab(CreativeTabs.MATERIALS)
-        .setTextureName("nullpower:enderGeneratorCoreAdvanced");
+        .setCreativeTab(CreativeTabs.MATERIALS);
+        ////.setTextureName("nullpower:enderGeneratorCoreAdvanced");
         
         // Null armour
-        nullHelmet = new NullArmor(nullArmour, nullArmourRenderer, 0)
+        /*nullHelmet = new NullArmor(nullArmour, nullArmourRenderer, 0)
             .setUnlocalizedName("nullHelmet")
-            .setCreativeTab(CreativeTabs.COMBAT)
-            .setTextureName("nullpower:nullHelmet");
+            .setCreativeTab(CreativeTabs.COMBAT);
+            ////.setTextureName("nullpower:nullHelmet");
         nullChestplate = new NullArmor(nullArmour, nullArmourRenderer, 1)
             .setUnlocalizedName("nullChestplate")
-            .setCreativeTab(CreativeTabs.COMBAT)
-            .setTextureName("nullpower:nullChestplate");
+            .setCreativeTab(CreativeTabs.COMBAT);
+            ////.setTextureName("nullpower:nullChestplate");
         nullLeggings = new NullArmor(nullArmour, nullArmourRenderer, 2)
             .setUnlocalizedName("nullLeggings")
-            .setCreativeTab(CreativeTabs.COMBAT)
-            .setTextureName("nullpower:nullLeggings");
+            .setCreativeTab(CreativeTabs.COMBAT);
+            ////.setTextureName("nullpower:nullLeggings");
         nullBoots = new NullArmor(nullArmour, nullArmourRenderer, 3)
             .setUnlocalizedName("nullBoots")
-            .setCreativeTab(CreativeTabs.COMBAT)
-            .setTextureName("nullpower:nullBoots");
+            .setCreativeTab(CreativeTabs.COMBAT);*/
+            ////.setTextureName("nullpower:nullBoots");
         
         // Register items
         GameRegistry.registerItem(rifleAmmo, "item.rifleAmmo");
@@ -304,11 +302,11 @@ public class NullPower {
         GameRegistry.addRecipe(new ItemStack(enderGeneratorCoreAdvanced, 1, 0), "ewe",
                 "wew", "ewe", 'e', enderGeneratorCore, 'w', Items.WATER_BUCKET);
         GameRegistry.registerTileEntity(TileEntityEnderGenerator.class, "EnderGenerator");
-        EntityRegistry.registerGlobalEntityID(EntityRifleBolt.class, "RifleBoltD", EntityRegistry.findGlobalUniqueEntityId());
+        ////EntityRegistry.registerGlobalEntityID(EntityRifleBolt.class, "RifleBoltD", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityRifleBolt.class, "RifleBoltD", 3, instance, 160, 1, true);
         
         // Add armour renderer
-        RenderingRegistry.addNewArmourRendererPrefix("5");
+        ////RenderingRegistry.addNewArmourRendererPrefix("5");
         
         proxy.registerTextures();
     }

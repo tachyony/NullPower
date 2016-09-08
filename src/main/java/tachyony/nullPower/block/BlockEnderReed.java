@@ -19,9 +19,10 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
@@ -44,9 +45,9 @@ public class BlockEnderReed extends Block implements IPlantable {
     /**
      * Ticks the block if it's been scheduled.
      */
-    @Override
+    ////@Override
     public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-        if (par1World.getBlock(par2, par3 - 1, par4) == Blocks.REEDS || this.checkBlockCoordValid(par1World, par2, par3, par4))
+        /*if (par1World.getBlock(par2, par3 - 1, par4) == Blocks.REEDS || this.checkBlockCoordValid(par1World, par2, par3, par4))
         {
             if (par1World.isAirBlock(par2, par3 + 1, par4)) {
                 int l;
@@ -66,19 +67,19 @@ public class BlockEnderReed extends Block implements IPlantable {
                     }
                 }
             }
-        }
+        }*/
     }
 
     /**
      * Checks to see if its valid to put this block at the specified
      * coordinates. Args: world, x, y, z
      */
-    @Override
+    ////@Override
     public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4) {
-        Block block = par1World.getBlock(par2, par3 - 1, par4);
-        if ((block == this) || (block == Blocks.OBSIDIAN)) {
-            return true;
-        }
+        ///Block block = par1World.getBlock(par2, par3 - 1, par4);
+        ////if ((block == this) || (block == Blocks.OBSIDIAN)) {
+        ////    return true;
+        ////}
 
         return false;
     }
@@ -88,7 +89,7 @@ public class BlockEnderReed extends Block implements IPlantable {
      * neighbor changed (coordinates passed are their own) Args: x, y, z,
      * neighbor blockID
      */
-    @Override
+    ////@Override
     public void onNeighborBlockChange(World par1World, int par2, int par3,
             int par4, Block par5) {
         this.checkBlockCoordValid(par1World, par2, par3, par4);
@@ -104,8 +105,8 @@ public class BlockEnderReed extends Block implements IPlantable {
      */
     protected final boolean checkBlockCoordValid(World par1World, int par2, int par3, int par4) {
         if (!this.canBlockStay(par1World, par2, par3, par4)) {
-            this.dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
-            par1World.setBlockToAir(par2, par3, par4);
+            ////this.dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+            ////par1World.setBlockToAir(par2, par3, par4);
             return false;
         }
         else
@@ -118,7 +119,7 @@ public class BlockEnderReed extends Block implements IPlantable {
      * Can this block stay at this position. Similar to canPlaceBlockAt except
      * gets checked often with plants.
      */
-    @Override
+    ////@Override
     public boolean canBlockStay(World par1World, int par2, int par3, int par4) {
         return this.canPlaceBlockAt(par1World, par2, par3, par4);
     }
@@ -127,7 +128,7 @@ public class BlockEnderReed extends Block implements IPlantable {
      * Returns a bounding box from the pool of bounding boxes (this means this
      * box can change after the pool has been cleared to be reused)
      */
-    @Override
+    ////@Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4) {
         return null;
     }
@@ -135,7 +136,7 @@ public class BlockEnderReed extends Block implements IPlantable {
     /**
      * Returns the ID of the items to drop on destruction.
      */
-    @Override
+    ////@Override
     public Item getItemDropped(int par1, Random par2Random, int par3) {
         return NullPower.itemEnderReed;
     }
@@ -145,7 +146,7 @@ public class BlockEnderReed extends Block implements IPlantable {
      * or not to render the shared face of two adjacent blocks and also whether
      * the player can attach torches, redstone wire, etc to this block.
      */
-    @Override
+    ////@Override
     public boolean isOpaqueCube() {
         return false;
     }
@@ -154,7 +155,7 @@ public class BlockEnderReed extends Block implements IPlantable {
      * If this block doesn't render as an ordinary block it will return False
      * (examples: signs, buttons, stairs, etc)
      */
-    @Override
+    ////@Override
     public boolean renderAsNormalBlock() {
         return false;
     }
@@ -162,7 +163,7 @@ public class BlockEnderReed extends Block implements IPlantable {
     /**
      * The type of render function that is called for this block
      */
-    @Override
+    ////@Override
     public int getRenderType() {
         return 1;
     }
@@ -171,24 +172,24 @@ public class BlockEnderReed extends Block implements IPlantable {
     /**
      * only called by clickMiddleMouseButton , and passed to inventory.setCurrentItem (along with isCreative)
      */
-    @Override
+    ////@Override
     public Item getItem(World par1World, int par2, int par3, int par4) {
         return NullPower.itemEnderReed;
     }
 
-    @Override
+    ////@Override
     public EnumPlantType getPlantType(IBlockAccess world, int x, int y, int z) {
         return EnumPlantType.Beach;
     }
 
-    @Override
+    ////@Override
     public Block getPlant(IBlockAccess world, int x, int y, int z) {
         return this;
     }
 
-    @Override
+    ////@Override
     public int getPlantMetadata(IBlockAccess world, int x, int y, int z) {
-        return world.getBlockMetadata(x, y, z);
+        return 0;////world.getBlockMetadata(x, y, z);
     }
 
     /**
@@ -196,11 +197,23 @@ public class BlockEnderReed extends Block implements IPlantable {
      * against the blocks color. Note only called when first determining what to
      * render.
      */
-    @Override
+    ////@Override
     @SideOnly(Side.CLIENT)
     public int colorMultiplier(IBlockAccess p_149720_1_, int p_149720_2_,
             int p_149720_3_, int p_149720_4_) {
-        return p_149720_1_.getBiomeGenForCoords(p_149720_2_, p_149720_4_)
-                .getBiomeGrassColor(p_149720_2_, p_149720_3_, p_149720_4_);
+        return 0;////p_149720_1_.getBiomeGenForCoords(p_149720_2_, p_149720_4_)
+                ////.getBiomeGrassColor(p_149720_2_, p_149720_3_, p_149720_4_);
+    }
+
+    @Override
+    public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -18,12 +18,8 @@ package tachyony.nullPower.block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import tachyony.nullPower.item.EnergyItems;
-import tachyony.nullPower.item.ItemDynamitePickaxe;
 import tachyony.nullPower.tile.TileEntityEnderGenerator;
 
 /**
@@ -44,7 +40,7 @@ public class BlockEnderGenerator extends BlockContainer {
      * @param meta The block's current metadata
      * @return True to spawn the drops
      */
-    @Override
+    ////@Override
     public boolean canHarvestBlock(EntityPlayer player, int meta)
     {
         return true;
@@ -59,34 +55,34 @@ public class BlockEnderGenerator extends BlockContainer {
         return new TileEntityEnderGenerator();
     }
 
-    @Override
+    ////@Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float px, float py, float pz)
     {
-        TileEntityEnderGenerator tileEntity = (TileEntityEnderGenerator)world.getTileEntity(x, y, z);
-        if  ((tileEntity == null) || player.isSneaking()) {
-            return false;
-        }
+        ////TileEntityEnderGenerator tileEntity = (TileEntityEnderGenerator)world.getTileEntity(x, y, z);
+        ////if  ((tileEntity == null) || player.isSneaking()) {
+        ////    return false;
+        ////}
         
-        ItemStack playerItem = player.getCurrentEquippedItem();
-        if (playerItem == null)
-        {
-            return false;
-        }
+        ////ItemStack playerItem = player.getCurrentEquippedItem();
+        ////if (playerItem == null)
+        ////{
+        ////    return false;
+        ////}
         
-        Item item = playerItem.getItem();
-        if (!(item instanceof ItemDynamitePickaxe))
-        {
-            return false;
-        }
+        ////Item item = playerItem.getItem();
+        ////if (!(item instanceof ItemDynamitePickaxe))
+        ////{
+        ////    return false;
+        ////}
         
         if (world.isRemote)
         {
             return true;
         }
         
-        tileEntity.setOwner(EnergyItems.getOwnerName(playerItem));
-        player.addChatMessage(new ChatComponentText("Current owner: " + tileEntity.getOwner()));
-        world.markBlockForUpdate(x, y, z);
+        ////tileEntity.setOwner(EnergyItems.getOwnerName(playerItem));
+        //player.addChatMessage(new ChatComponentText("Current owner: " + tileEntity.getOwner()));
+        //world.markBlockForUpdate(x, y, z);
         return true;
     }
 }

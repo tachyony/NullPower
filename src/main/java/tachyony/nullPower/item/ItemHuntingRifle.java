@@ -17,24 +17,17 @@ package tachyony.nullPower.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import tachyony.nullPower.NullPower;
-import tachyony.nullPower.entity.EntityRifleBolt;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Hunting rifle
@@ -54,42 +47,42 @@ public class ItemHuntingRifle extends Item {
 		this.toolMaterial = toolMaterial;
 		this.maxStackSize = 1;
 		this.setMaxDamage(this.toolMaterial.getMaxUses());
-		this.setCreativeTab(CreativeTabs.tabCombat);
+		this.setCreativeTab(CreativeTabs.COMBAT);
 		this.weaponDamage = 4.0F + this.toolMaterial.getDamageVsEntity();
 	}
     
-	@Override
+	////@Override
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer player)
     {
-    	if (player.capabilities.isCreativeMode || (player.inventory.hasItem(NullPower.rifleAmmo) && player.inventory.consumeInventoryItem(NullPower.rifleAmmo)))
+    	/*if (player.capabilities.isCreativeMode || (player.inventory.hasItem(NullPower.rifleAmmo) && player.inventory.consumeInventoryItem(NullPower.rifleAmmo)))
         {
     	    EntityRifleBolt entityBolt = new EntityRifleBolt(par2World, player, 4.0F);
     	    entityBolt.setIsCritical(true);
-    	    int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, par1ItemStack);
-            entityBolt.setDamage(weaponDamage + (double)k);
-    	    int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, par1ItemStack);
-    	    if (l > 0)
-            {
-    	        entityBolt.setKnockbackStrength(l);
-            }
+    	    ////int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, par1ItemStack);
+            ////entityBolt.setDamage(weaponDamage + (double)k);
+    	    ////int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, par1ItemStack);
+    	    ////if (l > 0)
+            ////{
+    	    ////    entityBolt.setKnockbackStrength(l);
+            ////}
     	    
-    	    if (EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, par1ItemStack) > 0)
+    	    /*if (EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, par1ItemStack) > 0)
             {
     	        entityBolt.setFire(100);
-            }
+            }*
     	    
     	    par1ItemStack.damageItem(1, player);
-    	    par2World.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+    	    ////par2World.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
     	    if (!par2World.isRemote)
             {
         	    par2World.spawnEntityInWorld(entityBolt);
             }
-        }
+        }*/
     	
     	return par1ItemStack;
 	}
 	
-    @Override
+    ////@Override
     public ItemStack onEaten(ItemStack p_77654_1_, World p_77654_2_, EntityPlayer p_77654_3_)
     {
         return p_77654_1_;
@@ -105,20 +98,20 @@ public class ItemHuntingRifle extends Item {
 	* Override to add custom weapon damage field rather than vanilla ItemSword's field
 	*/
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
+    ////@Override
 	public Multimap getItemAttributeModifiers() {
     	Multimap multimap = HashMultimap.create();
-    	multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", weaponDamage, 0));
+    	////multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", weaponDamage, 0));
     	return multimap;
 	}
 	
-	@Override
+	////@Override
 	public boolean onBlockDestroyed(ItemStack p_150894_1_, World p_150894_2_, Block p_150894_3_, int p_150894_4_, int p_150894_5_, int p_150894_6_, EntityLivingBase p_150894_7_)
     {
-        if ((double)p_150894_3_.getBlockHardness(p_150894_2_, p_150894_4_, p_150894_5_, p_150894_6_) != 0.0D)
+        /*if ((double)p_150894_3_.getBlockHardness(p_150894_2_, p_150894_4_, p_150894_5_, p_150894_6_) != 0.0D)
         {
             p_150894_1_.damageItem(1, p_150894_7_);
-        }
+        }*/
 
         return true;
     }
@@ -166,7 +159,7 @@ public class ItemHuntingRifle extends Item {
     @Override
     public boolean getIsRepairable(ItemStack p_82789_1_, ItemStack p_82789_2_)
     {
-        return this.toolMaterial.func_150995_f() == p_82789_2_.getItem() ? true : super.getIsRepairable(p_82789_1_, p_82789_2_);
+        return false;//this.toolMaterial.func_150995_f() == p_82789_2_.getItem() ? true : super.getIsRepairable(p_82789_1_, p_82789_2_);
     }
     
     /**

@@ -15,13 +15,9 @@
  */
 package tachyony.nullPower.client;
 
-import net.minecraft.client.renderer.entity.RenderSnowball;
-import net.minecraft.init.Items;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tachyony.nullPower.CommonProxy;
-import tachyony.nullPower.entity.EntityRifleBolt;
 
 /**
  * Client proxy
@@ -30,6 +26,6 @@ import tachyony.nullPower.entity.EntityRifleBolt;
 public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerTextures() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityRifleBolt.class, new RenderSnowball(Items.SNOWBALL));
+		////RenderingRegistry.registerEntityRenderingHandler(EntityRifleBolt.class, new RenderSnowball(Items.SNOWBALL));
 	}
 }
