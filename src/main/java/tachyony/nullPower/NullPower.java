@@ -15,9 +15,6 @@
  */
 package tachyony.nullPower;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -33,12 +30,18 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
+
 import tachyony.nullPower.block.BlockEnderGenerator;
 import tachyony.nullPower.block.BlockEnderReed;
 import tachyony.nullPower.entity.EntityRifleBolt;
@@ -57,13 +60,13 @@ public class NullPower {
     /**
      * Common proxy
      */
-    @SidedProxy(clientSide = "tachyony.nullPower.client.ClientProxy", serverSide = "tachyony.nullPower.CommonProxy", modId="nullpower")
+    @SidedProxy(clientSide = "tachyony.nullPower.client.ClientProxy", serverSide = "tachyony.nullPower.CommonProxy")
     public static CommonProxy proxy;
 
     /**
      * Mod instance
      */
-    @Mod.Instance("nullpower")
+    @Instance("nullpower")
     public static NullPower instance;
 
     /**
@@ -74,7 +77,7 @@ public class NullPower {
     /**
      * Logger
      */
-    public static Logger logger = Logger.getLogger("NullPower");
+    public static Logger logger;
 
     /**
      * Rifle ammo
@@ -183,6 +186,10 @@ public class NullPower {
      */
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        logger = event.getModLog();
+        
+        proxy.preInit(event);
+        
         configuration = new Configuration(event.getSuggestedConfigurationFile());
         configuration.load();
         // Config here
@@ -260,6 +267,8 @@ public class NullPower {
     @SuppressWarnings("boxing")
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        proxy.init(event);
+        
         GameRegistry.addRecipe(new ItemStack(rifleAmmo, 16, 0), "ci ", "   ",
                 "   ", 'c', Items.CLAY_BALL, 'i', enderIron);
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(huntingRifle,
@@ -284,13 +293,16 @@ public class NullPower {
         GameRegistry.registerTileEntity(TileEntityEnderGenerator.class, "EnderGenerator");
         ////EntityRegistry.registerGlobalEntityID(EntityRifleBolt.class, "RifleBoltD", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityRifleBolt.class, "RifleBoltD", 3, instance, 160, 1, true);
-        
-        // Add armour renderer
-        ////RenderingRegistry.addNewArmourRendererPrefix(nullArmourRenderer.toString());
-        
-        proxy.registerTextures();
     }
 
+    /**
+     * @param event Forge event
+     */
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        proxy.postInit(event);
+    }
+    
     /**
      * @param logLevel Log level
      * @param message

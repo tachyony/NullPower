@@ -1,6 +1,5 @@
 package tachyony.nullPower.item;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
@@ -10,13 +9,6 @@ import net.minecraft.world.World;
 public class NullArmor extends ItemArmor {
     public NullArmor(ArmorMaterial material, int renderId, EntityEquipmentSlot partId) {
         super(material, renderId, partId);
-    }
-    
-    ////@Override
-    public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type)
-    {
-        return "nullpower" + ":textures/armour/" + "nullArmour" + "_"; ////+
-            ////(this.armorType == 2 ? "2" : "1") + ".png";
     }
     
     @Override
@@ -34,7 +26,7 @@ public class NullArmor extends ItemArmor {
             player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 20, 1));
             
             // Absorption
-            ////player.addPotionEffect(new PotionEffect(Potion.field_76444_x.id, 20, 1));
+            player.addPotionEffect(new PotionEffect(Potion.field_76444_x.id, 20, 1));
             player.addPotionEffect(new PotionEffect(Potion.jump.id, 20, 1));
             player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 20, 1));
         }*/

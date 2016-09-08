@@ -15,13 +15,24 @@
  */
 package tachyony.nullPower;
 
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+
 /**
  * Common proxy
  */
 public class CommonProxy {
+    public void preInit(FMLPreInitializationEvent event) {
+    }
+    
     /**
      * Does nothing.
+     * @param event 
      */
-    public void registerTextures() {
+    public void init(FMLInitializationEvent event) {
+    }
+
+    public void postInit(FMLPostInitializationEvent event) {
     }
 }
