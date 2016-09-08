@@ -113,3 +113,16 @@ NullPower_Server.launch
 bin/com/example/examplemod/ExampleMod.class
 build/retromapping/replacedMain.rangemap
 build/retromapping/retromappedReplacedMain.jar
+run/config/forge.cfg
+run/config/splash.properties
+run/options.txt
+run/usercache.json
+run/config/forgeChunkLoading.cfg
+run/config/nullpower.cfg
+*.log.gz
+villages.dat
+forcedchunks.dat
+level.dat
+*.mca
+run/saves/*
+session.lock
