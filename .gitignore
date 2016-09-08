@@ -110,3 +110,4 @@ NullPower_Server.launch
 /build/sources/*
 /bin/assets/*
 /bin/tachyony/*
+bin/com/example/examplemod/ExampleMod.class

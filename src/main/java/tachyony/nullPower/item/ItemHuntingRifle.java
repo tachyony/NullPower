@@ -108,7 +108,7 @@ public class ItemHuntingRifle extends Item {
     @Override
 	public Multimap getItemAttributeModifiers() {
     	Multimap multimap = HashMultimap.create();
-    	multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", weaponDamage, 0));
+    	multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", weaponDamage, 0));
     	return multimap;
 	}
 	
@@ -139,7 +139,7 @@ public class ItemHuntingRifle extends Item {
     @Override
     public EnumAction getItemUseAction(ItemStack p_77661_1_)
     {
-        return EnumAction.bow;
+        return EnumAction.BOW;
     }
     
     /**

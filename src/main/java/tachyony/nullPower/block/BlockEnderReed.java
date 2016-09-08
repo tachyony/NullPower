@@ -21,14 +21,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tachyony.nullPower.NullPower;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Ender reed.
@@ -46,7 +46,7 @@ public class BlockEnderReed extends Block implements IPlantable {
      */
     @Override
     public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-        if (par1World.getBlock(par2, par3 - 1, par4) == Blocks.reeds || this.checkBlockCoordValid(par1World, par2, par3, par4))
+        if (par1World.getBlock(par2, par3 - 1, par4) == Blocks.REEDS || this.checkBlockCoordValid(par1World, par2, par3, par4))
         {
             if (par1World.isAirBlock(par2, par3 + 1, par4)) {
                 int l;
@@ -76,7 +76,7 @@ public class BlockEnderReed extends Block implements IPlantable {
     @Override
     public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4) {
         Block block = par1World.getBlock(par2, par3 - 1, par4);
-        if ((block == this) || (block == Blocks.obsidian)) {
+        if ((block == this) || (block == Blocks.OBSIDIAN)) {
             return true;
         }
 

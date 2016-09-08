@@ -1,6 +1,6 @@
 [
 {
-  "modid": "NullPower",
+  "modid": "nullpower",
   "name": "NullPower",
   "description": "Energy mod.",
   "version": "${version}",
@@ -8,6 +8,7 @@
   "url": "https://github.com/tachyony/NullPower",
   "updateUrl": "",
   "authors": ["Tachyony"],
+  "authorList": ["Tachyony"],
   "credits": "Tachyony",
   "logoFile": "",
   "parent": "",
