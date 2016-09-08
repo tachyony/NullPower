@@ -13,6 +13,7 @@ public class NullArmor extends ItemArmor {
     
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
+        super.onArmorTick(world, player, itemStack);
         /*if ((player.getCurrentArmor(3) != null) &&
             (player.getCurrentArmor(2) != null) &&
             (player.getCurrentArmor(1) != null) &&

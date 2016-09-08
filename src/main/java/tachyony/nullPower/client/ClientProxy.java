@@ -35,7 +35,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void init(FMLInitializationEvent event) {
 	    super.init(event);
-		////RenderingRegistry.registerEntityRenderingHandler(EntityRifleBolt.class, new RenderSnowball(Items.SNOWBALL));
 	}
 	
 	@Override

@@ -54,7 +54,7 @@ import tachyony.nullPower.tile.TileEntityEnderGenerator;
 /**
  * Mod class
  */
-@Mod(name = "NullPower", modid = "nullpower", version = "1.0.4", acceptedMinecraftVersions="[1.10.2]")
+@Mod(name = Reference.MODNAME, modid = Reference.MODID, version = Reference.VERSION, acceptedMinecraftVersions="[1.10.2]")
 /*, dependencies = "required-after:IC2;required-after:CoFHLib"*/
 public class NullPower {
     /**
@@ -66,7 +66,7 @@ public class NullPower {
     /**
      * Mod instance
      */
-    @Instance("nullpower")
+    @Instance(Reference.MODID)
     public static NullPower instance;
 
     /**
@@ -157,9 +157,9 @@ public class NullPower {
     /**
      * Null armour material
      */
-    public static ArmorMaterial nullArmour = EnumHelper.addArmorMaterial("nullArmour", "nullpower:nullArmour", 25, new int[]{3, 9, 7, 3}, 20, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1);
+    public static ArmorMaterial nullArmour = EnumHelper.addArmorMaterial("nullArmour", Reference.MODID + ":nullArmour", 25, new int[]{3, 9, 7, 3}, 20, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1);
     
-    public static Integer nullArmourRenderer = 5;
+    public static final Integer nullArmourRenderer = 5;
     
     /**
      * Null armour
@@ -206,11 +206,8 @@ public class NullPower {
         // Mod items for crafting
         enderIron = new Item().setCreativeTab(CreativeTabs.MATERIALS).setRegistryName("enderIron");
         enderIronDust = new Item().setCreativeTab(CreativeTabs.MATERIALS).setRegistryName("enderIronDust");
-        enderGenerator = new BlockEnderGenerator(Material.IRON).setHardness(1F)//.setStepSound(Block.soundTypeMetal)
-                .setRegistryName("enderGenerator").setCreativeTab(CreativeTabs.MATERIALS);
-        blockEnderReed = new BlockEnderReed(Material.PLANTS).setHardness(1F)//.setStepSound(Block.soundTypeGrass)
-                .setRegistryName("enderReed").setCreativeTab(CreativeTabs.MATERIALS);
-        ////blockEnderReed.setBlockBounds(0.5F - 0.375F, 0.0F, 0.5F - 0.375F, 0.5F + 0.375F, 1.0F, 0.5F + 0.375F);
+        enderGenerator = new BlockEnderGenerator(Material.IRON).setHardness(1F).setRegistryName("enderGenerator").setCreativeTab(CreativeTabs.MATERIALS);
+        blockEnderReed = new BlockEnderReed(Material.PLANTS).setHardness(1F).setRegistryName("enderReed").setCreativeTab(CreativeTabs.MATERIALS);
         blockEnderReed.setTickRandomly(true);
         itemEnderReed = new ItemEnderReed(blockEnderReed).setRegistryName("enderReed").setCreativeTab(CreativeTabs.MATERIALS);
         enderGeneratorCore = new Item().setRegistryName("enderGeneratorCore").setCreativeTab(CreativeTabs.MATERIALS);
@@ -291,7 +288,6 @@ public class NullPower {
         GameRegistry.addRecipe(new ItemStack(enderGeneratorCoreAdvanced, 1, 0), "ewe",
                 "wew", "ewe", 'e', enderGeneratorCore, 'w', Items.WATER_BUCKET);
         GameRegistry.registerTileEntity(TileEntityEnderGenerator.class, "EnderGenerator");
-        ////EntityRegistry.registerGlobalEntityID(EntityRifleBolt.class, "RifleBoltD", EntityRegistry.findGlobalUniqueEntityId());
         EntityRegistry.registerModEntity(EntityRifleBolt.class, "RifleBoltD", 3, instance, 160, 1, true);
     }
 
