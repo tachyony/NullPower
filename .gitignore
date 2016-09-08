@@ -10,7 +10,7 @@
 ##/.metadata
 /.classpath
 ##/.project
-/bin
+##/bin
 
 ## intellij
 /out
@@ -92,3 +92,21 @@ asm/ccl_modular/net#minecraft#block#BlockMobSpawner.txt
 asm/ccl_modular/net#minecraft#tileentity#MobSpawnerBaseLogic.txt
 asm/ccl_modular/codechicken#nei#guihook#GuiContainerManager.txt
 asm/ccl_modular/net#minecraft#block#BlockFire.txt
+NullPower_Client.launch
+.gradle/2.7/taskArtifacts/taskArtifacts.bin
+.gradle/2.7/taskArtifacts/fileSnapshots.bin
+.gradle/2.7/taskArtifacts/fileHashes.bin
+.gradle/2.7/taskArtifacts/cache.properties.lock
+.gradle/2.7/taskArtifacts/cache.properties
+.gradle/2.7/taskArtifacts/outputFileStates.bin
+NullPower_Server.launch
+/build/tmp/*
+/build/unpacked/*
+/build/sources/*
+/build/resources/*
+/build/natives/*
+/build/libs/*
+/build/classes/*
+/build/sources/*
+/bin/assets/*
+/bin/tachyony/*

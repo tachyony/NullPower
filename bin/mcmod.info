@@ -1,0 +1,17 @@
+[
+{
+  "modid": "NullPower",
+  "name": "NullPower",
+  "description": "Energy mod.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/tachyony/NullPower",
+  "updateUrl": "",
+  "authors": ["Tachyony"],
+  "credits": "Tachyony",
+  "logoFile": "",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": ["MinecraftForge"]
+}
+]
