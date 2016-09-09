@@ -126,3 +126,5 @@ level.dat
 *.mca
 run/saves/*
 session.lock
+run/crash-reports/crash-2016-09-09_22.09.16-client.txt
+run/crash-reports/crash-2016-09-09_22.07.01-client.txt
