@@ -27,6 +27,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -65,7 +66,7 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
     */
 	public EntityRifleBolt(World world) {
 		super(world);
-        ////this.renderDistanceWeight = 10.0D;
+        //this.renderDistanceWeight = 10.0D;
         this.setSize(0.5F, 0.5F);
     }
     
@@ -77,10 +78,10 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
      */
 	public EntityRifleBolt(World world, double x, double y, double z) {
 		super(world, x, y, z);
-        ////this.renderDistanceWeight = 10.0D;
+        //this.renderDistanceWeight = 10.0D;
         this.setSize(0.5F, 0.5F);
         this.setPosition(x, y, z);
-        ////this.yOffset = 0.0F;
+        //this.yOffset = 0.0F;
     }
     
 	/** Constructs an arrow with heading based on shooter and velocity, modified by the arrow's velocityFactor
@@ -90,7 +91,7 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
      */
 	public EntityRifleBolt(World world, EntityLivingBase shooter, float velocity) {
 		super(world);
-        ////this.renderDistanceWeight = 10.0D;
+        //this.renderDistanceWeight = 10.0D;
 		this.shootingEntity = shooter;
 		if (shooter instanceof EntityPlayer) {
             this.canBePickedUp = 1;
@@ -102,7 +103,7 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
         this.posY -= 0.10000000149011612D;
 		this.posZ -= MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * 0.16F;
 		setPosition(this.posX, this.posY, this.posZ);
-        ////this.yOffset = 0.0F;
+        //this.yOffset = 0.0F;
 		this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
 		this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float) Math.PI);
 		this.motionY = (-MathHelper.sin(this.rotationPitch / 180.0F * (float) Math.PI));
@@ -121,16 +122,16 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
      */
 	public EntityRifleBolt(World world, EntityLivingBase shooter, EntityLivingBase target, float velocity, float wobble) {
 		super(world);
-        ////this.renderDistanceWeight = 10.0D;
+        //this.renderDistanceWeight = 10.0D;
         this.shootingEntity = shooter;
         if (shooter instanceof EntityPlayer)
         {
             this.canBePickedUp = 1;
         }
 
-        /*this.posY = shooter.posY + shooter.getEyeHeight() - 0.10000000149011612D;
+        this.posY = shooter.posY + shooter.getEyeHeight() - 0.10000000149011612D;
         double d0 = target.posX - shooter.posX;
-        double d1 = target.boundingBox.minY + target.height / 3.0F - this.posY;
+        double d1 = 0/*target.boundingBox.minY*/ + target.height / 3.0F - this.posY;
         double d2 = target.posZ - shooter.posZ;
         double d3 = MathHelper.sqrt_double(d0 * d0 + d2 * d2);
         if (d3 >= 1.0E-7D)
@@ -140,18 +141,17 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
             double d4 = d0 / d3;
             double d5 = d2 / d3;
             this.setLocationAndAngles(shooter.posX + d4, this.posY, shooter.posZ + d5, f2, f3);
-            this.yOffset = 0.0F;
+            //this.yOffset = 0.0F;
             float f4 = (float)d3 * 0.2F;
             this.setThrowableHeading(d0, d1 + f4, d2, velocity, wobble);
-        }*/
+        }
     }
     
     /**
      * @param mop 
-     */
-    /*@Override
-    protected void onImpact(MovingObjectPosition mop)
-        {
+     *
+	@Override
+    protected void onImpact(MovingObjectPosition mop) {
 		if (mop.entityHit != null) {
 			onImpactEntity(mop);
 		} else {
@@ -160,10 +160,14 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
     }*/
     
     @Override
+    protected void onImpact(RayTraceResult result) {
+    }
+	
+    @Override
     protected void entityInit()
     {
 		super.entityInit();
-        ////this.dataWatcher.addObject(16, Byte.valueOf((byte)0));;
+        //this.dataWatcher.addObject(16, Byte.valueOf((byte)0));;
     }
     
     /**
@@ -229,7 +233,7 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
             }
 
 			if (flag) {
-				////playSound("random.pop", 0.2F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+				//playSound("random.pop", 0.2F, ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
 				player.onItemPickup(this, 1);
 				setDead();
             }
@@ -327,9 +331,8 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
 		if (isInWater()) {
 			for (int i = 0; i < 4; ++i) {
 				float f3 = 0.25F;
-				////this.worldObj.spawnParticle("bubble", this.posX - this.motionX * f3,
-						////this.posY - this.motionY * f3, this.posZ - this.motionZ
-								////* f3, this.motionX, this.motionY, this.motionZ);
+				//this.worldObj.spawnParticle("bubble", this.posX - this.motionX * f3, this.posY - this.motionY * f3, this.posZ - this.motionZ
+				//	* f3, this.motionX, this.motionY, this.motionZ);
 			}
 
 			motionFactor = 0.8F;
@@ -356,18 +359,16 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
      * Checks if entity is colliding with a block and if so, sets inGround to
      * true
      */
+    @SuppressWarnings("unused")
     protected void checkInGround() {
-		/*Block i = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
+		Block i = null;//this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
 		if (i != null) {
-			i.setBlockBoundsBasedOnState(this.worldObj, this.xTile,
-					this.yTile, this.zTile);
-			AxisAlignedBB axisalignedbb = i.getCollisionBoundingBoxFromPool(this.worldObj, this.xTile, this.yTile,
-							this.zTile);
-			if (axisalignedbb != null
-					&& axisalignedbb.isVecInside(Vec3.createVectorHelper(this.posX, this.posY, this.posZ))) {
+			//i.setBlockBoundsBasedOnState(this.worldObj, this.xTile, this.yTile, this.zTile);
+			AxisAlignedBB axisalignedbb = null;//i.getCollisionBoundingBoxFromPool(this.worldObj, this.xTile, this.yTile, this.zTile);
+			if (axisalignedbb != null /*&& axisalignedbb.isVecInside(Vec3.createVectorHelper(this.posX, this.posY, this.posZ))*/) {
                 this.inGround = true;
 			}
-        }*/
+        }
     }
     
     /**
@@ -375,8 +376,8 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
 	 * block no longer in world
 	 */
 	protected void updateInGround() {
-		/*Block j = this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
-		int k = this.worldObj.getBlockMetadata(this.xTile, this.yTile, this.zTile);
+		Block j = null;//this.worldObj.getBlock(this.xTile, this.yTile, this.zTile);
+		int k = 0;//this.worldObj.getBlockMetadata(this.xTile, this.yTile, this.zTile);
 
 		if (j == this.inTile && k == this.inData) {
 			++this.ticksInGround;
@@ -390,7 +391,7 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
 			this.motionZ *= this.rand.nextFloat() * 0.2F;
 			this.ticksInGround = 0;
 			this.ticksInAir = 0;
-		}*/
+		}
 	}
 	
 	/** 
@@ -398,14 +399,14 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
 	 */
 	protected void updateInAir() {
 		++this.ticksInAir;
-		////MovingObjectPosition mop = checkForImpact();
-		////if (mop != null) {
-		////	onImpact(mop);
-		////}
+		//MovingObjectPosition mop = checkForImpact();
+		//if (mop != null) {
+		//	onImpact(mop);
+		//}
 		
 		spawnTrailingParticles();
 		updatePosition();
-		////func_145775_I();
+		//func_145775_I();
 	}
 	
 	/** Returns the arrow's velocity factor
@@ -439,11 +440,9 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
     protected void spawnTrailingParticles() {
         if (shouldSpawnParticles()) {
             for (int i = 0; i < 4; ++i) {
-				////this.worldObj.spawnParticle(getParticleName(), this.posX + this.motionX
-						////* i / 4.0D,
-						////this.posY + this.motionY * i / 4.0D, this.posZ + this.motionZ
-								////* i / 4.0D, -this.motionX, -this.motionY + 0.2D,
-						////-this.motionZ);
+				//this.worldObj.spawnParticle(getParticleName(), this.posX + this.motionX* i / 4.0D,
+				//	this.posY + this.motionY * i / 4.0D, this.posZ + this.motionZ * i / 4.0D, -this.motionX, -this.motionY + 0.2D,
+				//	-this.motionZ);
             }
         }
     }
@@ -452,8 +451,8 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
 	 * Returns MovingObjectPosition of Entity or Block impacted, or null if
 	 * nothing was struck
 	 * @return Position
-	 */
-	/*protected MovingObjectPosition checkForImpact() {
+	 *
+	protected MovingObjectPosition checkForImpact() {
 		Vec3 vec3 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
 		Vec3 vec31 = Vec3.createVectorHelper(this.posX + this.motionX,
 				this.posY + this.motionY, this.posZ + this.motionZ);
@@ -515,8 +514,8 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
 	/**
      * Called when custom arrow impacts another entity
      * @param mop 
-     */
-    /*protected void onImpactEntity(MovingObjectPosition mop) {
+     *
+    protected void onImpactEntity(MovingObjectPosition mop) {
         if (mop.entityHit != null) {
             int dmg = calculateDamage(mop.entityHit);
 			if (isBurning() && canTargetEntity(mop.entityHit)) {
@@ -527,7 +526,7 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
                 if (mop.entityHit instanceof EntityLivingBase) {
                     handlePostDamageEffects((EntityLivingBase) mop.entityHit);
                     if (this.shootingEntity instanceof EntityPlayerMP && mop.entityHit != this.shootingEntity && mop.entityHit instanceof EntityPlayer) {
-						((EntityPlayerMP) this.shootingEntity).playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(6, 0.0F));
+						((EntityPlayerMP)this.shootingEntity).playerNetServerHandler.sendPacket(new SPacketChangeGameState(6, 0.0F));
                     }
                 }
 
@@ -547,8 +546,8 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
     /**
 	 * Called when custom arrow impacts a block
 	 * @param mop 
-	 */
-	/*protected void onImpactBlock(MovingObjectPosition mop) {
+	 *
+	protected void onImpactBlock(MovingObjectPosition mop) {
 		this.xTile = mop.blockX;
 		this.yTile = mop.blockY;
 		this.zTile = mop.blockZ;
@@ -658,7 +657,7 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
      */
     public boolean getIsCritical()
     {
-        byte b0 = 0;////this.dataWatcher.getWatchableObjectByte(16);
+        byte b0 = 0;//this.dataWatcher.getWatchableObjectByte(16);
         return (b0 & 1) != 0;
     }
     
@@ -668,14 +667,14 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
      */
     public void setIsCritical(boolean par1)
     {
-        byte b0 = 0;////this.dataWatcher.getWatchableObjectByte(16);
+        byte b0 = 0;//this.dataWatcher.getWatchableObjectByte(16);
         if (par1)
         {
-            ////this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 | 1)));
+            //this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 | 1)));
         }
         else
         {
-            ////this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 & -2)));
+            //this.dataWatcher.updateObject(16, Byte.valueOf((byte)(b0 & -2)));
         }
     }
     
@@ -683,7 +682,7 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
      * If returns false, the item will not inflict any damage against entities.
      * @return No
      */
-    ////@Override
+    //@Override
     public boolean canAttackWithItem()
     {
         return false;
@@ -699,7 +698,7 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
         return false;
     }
     
-    ////@Override
+    //@Override
     @SideOnly(Side.CLIENT)
     public float getShadowSize()
     {
@@ -710,7 +709,7 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
      * Sets the position and rotation. Only difference from the other one is no bounding on the rotation. Args: posX,
      * posY, posZ, yaw, pitch
      */
-    ////@Override
+    //@Override
     @SideOnly(Side.CLIENT)
     public void setPositionAndRotation2(double par1, double par3, double par5, float par7, float par8, int par9)
     {
@@ -741,10 +740,5 @@ public class EntityRifleBolt extends EntityThrowable implements IProjectile {
         this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(par1, par5) * 180.0D / Math.PI);
         this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(par3, f3) * 180.0D / Math.PI);
         this.ticksInGround = 0;
-    }
-
-    @Override
-    protected void onImpact(RayTraceResult result) {
-        // TODO Auto-generated method stub   
     }
 }
