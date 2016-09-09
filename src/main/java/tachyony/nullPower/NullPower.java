@@ -197,7 +197,6 @@ public class NullPower {
 
         // Ranged weapons
         rifleAmmo = new Item().setCreativeTab(CreativeTabs.MATERIALS).setRegistryName("rifleAmmo");   
-        rifleAmmo.setUnlocalizedName(rifleAmmo.getRegistryName().toString());
         EntityRegistry.registerModEntity(EntityRifleBolt.class, "RifleBoltD", 3, instance, 160, 1, true);
         
         huntingRifle = new ItemHuntingRifle(ToolMaterial.IRON).setRegistryName("huntingRifle");
@@ -222,6 +221,7 @@ public class NullPower {
         nullLeggings = new NullArmor(nullArmour, nullArmourRenderer, EntityEquipmentSlot.LEGS).setRegistryName("nullLeggings").setCreativeTab(CreativeTabs.COMBAT);
         nullBoots = new NullArmor(nullArmour, nullArmourRenderer, EntityEquipmentSlot.FEET).setRegistryName("nullBoots").setCreativeTab(CreativeTabs.COMBAT);
         
+        rifleAmmo.setUnlocalizedName(rifleAmmo.getRegistryName().toString());
         huntingRifle.setUnlocalizedName(huntingRifle.getRegistryName().toString());
         huntingRifleB.setUnlocalizedName(huntingRifleB.getRegistryName().toString());
         huntingRifleC.setUnlocalizedName(huntingRifleC.getRegistryName().toString());

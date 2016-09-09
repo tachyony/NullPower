@@ -15,6 +15,7 @@
  */
 package tachyony.nullPower.client;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -28,7 +29,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tachyony.nullPower.CommonProxy;
 import tachyony.nullPower.NullPower;
-import tachyony.nullPower.Reference;
 import tachyony.nullPower.entity.EntityRifleBolt;
 
 /**
@@ -57,6 +57,19 @@ public class ClientProxy extends CommonProxy {
     public void registerRenderers() {
         ItemModelMesher mesher = mc.getRenderItem().getItemModelMesher();
         
+        registerItemRenderer(mesher, NullPower.rifleAmmo);
+        registerItemRenderer(mesher, NullPower.huntingRifle);
+        registerItemRenderer(mesher, NullPower.huntingRifleB);
+        registerItemRenderer(mesher, NullPower.huntingRifleC);
+        registerItemRenderer(mesher, NullPower.huntingRifleD);
+        registerItemRenderer(mesher, NullPower.itemDynamitePickaxe);
+        registerItemRenderer(mesher, NullPower.enderIron);
+        registerItemRenderer(mesher, NullPower.enderIronDust);
+        registerBlockRenderer(mesher, NullPower.enderGenerator);
+        registerBlockRenderer(mesher, NullPower.blockEnderReed);
+        registerItemRenderer(mesher, NullPower.itemEnderReed);
+        registerItemRenderer(mesher, NullPower.enderGeneratorCore);
+        registerItemRenderer(mesher, NullPower.enderGeneratorCoreAdvanced);
         registerItemRenderer(mesher, NullPower.nullHelmet);
         registerItemRenderer(mesher, NullPower.nullChestplate);
         registerItemRenderer(mesher, NullPower.nullLeggings);
@@ -64,8 +77,8 @@ public class ClientProxy extends CommonProxy {
         
         RenderingRegistry.registerEntityRenderingHandler(EntityRifleBolt.class, new RenderSnowball(mc.getRenderManager(), NullPower.rifleAmmo, mc.getRenderItem()));
     }
-	
-	/**
+
+    /**
      * Registers an item with no subtypes using the unlocalized name as the texture name
      */
     private void registerItemRenderer(ItemModelMesher mesher, Item item) {
@@ -73,13 +86,28 @@ public class ClientProxy extends CommonProxy {
     }
     
     /**
+     * Registers an item with no subtypes using the unlocalized name as the texture name
+     */
+    private void registerBlockRenderer(ItemModelMesher mesher, Block block) {
+        registerBlockRenderer(mesher, block, 0);
+    }
+
+    /**
      * Registers a specific item subtype using the unlocalized name as the texture name
      * @param meta  Always 0 if only one type, otherwise the subtype's metadata value
      */
     private void registerItemRenderer(ItemModelMesher mesher, Item item, int meta) {
-        String name = item.getUnlocalizedName();
-        name = Reference.MODID + ":" + name.substring(name.lastIndexOf(".") + 1);
+        String name = item.getRegistryName().toString();
         registerItemRenderer(mesher, item, name, meta);
+    }
+    
+    /**
+     * Registers a specific item subtype using the unlocalized name as the texture name
+     * @param meta  Always 0 if only one type, otherwise the subtype's metadata value
+     */
+    private void registerBlockRenderer(ItemModelMesher mesher, Block block, int meta) {
+        String name = block.getRegistryName().toString();
+        registerBlockRenderer(mesher, block, name, meta);
     }
     
     /**
@@ -90,5 +118,15 @@ public class ClientProxy extends CommonProxy {
     private void registerItemRenderer(ItemModelMesher mesher, Item item, String name, int meta) {
         NullPower.logger.info("Registering renderer for " + name);
         mesher.register(item, meta, new ModelResourceLocation(name, "inventory"));
+    }
+    
+    /**
+     * Registers a specific item subtype using the specified texture name
+     * @param name  Exact name of the texture file to be used, including the "modid:" prefix
+     * @param meta  Always 0 if only one type, otherwise the subtype's metadata value
+     */
+    private void registerBlockRenderer(ItemModelMesher mesher, Block block, String name, int meta) {
+        //NullPower.logger.info("Registering renderer for " + name);
+        //mesher.register(item, meta, new ModelResourceLocation(name, "inventory"));
     }
 }
