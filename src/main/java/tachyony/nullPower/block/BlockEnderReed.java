@@ -18,6 +18,7 @@ package tachyony.nullPower.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.EnumPlantType;
@@ -150,20 +151,21 @@ public class BlockEnderReed extends Block implements IPlantable {
     ////@Override
     public boolean renderAsNormalBlock() {
         return false;
-    }
+    }*/
 
     /**
-     * The type of render function that is called for this block
-     *
+     * The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
+     */
     @Override
-    public int getRenderType() {
-        return 3;
+    public EnumBlockRenderType getRenderType(IBlockState state)
+    {
+        return EnumBlockRenderType.MODEL;
     }
 
-    @SideOnly(Side.CLIENT)
     /**
      * only called by clickMiddleMouseButton , and passed to inventory.setCurrentItem (along with isCreative)
      *
+    @SideOnly(Side.CLIENT)
     ////@Override
     public Item getItem(World par1World, int par2, int par3, int par4) {
         return NullPower.itemEnderReed;

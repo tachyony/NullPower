@@ -15,22 +15,45 @@
  */
 package tachyony.nullPower.block;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import tachyony.nullPower.item.EnergyItems;
+import tachyony.nullPower.item.ItemDynamitePickaxe;
 import tachyony.nullPower.tile.TileEntityEnderGenerator;
 
 /**
  * Ender generator
  */
-public class BlockEnderGenerator extends BlockContainer {
+public class BlockEnderGenerator extends BlockContainer implements ITileEntityProvider {
     /**
      * @param material Material
      */
     public BlockEnderGenerator(Material material) {
       super(material);
+    }
+    
+    /**
+     * The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
+     */
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state)
+    {
+        return EnumBlockRenderType.MODEL;
     }
     
     /**
@@ -40,8 +63,8 @@ public class BlockEnderGenerator extends BlockContainer {
      * @param meta The block's current metadata
      * @return True to spawn the drops
      */
-    ////@Override
-    public boolean canHarvestBlock(EntityPlayer player, int meta)
+    @Override
+    public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player)
     {
         return true;
     }
@@ -55,34 +78,35 @@ public class BlockEnderGenerator extends BlockContainer {
         return new TileEntityEnderGenerator();
     }
 
-    ////@Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float px, float py, float pz)
+    @Override
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem,
+            EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        ////TileEntityEnderGenerator tileEntity = (TileEntityEnderGenerator)world.getTileEntity(x, y, z);
-        ////if  ((tileEntity == null) || player.isSneaking()) {
-        ////    return false;
-        ////}
+        TileEntityEnderGenerator tileEntity = (TileEntityEnderGenerator)world.getTileEntity(pos);
+        if  ((tileEntity == null) || player.isSneaking()) {
+            return false;
+        }
         
-        ////ItemStack playerItem = player.getCurrentEquippedItem();
-        ////if (playerItem == null)
-        ////{
-        ////    return false;
-        ////}
+        ItemStack playerItem = player.getHeldItem(hand);
+        if (playerItem == null)
+        {
+            return false;
+        }
         
-        ////Item item = playerItem.getItem();
-        ////if (!(item instanceof ItemDynamitePickaxe))
-        ////{
-        ////    return false;
-        ////}
+        Item item = playerItem.getItem();
+        if (!(item instanceof ItemDynamitePickaxe))
+        {
+            return false;
+        }
         
         if (world.isRemote)
         {
             return true;
         }
         
-        ////tileEntity.setOwner(EnergyItems.getOwnerName(playerItem));
-        //player.addChatMessage(new ChatComponentText("Current owner: " + tileEntity.getOwner()));
-        //world.markBlockForUpdate(x, y, z);
+        tileEntity.setOwner(EnergyItems.getOwnerName(playerItem));
+        player.addChatMessage(new TextComponentString("Current owner: " + tileEntity.getOwner()));
+        world.notifyBlockUpdate(pos, state, state, 3);
         return true;
     }
 }
