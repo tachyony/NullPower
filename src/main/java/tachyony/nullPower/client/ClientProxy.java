@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.item.Item;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -65,8 +66,12 @@ public class ClientProxy extends CommonProxy {
         registerItemRenderer(mesher, NullPower.itemDynamitePickaxe);
         registerItemRenderer(mesher, NullPower.enderIron);
         registerItemRenderer(mesher, NullPower.enderIronDust);
-        registerBlockRenderer(mesher, NullPower.enderGenerator);
-        registerBlockRenderer(mesher, NullPower.blockEnderReed);
+        
+        registerBlock(NullPower.blockEnderGenerator);
+        //registerItemRenderer(mesher, NullPower.itemBlockEnderGenerator);
+        registerBlock(NullPower.blockEnderReed);
+        //registerItemRenderer(mesher, NullPower.itemBlockEnderReed);
+        
         registerItemRenderer(mesher, NullPower.itemEnderReed);
         registerItemRenderer(mesher, NullPower.enderGeneratorCore);
         registerItemRenderer(mesher, NullPower.enderGeneratorCoreAdvanced);
@@ -86,28 +91,12 @@ public class ClientProxy extends CommonProxy {
     }
     
     /**
-     * Registers an item with no subtypes using the unlocalized name as the texture name
-     */
-    private void registerBlockRenderer(ItemModelMesher mesher, Block block) {
-        registerBlockRenderer(mesher, block, 0);
-    }
-
-    /**
      * Registers a specific item subtype using the unlocalized name as the texture name
      * @param meta  Always 0 if only one type, otherwise the subtype's metadata value
      */
     private void registerItemRenderer(ItemModelMesher mesher, Item item, int meta) {
         String name = item.getRegistryName().toString();
         registerItemRenderer(mesher, item, name, meta);
-    }
-    
-    /**
-     * Registers a specific item subtype using the unlocalized name as the texture name
-     * @param meta  Always 0 if only one type, otherwise the subtype's metadata value
-     */
-    private void registerBlockRenderer(ItemModelMesher mesher, Block block, int meta) {
-        String name = block.getRegistryName().toString();
-        registerBlockRenderer(mesher, block, name, meta);
     }
     
     /**
@@ -120,13 +109,7 @@ public class ClientProxy extends CommonProxy {
         mesher.register(item, meta, new ModelResourceLocation(name, "inventory"));
     }
     
-    /**
-     * Registers a specific item subtype using the specified texture name
-     * @param name  Exact name of the texture file to be used, including the "modid:" prefix
-     * @param meta  Always 0 if only one type, otherwise the subtype's metadata value
-     */
-    private void registerBlockRenderer(ItemModelMesher mesher, Block block, String name, int meta) {
-        //NullPower.logger.info("Registering renderer for " + name);
-        //mesher.register(item, meta, new ModelResourceLocation(name, "inventory"));
+    public static void registerBlock(Block block) {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
     }
 }

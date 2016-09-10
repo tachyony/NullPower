@@ -138,7 +138,7 @@ public class NullPower {
     /**
      * Ender generator
      */
-    public static Block enderGenerator;
+    public static Block blockEnderGenerator;
     
     /**
      * Ender generator
@@ -219,13 +219,18 @@ public class NullPower {
         // Mod items for crafting
         enderIron = new Item().setCreativeTab(CreativeTabs.MATERIALS).setRegistryName("enderIron");
         enderIronDust = new Item().setCreativeTab(CreativeTabs.MATERIALS).setRegistryName("enderIronDust");
-        enderGenerator = new BlockEnderGenerator(Material.IRON).setHardness(1F).setRegistryName("enderGenerator").setCreativeTab(CreativeTabs.MATERIALS);
-        itemBlockEnderGenerator = new ItemBlock(enderGenerator);
-        itemBlockEnderGenerator.setRegistryName("enderGenerator");
-        blockEnderReed = new BlockEnderReed(Material.PLANTS).setHardness(1F).setRegistryName("blockEnderReed").setCreativeTab(CreativeTabs.MATERIALS);
+        
+        blockEnderGenerator = new BlockEnderGenerator(Material.IRON).setHardness(1F).setCreativeTab(CreativeTabs.MATERIALS);
+        blockEnderGenerator.setRegistryName("blockEnderGenerator");
+        itemBlockEnderGenerator = new ItemBlock(blockEnderGenerator);
+        itemBlockEnderGenerator.setRegistryName("itemBlockEnderGenerator");
+        
+        blockEnderReed = new BlockEnderReed(Material.PLANTS).setHardness(1F).setCreativeTab(CreativeTabs.MATERIALS);
+        blockEnderReed.setRegistryName("blockEnderReed");
         blockEnderReed.setTickRandomly(true);
         itemBlockEnderReed = new ItemBlock(blockEnderReed);
-        itemBlockEnderReed.setRegistryName("blockEnderReed");
+        itemBlockEnderReed.setRegistryName("itemBlockEnderReed");
+        
         itemEnderReed = new ItemEnderReed(blockEnderReed).setRegistryName("enderReed").setCreativeTab(CreativeTabs.MATERIALS);
         enderGeneratorCore = new Item().setRegistryName("enderGeneratorCore").setCreativeTab(CreativeTabs.MATERIALS);
         enderGeneratorCoreAdvanced = new Item().setRegistryName("enderGeneratorCoreAdvanced").setCreativeTab(CreativeTabs.MATERIALS);
@@ -236,7 +241,6 @@ public class NullPower {
         nullLeggings = new NullArmor(nullArmour, nullArmourRenderer, EntityEquipmentSlot.LEGS).setRegistryName("nullLeggings").setCreativeTab(CreativeTabs.COMBAT);
         nullBoots = new NullArmor(nullArmour, nullArmourRenderer, EntityEquipmentSlot.FEET).setRegistryName("nullBoots").setCreativeTab(CreativeTabs.COMBAT);
         
-        this.log(Level.ERROR, "AAAAAAAAA::::" + rifleAmmo.getRegistryName().toString());
         rifleAmmo.setUnlocalizedName(Reference.MODID + "." + "rifleAmmo");
         huntingRifle.setUnlocalizedName(Reference.MODID + "." + "huntingRifle");
         huntingRifleB.setUnlocalizedName(Reference.MODID + "." + "huntingRifleB");
@@ -245,10 +249,12 @@ public class NullPower {
         itemDynamitePickaxe.setUnlocalizedName(Reference.MODID + "." + "itemDynamitePickaxe");
         enderIron.setUnlocalizedName(Reference.MODID + "." + "enderIron");
         enderIronDust.setUnlocalizedName(Reference.MODID + "." + "enderIronDust");
-        enderGenerator.setUnlocalizedName(Reference.MODID + "." + "blockEnderGenerator");
+        
+        blockEnderGenerator.setUnlocalizedName(Reference.MODID + "." + "blockEnderGenerator");
         blockEnderReed.setUnlocalizedName(Reference.MODID + "." + "blockEnderReed");
-        itemBlockEnderGenerator.setUnlocalizedName(Reference.MODID + "." + "blockEnderGenerator");
-        itemBlockEnderReed.setUnlocalizedName(Reference.MODID + "." + "blockEnderReed");
+        itemBlockEnderGenerator.setUnlocalizedName(Reference.MODID + "." + "itemBlockEnderGenerator");
+        itemBlockEnderReed.setUnlocalizedName(Reference.MODID + "." + "itemBlockEnderReed");
+        
         itemEnderReed.setUnlocalizedName(Reference.MODID + "." + "itemEnderReed");
         enderGeneratorCore.setUnlocalizedName(Reference.MODID + "." + "enderGeneratorCore");
         enderGeneratorCoreAdvanced.setUnlocalizedName(Reference.MODID + "." + "enderGeneratorCoreAdvanced");
@@ -265,11 +271,13 @@ public class NullPower {
         GameRegistry.register(huntingRifleD);
         GameRegistry.register(enderIron);
         GameRegistry.register(enderIronDust);
-        GameRegistry.register(enderGenerator);
+        
+        GameRegistry.register(blockEnderGenerator);
         GameRegistry.register(itemBlockEnderGenerator);
-        GameRegistry.register(itemEnderReed);
         GameRegistry.register(blockEnderReed);
         GameRegistry.register(itemBlockEnderReed);
+        
+        GameRegistry.register(itemEnderReed);
         GameRegistry.register(enderGeneratorCore);
         GameRegistry.register(enderGeneratorCoreAdvanced);
         GameRegistry.register(itemDynamitePickaxe);

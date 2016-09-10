@@ -2,7 +2,7 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
-			"all": "nullpower:blocks/enderGenerator"
+			"all": "nullpower:blocks/blockEnderReed"
 		}
 	},
 	"variants": {
