@@ -225,9 +225,8 @@ public class NullPower {
         itemBlockEnderGenerator = new ItemBlock(blockEnderGenerator);
         itemBlockEnderGenerator.setRegistryName("itemBlockEnderGenerator");
         
-        blockEnderReed = new BlockEnderReed(Material.PLANTS).setHardness(1F).setCreativeTab(CreativeTabs.MATERIALS);
+        blockEnderReed = new BlockEnderReed().setHardness(1F).setCreativeTab(CreativeTabs.MATERIALS);
         blockEnderReed.setRegistryName("blockEnderReed");
-        blockEnderReed.setTickRandomly(true);
         itemBlockEnderReed = new ItemBlock(blockEnderReed);
         itemBlockEnderReed.setRegistryName("itemBlockEnderReed");
         

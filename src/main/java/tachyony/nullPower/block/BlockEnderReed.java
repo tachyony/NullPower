@@ -15,143 +15,183 @@
  */
 package tachyony.nullPower.block;
 
+import java.util.Random;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import tachyony.nullPower.NullPower;
 
 /**
  * Ender reed.
  */
 public class BlockEnderReed extends Block implements IPlantable {
+    public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 15);
+    
+    protected static final AxisAlignedBB REED_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 1.0D, 0.875D);
+    
     /**
-     * @param material Material
+     * 
      */
-    public BlockEnderReed(Material material) {
-        super(material);
+    public BlockEnderReed()
+    {
+        super(Material.PLANTS);
+        this.setDefaultState(this.blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)));
+        this.setTickRandomly(true);
     }
 
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+    {
+        return REED_AABB;
+    }
+    
     /**
      * Ticks the block if it's been scheduled.
-     *
-    ////@Override
-    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random) {
-        /*if (par1World.getBlock(par2, par3 - 1, par4) == Blocks.REEDS || this.checkBlockCoordValid(par1World, par2, par3, par4))
+     */
+    @Override
+    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
+    {
+        if (world.getBlockState(pos.down()).getBlock() == Blocks.REEDS || this.checkForDrop(world, pos, state))
         {
-            if (par1World.isAirBlock(par2, par3 + 1, par4)) {
-                int l;
-                for (l = 1; par1World.getBlock(par2, par3 - l, par4) == this; ++l) {
+            if (world.isAirBlock(pos.up()))
+            {
+                int i;
+                for (i = 1; world.getBlockState(pos.down(i)).getBlock() == this; ++i)
+                {
                     ;
                 }
 
-                if (l < 11) {
-                    int i1 = par1World.getBlockMetadata(par2, par3, par4);
-                    if (i1 >= 7) {
-                        par1World.setBlock(par2, par3 + 1, par4, this);
-                        par1World.setBlockMetadataWithNotify(par2, par3, par4,
-                                0, 4);
-                    } else {
-                        par1World.setBlockMetadataWithNotify(par2, par3, par4,
-                                i1 + 1, 4);
+                if (i < 11)
+                {
+                    int j = ((Integer)state.getValue(AGE)).intValue();
+                    if (j == 15)
+                    {
+                        world.setBlockState(pos.up(), this.getDefaultState());
+                        world.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(0)), 4);
+                    }
+                    else
+                    {
+                        world.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(j + 1)), 4);
                     }
                 }
             }
-        }*
+        }
     }
 
     /**
      * Checks to see if its valid to put this block at the specified
      * coordinates. Args: world, x, y, z
-     *
-    ////@Override
-    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4) {
-        ///Block block = par1World.getBlock(par2, par3 - 1, par4);
-        ////if ((block == this) || (block == Blocks.OBSIDIAN)) {
-        ////    return true;
-        ////}
-
-        return false;
-    }
-
-    /**
-     * Lets the block know when one of its neighbor changes. Doesn't know which
-     * neighbor changed (coordinates passed are their own) Args: x, y, z,
-     * neighbor blockID
-     *
-    ////@Override
-    public void onNeighborBlockChange(World par1World, int par2, int par3,
-            int par4, Block par5) {
-        this.checkBlockCoordValid(par1World, par2, par3, par4);
-    }
-
-    /**
-     * Checks if current block pos is valid, if not, breaks the block as
-     * dropable item. Used for reed and cactus. (func_150170_e)
-     * @param par1World World
-     * @param par2 X
-     * @param par3 Y
-     * @param par4 Z
-     *
-    protected final boolean checkBlockCoordValid(World par1World, int par2, int par3, int par4) {
-        if (!this.canBlockStay(par1World, par2, par3, par4)) {
-            ////this.dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
-            ////par1World.setBlockToAir(par2, par3, par4);
-            return false;
+     */
+    @Override
+    public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+        IBlockState state = worldIn.getBlockState(pos.down());
+        Block block = state.getBlock();
+        if (block.canSustainPlant(state, worldIn, pos.down(), EnumFacing.UP, this)) {
+            return true;
         }
-        else
+        
+        if (block == this)
         {
             return true;
         }
+        else if (block == Blocks.OBSIDIAN)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /**
+     * Called when a neighboring block was changed and marks that this state should perform any checks during a neighbor
+     * change. Cases may include when redstone power is updated, cactus blocks popping off due to a neighboring solid
+     * block, etc.
+     */
+    @Override
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+    {
+        this.checkForDrop(worldIn, pos, state);
+    }
+    
+    protected final boolean checkForDrop(World worldIn, BlockPos pos, IBlockState state)
+    {
+        if (this.canBlockStay(worldIn, pos))
+        {
+            return true;
+        }
+        else
+        {
+            this.dropBlockAsItem(worldIn, pos, state, 0);
+            worldIn.setBlockToAir(pos);
+            return false;
+        }
+    }
+    
+    /**
      * Can this block stay at this position. Similar to canPlaceBlockAt except
      * gets checked often with plants.
-     *
-    ////@Override
-    public boolean canBlockStay(World par1World, int par2, int par3, int par4) {
-        return this.canPlaceBlockAt(par1World, par2, par3, par4);
+     */
+    public boolean canBlockStay(World worldIn, BlockPos pos)
+    {
+        return this.canPlaceBlockAt(worldIn, pos);
     }
 
     /**
      * Returns a bounding box from the pool of bounding boxes (this means this
      * box can change after the pool has been cleared to be reused)
-     *
-    ////@Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4) {
-        return null;
+     */
+    @Override
+    @Nullable
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
+    {
+        return NULL_AABB;
     }
 
     /**
-     * Returns the ID of the items to drop on destruction.
-     *
-    ////@Override
-    public Item getItemDropped(int par1, Random par2Random, int par3) {
+     * Get the Item that this Block should drop when harvested.
+     */
+    @Nullable
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
         return NullPower.itemEnderReed;
     }
 
     /**
-     * Is this block (a) opaque and (b) a full 1m cube? This determines whether
-     * or not to render the shared face of two adjacent blocks and also whether
-     * the player can attach torches, redstone wire, etc to this block.
-     *
-    ////@Override
-    public boolean isOpaqueCube() {
+     * Used to determine ambient occlusion and culling when rebuilding chunks for render
+     */
+    @Override
+    public boolean isOpaqueCube(IBlockState state)
+    {
         return false;
     }
 
-    /**
-     * If this block doesn't render as an ordinary block it will return False
-     * (examples: signs, buttons, stairs, etc)
-     *
-    ////@Override
-    public boolean renderAsNormalBlock() {
+    @Override
+    public boolean isFullCube(IBlockState state)
+    {
         return false;
-    }*/
+    }
 
     /**
      * The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
@@ -164,48 +204,50 @@ public class BlockEnderReed extends Block implements IPlantable {
 
     /**
      * only called by clickMiddleMouseButton , and passed to inventory.setCurrentItem (along with isCreative)
-     *
+     */
+    @Override
+    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+        return new ItemStack(NullPower.itemEnderReed);
+    }
+    
+    /**
+     * Convert the given metadata into a BlockState for this Block
+     */
+    @Override
+    public IBlockState getStateFromMeta(int meta)
+    {
+        return this.getDefaultState().withProperty(AGE, Integer.valueOf(meta));
+    }
+    
+    @Override
     @SideOnly(Side.CLIENT)
-    ////@Override
-    public Item getItem(World par1World, int par2, int par3, int par4) {
-        return NullPower.itemEnderReed;
-    }
-
-    ////@Override
-    public EnumPlantType getPlantType(IBlockAccess world, int x, int y, int z) {
-        return EnumPlantType.Beach;
-    }
-
-    ////@Override
-    public Block getPlant(IBlockAccess world, int x, int y, int z) {
-        return this;
-    }
-
-    ////@Override
-    public int getPlantMetadata(IBlockAccess world, int x, int y, int z) {
-        return 0;////world.getBlockMetadata(x, y, z);
+    public BlockRenderLayer getBlockLayer()
+    {
+        return BlockRenderLayer.CUTOUT;
     }
 
     /**
-     * Returns a integer with hex for 0xrrggbb with this color multiplied
-     * against the blocks color. Note only called when first determining what to
-     * render.
-     *
-    ////@Override
-    @SideOnly(Side.CLIENT)
-    public int colorMultiplier(IBlockAccess p_149720_1_, int p_149720_2_,
-            int p_149720_3_, int p_149720_4_) {
-        return 0;////p_149720_1_.getBiomeGenForCoords(p_149720_2_, p_149720_4_)
-                ////.getBiomeGrassColor(p_149720_2_, p_149720_3_, p_149720_4_);
-    }*/
-
+     * Convert the BlockState into the correct metadata value
+     */
     @Override
-    public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
-        return null;
+    public int getMetaFromState(IBlockState state)
+    {
+        return ((Integer)state.getValue(AGE)).intValue();
     }
-
+    
+    @Override
+    public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)
+    {
+        return EnumPlantType.Beach;
+    }
+    
     @Override
     public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
-        return null;
+        return this.getDefaultState();
+    }
+
+    protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer(this, new IProperty[] {AGE});
     }
 }
