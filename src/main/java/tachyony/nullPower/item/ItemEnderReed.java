@@ -16,10 +16,22 @@
 package tachyony.nullPower.item;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSnow;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import tachyony.nullPower.NullPower;
 
 /**
  * Ender reed
@@ -40,65 +52,48 @@ public class ItemEnderReed extends Item {
      * clicking, he will have one of those. Return True if something happen and
      * false if it don't. This is for ITEMS, not BLOCKS
      */
-    ////@Override
-    public boolean onItemUse(ItemStack par1ItemStack,
-            EntityPlayer par2EntityPlayer, World par3World, int par4, int par5,
-            int par6, int par7, float par8, float par9, float par10) {
-        /*Block block = par3World.getBlock(par4, par5, par6);
-        if (block == Blocks.snow_layer && (par3World.getBlockMetadata(par4, par5, par6) & 7) < 1) {
-            par7 = 1;
-        } else if (block != Blocks.vine && block != Blocks.tallgrass && block != Blocks.deadbush) {
-            if (par7 == 0) {
-                --par5;
+    @Override
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
+            float hitX, float hitY, float hitZ) {
+        IBlockState iblockstate = worldIn.getBlockState(pos);
+        Block block = iblockstate.getBlock();
+        
+        if (block == Blocks.SNOW_LAYER && ((Integer)iblockstate.getValue(BlockSnow.LAYERS)).intValue() < 1)
+        {
+            facing = EnumFacing.UP;
+        }
+        else if (!block.isReplaceable(worldIn, pos))
+        {
+            pos = pos.offset(facing);
+        }
+
+        if (playerIn.canPlayerEdit(pos, facing, stack) && stack.stackSize != 0 &&
+                worldIn.canBlockBePlaced(NullPower.blockEnderReed, pos, false, facing, (Entity)null, stack))
+        {
+            IBlockState iblockstate1 = NullPower.blockEnderReed.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, 0, playerIn);
+            if (!worldIn.setBlockState(pos, iblockstate1, 11))
+            {
+                return EnumActionResult.FAIL;
             }
-
-            if (par7 == 1) {
-                ++par5;
-            }
-
-            if (par7 == 2) {
-                --par6;
-            }
-
-            if (par7 == 3) {
-                ++par6;
-            }
-
-            if (par7 == 4) {
-                --par4;
-            }
-
-            if (par7 == 5) {
-                ++par4;
-            }
-        }*/
-
-        /*if (!par2EntityPlayer.canPlayerEdit(par4, par5, par6, par7,
-                par1ItemStack)) {
-            return false;
-        } else*/ if (par1ItemStack.stackSize == 0) {
-            return false;
-        } else {
-            /*if (par3World.canPlaceEntityOnSide(this.spawn, par4, par5, par6, false, par7, (Entity)null, par1ItemStack)) {
-                int j1 = block.onBlockPlaced(par3World, par4, par5, par6, par7,
-                        par8, par9, par10, 0);
-                if (par3World.setBlock(par4, par5, par6, this.spawn, j1, 3)) {
-                    if (par3World.getBlock(par4, par5, par6) == this.spawn) {
-                        this.spawn.onBlockPlacedBy(par3World, par4, par5, par6,
-                                par2EntityPlayer, par1ItemStack);
-                        this.spawn.onPostBlockPlaced(par3World, par4, par5,
-                                par6, j1);
-                    }
-
-                    par3World.playSoundEffect((par4 + 0.5F), (par5 + 0.5F),
-                            (par6 + 0.5F), block.stepSound.func_150496_b(),
-                            (block.stepSound.getVolume() + 1.0F) / 2.0F,
-                            block.stepSound.getPitch() * 0.8F);
-                    --par1ItemStack.stackSize;
+            else
+            {
+                iblockstate1 = worldIn.getBlockState(pos);
+                if (iblockstate1.getBlock() == NullPower.blockEnderReed)
+                {
+                    ItemBlock.setTileEntityNBT(worldIn, playerIn, pos, stack);
+                    iblockstate1.getBlock().onBlockPlacedBy(worldIn, pos, iblockstate1, playerIn, stack);
                 }
-            }*/
 
-            return true;
+                SoundType soundtype = NullPower.blockEnderReed.getSoundType();
+                worldIn.playSound(playerIn, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F,
+                        soundtype.getPitch() * 0.8F);
+                --stack.stackSize;
+                return EnumActionResult.SUCCESS;
+            }
+        }
+        else
+        {
+            return EnumActionResult.FAIL;
         }
     }
 }

@@ -336,7 +336,15 @@ public class NullPower {
      * @param logLevel Log level
      * @param message
      */
-    public static void log(Level logLevel, String message) {
+    public static void error(String message) {
+        log(Level.ERROR, message);
+    }
+    
+    /**
+     * @param logLevel Log level
+     * @param message
+     */
+    private static void log(Level logLevel, String message) {
         logger.log(logLevel, message);
     }
 }
