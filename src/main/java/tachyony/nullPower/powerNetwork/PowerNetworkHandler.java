@@ -16,6 +16,7 @@
 package tachyony.nullPower.powerNetwork;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.ITextComponent;
 
 /**
  * 
@@ -25,8 +26,8 @@ public class PowerNetworkHandler {
      * @param player
      * @return Name
      */
-    public static String getUsername(EntityPlayer player)
+    public static ITextComponent getUsername(EntityPlayer player)
     {
-        return "";//player.getDisplayName();
+        return player.getDisplayName();
     }
 }

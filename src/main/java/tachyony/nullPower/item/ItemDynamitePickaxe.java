@@ -17,6 +17,7 @@ package tachyony.nullPower.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -37,7 +38,7 @@ public class ItemDynamitePickaxe extends EnergyItems {
 	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
 	 * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
 	 */
-	////@Override
+	@Override
 	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
 	{
 		int p4 = par4;
@@ -75,14 +76,14 @@ public class ItemDynamitePickaxe extends EnergyItems {
         }
 		
 		if(!par3World.isRemote) {
-			////if (!par2EntityPlayer.canPlayerEdit(p4, p5, p6, p7, par1ItemStack)) {
-		        ////return false;
-		    /*} else*/ if (par1ItemStack.stackSize == 0) {
+			if (!par2EntityPlayer.canPlayerEdit(p4, p5, p6, p7, par1ItemStack)) {
+		        return false;
+		    } else if (par1ItemStack.stackSize == 0) {
 		        return false;
 		    }
 			
-		    //par3World.createExplosion(par2EntityPlayer, p4, p5, p6, 3.0F, true);
-		    //return true;
+		    par3World.createExplosion(par2EntityPlayer, p4, p5, p6, 3.0F, true);
+		    return true;
 		}
 		
 		return false;
@@ -98,7 +99,7 @@ public class ItemDynamitePickaxe extends EnergyItems {
         return this.bFull3D;
     }
     
-    ////@Override
+    @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
     {
         EnergyItems.checkAndSetItemOwner(itemstack, player);
@@ -107,7 +108,7 @@ public class ItemDynamitePickaxe extends EnergyItems {
             return itemstack;
         }
         
-        /*NBTTagCompound itemTag = itemstack.stackTagCompound;
+        NBTTagCompound itemTag = itemstack.getTagCompound();
         if (itemTag == null || itemTag.getString("ownerName").equals(""))
         {
             return itemstack;
@@ -116,14 +117,14 @@ public class ItemDynamitePickaxe extends EnergyItems {
         String ownerName = itemTag.getString("ownerName");
         MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(world, player, false);
         if (movingobjectposition == null) {
-            ////player.addChatMessage(new ChatComponentText("Current Power: " + EnergyItems.getCurrentPower(ownerName)));
+            player.addChatMessage(new ChatComponentText("Current Power: " + EnergyItems.getCurrentPower(ownerName)));
             return itemstack;
         } else {
             if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                ////player.addChatMessage(new ChatComponentText("Current Power: " + EnergyItems.getCurrentPower(ownerName)));
+                player.addChatMessage(new ChatComponentText("Current Power: " + EnergyItems.getCurrentPower(ownerName)));
                 return itemstack;
             }
-        }*/
+        }
         
         return itemstack;
     }

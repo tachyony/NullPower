@@ -16,11 +16,12 @@
 package tachyony.nullPower.powerNetwork;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.WorldSavedData;
 
 /**
  * 
  */
-public class PowerNetwork extends net.minecraft.world.WorldSavedData {
+public class PowerNetwork extends WorldSavedData {
     /**
      * 
      */

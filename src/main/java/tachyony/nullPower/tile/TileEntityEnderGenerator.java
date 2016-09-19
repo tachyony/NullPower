@@ -15,18 +15,17 @@
  */
 package tachyony.nullPower.tile;
 
+import tachyony.nullPower.powerNetwork.PowerNetwork;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 /**
  * Ender generator
  */
 public class TileEntityEnderGenerator extends TileEntity {    
     private String owner;
-    
-    //IC2 protected BasicSource ic2EnergySource;
-
-    //RF protected EnergyStorage storage;
     
     /**
      * 
@@ -82,9 +81,9 @@ public class TileEntityEnderGenerator extends TileEntity {
         owner = par1.getString("owner");
     }
 
-    ////@Override
+    @Override
     public void updateEntity() {
-        ////super.updateEntity();
+        super.updateEntity();
         if (worldObj.isRemote)
         {
             return;
@@ -98,20 +97,20 @@ public class TileEntityEnderGenerator extends TileEntity {
                 return;
             }
             
-            /*World world = MinecraftServer.getServer().worldServers[0];
+            World world = MinecraftServer.getServer().worldServers[0];
             PowerNetwork data = (PowerNetwork) world.loadItemData(PowerNetwork.class, ownerName);
             if (data == null) {
                 data = new PowerNetwork(ownerName);
                 world.setItemData(ownerName, data);
-            }*/
+            }
             
-            ////int powerAdd = Math.min(addRfEnergy(), MAXNETWORKPOWER - data.currentPower);
-            ////data.currentPower = powerAdd + data.currentPower;
-            ////data.markDirty();
+            int powerAdd = Math.min(addRfEnergy(), MAXNETWORKPOWER - data.currentPower);
+            data.currentPower = powerAdd + data.currentPower;
+            data.markDirty();
             
             if (worldObj != null)
             {
-                ////worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
             }
         }
     }
