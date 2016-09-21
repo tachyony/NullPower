@@ -1,6 +1,3 @@
-/.repository
-/.cache
-
 .gradle/1.11/taskArtifacts/*
 .gradle/2.0/taskArtifacts/*
 .gradle/2.14/taskArtifacts/*
