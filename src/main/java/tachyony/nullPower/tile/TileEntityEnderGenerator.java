@@ -15,16 +15,17 @@
  */
 package tachyony.nullPower.tile;
 
-import tachyony.nullPower.powerNetwork.PowerNetwork;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import tachyony.nullPower.powerNetwork.PowerNetwork;
 
 /**
  * Ender generator
  */
-public class TileEntityEnderGenerator extends TileEntity {    
+public class TileEntityEnderGenerator extends TileEntity implements ITickable {    
     private String owner;
     
     /**
@@ -82,14 +83,13 @@ public class TileEntityEnderGenerator extends TileEntity {
     }
 
     @Override
-    public void updateEntity() {
-        super.updateEntity();
+    public void update() {
         if (worldObj.isRemote)
         {
             return;
         }
         
-        int worldTime = (int) (worldObj.getWorldTime() % 24000);
+        int worldTime = (int)(worldObj.getWorldTime() % 24000);
         if (worldTime % 1 == 0)
         {
             String ownerName = owner;
@@ -97,21 +97,16 @@ public class TileEntityEnderGenerator extends TileEntity {
                 return;
             }
             
-            World world = MinecraftServer.getServer().worldServers[0];
-            PowerNetwork data = (PowerNetwork) world.loadItemData(PowerNetwork.class, ownerName);
+            World world = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers[0];
+            PowerNetwork data = (PowerNetwork)world.loadItemData(PowerNetwork.class, ownerName);
             if (data == null) {
                 data = new PowerNetwork(ownerName);
                 world.setItemData(ownerName, data);
             }
             
-            int powerAdd = Math.min(addRfEnergy(), MAXNETWORKPOWER - data.currentPower);
+            int powerAdd = Math.min(addEnergy(), MAXNETWORKPOWER - data.currentPower);
             data.currentPower = powerAdd + data.currentPower;
             data.markDirty();
-            
-            if (worldObj != null)
-            {
-                worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-            }
         }
     }
 
@@ -119,7 +114,7 @@ public class TileEntityEnderGenerator extends TileEntity {
      * Power to add
      * @return Added power
      */
-    private int addRfEnergy() {
+    private int addEnergy() {
         return 100;
     }
 }

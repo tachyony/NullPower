@@ -15,9 +15,18 @@
  */
 package tachyony.nullPower.item;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockSnow;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,55 +47,27 @@ public class ItemDynamitePickaxe extends EnergyItems {
 	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
 	 * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
 	 */
-	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
-	{
-		int p4 = par4;
-		int p5 = par5;
-		int p6 = par6;
-		int p7 = par7;
-		if (p7 == 0)
+    @Override
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
+            float hitX, float hitY, float hitZ) {
+        IBlockState iblockstate = worldIn.getBlockState(pos);
+        Block block = iblockstate.getBlock();
+        
+        if (block == Blocks.SNOW_LAYER && ((Integer)iblockstate.getValue(BlockSnow.LAYERS)).intValue() < 1)
         {
-            --p5;
+            facing = EnumFacing.UP;
         }
-
-        if (p7 == 1)
-        {
-            ++p5;
-        }
-
-        if (p7 == 2)
-        {
-            --p6;
-        }
-
-        if (p7 == 3)
-        {
-            ++p6;
-        }
-
-        if (p7 == 4)
-        {
-            --p4;
-        }
-
-        if (p7 == 5)
-        {
-            ++p4;
+        else if (!block.isReplaceable(worldIn, pos)) {
+            pos = pos.offset(facing);
         }
 		
-		if(!par3World.isRemote) {
-			if (!par2EntityPlayer.canPlayerEdit(p4, p5, p6, p7, par1ItemStack)) {
-		        return false;
-		    } else if (par1ItemStack.stackSize == 0) {
-		        return false;
-		    }
-			
-		    par3World.createExplosion(par2EntityPlayer, p4, p5, p6, 3.0F, true);
-		    return true;
-		}
-		
-		return false;
+        if (playerIn.canPlayerEdit(pos, facing, stack) && stack.stackSize != 0) {
+            worldIn.createExplosion(playerIn, hitX, hitY, hitZ, 3.0F, true);
+            return EnumActionResult.SUCCESS;
+        }
+        else {
+            return EnumActionResult.FAIL;
+        }
     }
 	
 	/**
@@ -100,32 +81,16 @@ public class ItemDynamitePickaxe extends EnergyItems {
     }
     
     @Override
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
     {
-        EnergyItems.checkAndSetItemOwner(itemstack, player);
+        EnergyItems.checkAndSetItemOwner(itemStack, player);
         if (player.worldObj.isRemote)
         {
-            return itemstack;
+            return new ActionResult(EnumActionResult.PASS, itemStack);
         }
         
-        NBTTagCompound itemTag = itemstack.getTagCompound();
-        if (itemTag == null || itemTag.getString("ownerName").equals(""))
-        {
-            return itemstack;
-        }
-        
-        String ownerName = itemTag.getString("ownerName");
-        MovingObjectPosition movingobjectposition = this.getMovingObjectPositionFromPlayer(world, player, false);
-        if (movingobjectposition == null) {
-            player.addChatMessage(new ChatComponentText("Current Power: " + EnergyItems.getCurrentPower(ownerName)));
-            return itemstack;
-        } else {
-            if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                player.addChatMessage(new ChatComponentText("Current Power: " + EnergyItems.getCurrentPower(ownerName)));
-                return itemstack;
-            }
-        }
-        
-        return itemstack;
+        String ownerName = this.getOwnerName(itemStack);
+        player.addChatMessage(new TextComponentString("Current Power: " + ownerName + ": " + EnergyItems.getCurrentPower(ownerName)));
+        return new ActionResult(EnumActionResult.SUCCESS, itemStack);
     }
 }

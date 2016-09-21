@@ -58,7 +58,7 @@ public class EnergyItems extends Item {
         
         if (item.getTagCompound().getString("ownerName").equals("")) {
             NBTTagCompound nbtCompound = item.getTagCompound();
-            nbtCompound.setString("ownerName", PowerNetworkHandler.getUsername(player).toString());
+            nbtCompound.setString("ownerName", PowerNetworkHandler.getUsername(player));
             item.setTagCompound(nbtCompound);
         }
         
