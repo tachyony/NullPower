@@ -15,11 +15,12 @@
  */
 package tachyony.nullPower.item;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSnow;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -27,49 +28,56 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.google.common.collect.Multimap;
 
 /**
  * LOL
  */
 public class ItemDynamitePickaxe extends EnergyItems {
+    protected float damageVsEntity;
+    
+    protected float attackSpeed;
+    
 	/**
 	 * @param itemId Item id
 	 */
 	public ItemDynamitePickaxe() {
 		super();
+		this.bFull3D = true;
 		this.maxStackSize = 1;
+        this.damageVsEntity = 0f/*attackDamageIn + materialIn.getDamageVsEntity()*/;
+        this.attackSpeed = -3f/*attackSpeedIn*/;
+		this.setCreativeTab(CreativeTabs.TOOLS);
 	}
 	
-	/**
-	 * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
-	 * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
-	 */
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
-            float hitX, float hitY, float hitZ) {
-        IBlockState iblockstate = worldIn.getBlockState(pos);
-        Block block = iblockstate.getBlock();
-        
-        if (block == Blocks.SNOW_LAYER && ((Integer)iblockstate.getValue(BlockSnow.LAYERS)).intValue() < 1)
+    public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)
+    {
+        Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
+        if (equipmentSlot == EntityEquipmentSlot.MAINHAND)
         {
-            facing = EnumFacing.UP;
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", (double)this.damageVsEntity, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", (double)this.attackSpeed, 0));
         }
-        else if (!block.isReplaceable(worldIn, pos)) {
-            pos = pos.offset(facing);
-        }
-		
-        if (playerIn.canPlayerEdit(pos, facing, stack) && stack.stackSize != 0) {
-            worldIn.createExplosion(playerIn, hitX, hitY, hitZ, 3.0F, true);
-            return EnumActionResult.SUCCESS;
-        }
-        else {
-            return EnumActionResult.FAIL;
-        }
+
+        return multimap;
     }
-	
+    
+    /**
+     * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
+     * the damage on the stack.
+     */
+    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
+    {
+        stack.damageItem(0/*1*/, attacker);
+        return true;
+    }
+    
 	/**
      * Returns True is the item is renderer in full 3D when hold.
      */
@@ -78,6 +86,52 @@ public class ItemDynamitePickaxe extends EnergyItems {
     public boolean isFull3D()
     {
         return this.bFull3D;
+    }
+
+    /**
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
+     */
+    @Override
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (!playerIn.canPlayerEdit(pos.offset(facing), facing, stack))
+        {
+            return EnumActionResult.FAIL;
+        }
+        else
+        {
+            /*int hook = ForgeEventFactory.onHoeUse(stack, playerIn, worldIn, pos);
+            if (hook != 0) {
+                return hook > 0 ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
+            }
+
+            IBlockState iblockstate = worldIn.getBlockState(pos);
+            Block block = iblockstate.getBlock();
+            if (facing != EnumFacing.DOWN && worldIn.isAirBlock(pos.up()))
+            {
+                if (block == Blocks.GRASS || block == Blocks.GRASS_PATH)
+                {
+                    this.setBlock(stack, playerIn, worldIn, pos, Blocks.FARMLAND.getDefaultState());
+                    return EnumActionResult.SUCCESS;
+                }
+                
+                if (block == Blocks.DIRT)
+                {
+                    switch ((BlockDirt.DirtType)iblockstate.getValue(BlockDirt.VARIANT))
+                    {
+                        case DIRT:
+                            this.setBlock(stack, playerIn, worldIn, pos, Blocks.FARMLAND.getDefaultState());
+                            return EnumActionResult.SUCCESS;
+                        case COARSE_DIRT:
+                            this.setBlock(stack, playerIn, worldIn, pos, Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT));
+                            return EnumActionResult.SUCCESS;
+                    }
+                }
+            }*/
+            
+            //Explosion explosion = worldIn.createExplosion(playerIn, playerIn.posX, playerIn.posY, playerIn.posZ, 10.0F, true);
+            return EnumActionResult.SUCCESS;
+        }
     }
     
     @Override

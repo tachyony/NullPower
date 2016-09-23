@@ -168,7 +168,7 @@ public class NullPower {
     /**
      * Null armour material
      */
-    public static ArmorMaterial nullArmour = EnumHelper.addArmorMaterial("nullArmour", Reference.MODID + ":nullArmour", 25, new int[]{3, 9, 7, 3}, 20, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1);
+    public static ArmorMaterial nullArmour = EnumHelper.addArmorMaterial("nullArmour", Reference.MODID + ":nullArmour", 25, new int[]{3, 6, 8, 3}, 25, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2);
     
     public static final Integer nullArmourRenderer = 5;
     
@@ -214,7 +214,7 @@ public class NullPower {
         huntingRifleB = new ItemHuntingRifle(ToolMaterial.DIAMOND).setRegistryName("huntingRifleB");
         huntingRifleC = new ItemHuntingRifle(enderIronMaterial).setRegistryName("huntingRifleC");
         huntingRifleD = new ItemHuntingRifle(cheatMaterial).setRegistryName("huntingRifleD");
-        itemDynamitePickaxe = new ItemDynamitePickaxe().setCreativeTab(CreativeTabs.TOOLS).setRegistryName("dynamitePickaxe");
+        itemDynamitePickaxe = new ItemDynamitePickaxe().setRegistryName("dynamitePickaxe");
         
         // Mod items for crafting
         enderIron = new Item().setCreativeTab(CreativeTabs.MATERIALS).setRegistryName("enderIron");

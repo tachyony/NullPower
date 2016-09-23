@@ -1,3 +1,4 @@
+.classpath
 .gradle/1.11/taskArtifacts/*
 .gradle/2.0/taskArtifacts/*
 .gradle/2.14/taskArtifacts/*
@@ -12,6 +13,8 @@
 .settings/org.eclipse.mylyn.tasks.ui.prefs
 bin/assets/nullpower/*
 build/classes/main/*
+build/libs/nullpower-1.10.2.1.jar
+build/libs/nullpower-1.10.2.1-sources.jar
 build/natives/*
 build/resources/main/*
 build/retromapping/*
@@ -64,10 +67,14 @@ eclipse/assets/saves/*
 eclipse/assets/sound/*
 eclipse/assets/sounds/*
 run/crash-reports/*
+run/config/splash.properties
+run/config/nullpower.cfg
+run/config/forgeChunkLoading.cfg
+run/config/forge.cfg
 run/logs/*
 run/mods/*
 run/options.txt
 run/saves/*
 run/screenshots/*
 run/usercache.json
-.classpath
+run/usernamecache.json
