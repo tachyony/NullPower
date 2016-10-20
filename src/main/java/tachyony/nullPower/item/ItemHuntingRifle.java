@@ -16,24 +16,35 @@
 package tachyony.nullPower.item;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
+import tachyony.nullPower.entity.EntityRifleBolt;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 /**
  * Hunting rifle
  */
 public class ItemHuntingRifle extends Item {
-    private float weaponDamage;
+    private float attackDamage;
     
     private ToolMaterial toolMaterial;
     
@@ -46,47 +57,52 @@ public class ItemHuntingRifle extends Item {
 		super();
 		this.toolMaterial = toolMaterial;
 		this.maxStackSize = 1;
+		this.bFull3D = true;
 		this.setMaxDamage(this.toolMaterial.getMaxUses());
 		this.setCreativeTab(CreativeTabs.COMBAT);
-		this.weaponDamage = 4.0F + this.toolMaterial.getDamageVsEntity();
+		this.attackDamage = 4.0F + this.toolMaterial.getDamageVsEntity();
 	}
     
-	////@Override
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer player)
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
-    	/*if (player.capabilities.isCreativeMode || (player.inventory.hasItem(NullPower.rifleAmmo) && player.inventory.consumeInventoryItem(NullPower.rifleAmmo)))
+    	if (playerIn.capabilities.isCreativeMode || true/*((playerIn.inventory.hasItemStack(NullPower.rifleAmmo) && playerIn.inventory.consumeInventoryItem(NullPower.rifleAmmo)))*/)
         {
-    	    EntityRifleBolt entityBolt = new EntityRifleBolt(par2World, player, 4.0F);
+    	    EntityRifleBolt entityBolt = new EntityRifleBolt(worldIn, playerIn, 4.0F);
     	    entityBolt.setIsCritical(true);
-    	    ////int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, par1ItemStack);
-            ////entityBolt.setDamage(weaponDamage + (double)k);
-    	    ////int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, par1ItemStack);
-    	    ////if (l > 0)
-            ////{
-    	    ////    entityBolt.setKnockbackStrength(l);
-            ////}
+    	    int k = 0;//EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, itemStackIn);
+            entityBolt.setDamage(attackDamage + (double)k);
+    	    int l = 1;//EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, itemStackIn);
+    	    if (l > 0)
+            {
+    	        entityBolt.setKnockbackStrength(l);
+            }
     	    
-    	    /*if (EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, par1ItemStack) > 0)
+    	    //if (EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, itemStackIn) > 0)
             {
     	        entityBolt.setFire(100);
-            }*
-    	    
-    	    par1ItemStack.damageItem(1, player);
-    	    ////par2World.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-    	    if (!par2World.isRemote)
-            {
-        	    par2World.spawnEntityInWorld(entityBolt);
             }
-        }*/
-    	
-    	return par1ItemStack;
+    	    
+    	    itemStackIn.damageItem(1, playerIn);
+    	    //worldIn.playSoundAtEntity(playerIn, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+    	    if (!worldIn.isRemote)
+            {
+    	        worldIn.spawnEntityInWorld(entityBolt);
+            }
+    	    
+    	    return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
+        }
+    	else
+    	{
+    	    return new ActionResult(EnumActionResult.FAIL, itemStackIn);
+    	}
 	}
 	
-    ////@Override
+    /*obsolete @Override
     public ItemStack onEaten(ItemStack p_77654_1_, World p_77654_2_, EntityPlayer p_77654_3_)
     {
         return p_77654_1_;
-    }
+    }*/
 	
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
@@ -98,20 +114,29 @@ public class ItemHuntingRifle extends Item {
 	* Override to add custom weapon damage field rather than vanilla ItemSword's field
 	*/
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-    ////@Override
-	public Multimap getItemAttributeModifiers() {
-    	Multimap multimap = HashMultimap.create();
-    	////multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(field_111210_e, "Weapon modifier", weaponDamage, 0));
-    	return multimap;
-	}
-	
-	////@Override
-	public boolean onBlockDestroyed(ItemStack p_150894_1_, World p_150894_2_, Block p_150894_3_, int p_150894_4_, int p_150894_5_, int p_150894_6_, EntityLivingBase p_150894_7_)
+    @Override
+    public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)
     {
-        /*if ((double)p_150894_3_.getBlockHardness(p_150894_2_, p_150894_4_, p_150894_5_, p_150894_6_) != 0.0D)
+        Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
+        if (equipmentSlot == EntityEquipmentSlot.MAINHAND)
         {
-            p_150894_1_.damageItem(1, p_150894_7_);
-        }*/
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double)attackDamage, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4000000953674316D, 0));
+        }
+
+        return multimap;
+    }
+	
+    /**
+     * Called when a Block is destroyed using this Item. Return true to trigger the "Use Item" statistic.
+     */
+	@Override
+    public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)
+    {
+        if ((double)state.getBlockHardness(worldIn, pos) != 0.0D)
+        {
+            stack.damageItem(2, entityLiving);
+        }
 
         return true;
     }
@@ -157,9 +182,15 @@ public class ItemHuntingRifle extends Item {
      * Return whether this item is repairable in an anvil.
      */
     @Override
-    public boolean getIsRepairable(ItemStack p_82789_1_, ItemStack p_82789_2_)
+    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
     {
-        return false;//this.toolMaterial.func_150995_f() == p_82789_2_.getItem() ? true : super.getIsRepairable(p_82789_1_, p_82789_2_);
+        ItemStack mat = this.toolMaterial.getRepairItemStack();
+        if (mat != null && OreDictionary.itemMatches(mat, repair, false))
+        {
+            return true;
+        }
+        
+        return super.getIsRepairable(toRepair, repair);
     }
     
     /**
@@ -169,5 +200,37 @@ public class ItemHuntingRifle extends Item {
     public int getMaxItemUseDuration(ItemStack p_77626_1_)
     {
         return 72000;
+    }
+    
+    @Override
+    public float getStrVsBlock(ItemStack stack, IBlockState state)
+    {
+        Block block = state.getBlock();
+        if (block == Blocks.WEB)
+        {
+            return 15.0F;
+        }
+        else
+        {
+            Material material = state.getMaterial();
+            return material != Material.PLANTS && material != Material.VINE && material != Material.CORAL && material != Material.LEAVES && material != Material.GOURD ? 1.0F : 1.5F;
+        }
+    }
+    
+    /**
+     * Returns the amount of damage this item will deal. One heart of damage is equal to 2 damage points.
+     */
+    public float getDamageVsEntity()
+    {
+        return this.toolMaterial.getDamageVsEntity();
+    }
+    
+    /**
+     * Check whether this Item can harvest the given Block
+     */
+    @Override
+    public boolean canHarvestBlock(IBlockState blockIn)
+    {
+        return blockIn.getBlock() == Blocks.WEB;
     }
 }

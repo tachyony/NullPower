@@ -18,7 +18,6 @@ package tachyony.nullPower;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -302,25 +301,29 @@ public class NullPower {
         
         GameRegistry.addRecipe(new ItemStack(rifleAmmo, 16, 0), "ci ", "   ",
                 "   ", 'c', Items.CLAY_BALL, 'i', enderIron);
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemDynamitePickaxe,
+                1, 0), "eee", " s ", " s ", 'e', enderIron, 's', "stickWood"));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(huntingRifle,
                 1, 0), "iii", "css", "w  ", 'i', enderIron, 'c',
                 enderGeneratorCore, 's', "stickWood", 'w', "plankWood"));
-        /*GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(huntingRifleB,
-                1, 0), "iii", "css", "w  ", 'i', enderIron, 'c',
-                enderGeneratorCore, 's', Item.ingotGold, 'w', "plankWood"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(huntingRifleB,
+                1, 0), "cii", "css", "w  ", 'i', enderIron, 'c',
+                enderGeneratorCore, 's', Items.GOLD_INGOT, 'w', "plankWood"));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(huntingRifleC,
-                1, 0), "iii", "css", "w  ", 'i', enderIron, 'c',
-                enderGeneratorCore, 's', Item.diamond, 'w', "plankWood"));*/
-        GameRegistry.addShapelessRecipe(new ItemStack(enderIronDust, 1, 0), new Object[]{new ItemStack(itemEnderReed)});
-        GameRegistry.addRecipe(new ItemStack(Items.SPAWN_EGG, 1, 58), "wbw",
-                "brb", "wbw", 'w', Items.WATER_BUCKET, 'r', Items.REEDS, 'b', Blocks.IRON_BARS);
+                1, 0), "cii", "css", "i  ", 'i', enderIron, 'c',
+                enderGeneratorCore, 's', Items.DIAMOND));
+        GameRegistry.addRecipe(new ItemStack(enderIronDust, 1, 0), "   ", " r ", " w ", 'r', itemEnderReed, 'w', Items.WATER_BUCKET);
+        //GameRegistry.addRecipe(new ItemStack(Items.SPAWN_EGG, 1, 58), "wbw",
+        //        "brb", "wbw", 'w', Items.WATER_BUCKET, 'r', Items.REEDS, 'b', Blocks.IRON_BARS);
         GameRegistry.addRecipe(new ItemStack(itemEnderReed, 1, 0), " e ",
                 "wrw", " i ", 'w', Items.WATER_BUCKET, 'r', Items.REEDS, 'i', Items.IRON_INGOT, 'e', Items.ENDER_PEARL);
         GameRegistry.addSmelting(enderIronDust, new ItemStack(enderIron, 1, 0), 0.1f);
         GameRegistry.addRecipe(new ItemStack(enderGeneratorCore, 1, 0), "eee",
-                "ewe", "eee", 'e', enderIron, 'w', Items.WATER_BUCKET);
+                "ewe", "eee", 'e', enderIron, 'w', Items.ENDER_PEARL);
         GameRegistry.addRecipe(new ItemStack(enderGeneratorCoreAdvanced, 1, 0), "ewe",
                 "wew", "ewe", 'e', enderGeneratorCore, 'w', Items.WATER_BUCKET);
+        
+        // Tile entity
         GameRegistry.registerTileEntity(TileEntityEnderGenerator.class, "EnderGenerator");
     }
 

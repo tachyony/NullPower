@@ -1,4 +1,6 @@
 .classpath
+.gradle/minecraft/forge*
+.gradle/minecraft/forgeSrc*
 .gradle/1.11/taskArtifacts/*
 .gradle/2.0/taskArtifacts/*
 .gradle/2.14/taskArtifacts/*
@@ -78,3 +80,4 @@ run/saves/*
 run/screenshots/*
 run/usercache.json
 run/usernamecache.json
+/build/
