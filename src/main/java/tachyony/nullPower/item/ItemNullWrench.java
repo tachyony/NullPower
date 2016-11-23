@@ -32,6 +32,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 /**
@@ -49,16 +50,19 @@ public class ItemNullWrench extends EnergyItems {
 		super();
 		this.bFull3D = true;
 		this.maxStackSize = 1;
-        this.damageVsEntity = 0f/*attackDamageIn + materialIn.getDamageVsEntity()*/;
-        this.attackSpeed = -3f/*attackSpeedIn*/;
+        this.damageVsEntity = 0f;
+        this.attackSpeed = -3f;
 		this.setCreativeTab(CreativeTabs.TOOLS);
 	}
 	
+    /**
+     * ItemStack sensitive version of getItemAttributeModifiers
+     */
     @Override
-    public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot)
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
     {
-        Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
-        if (equipmentSlot == EntityEquipmentSlot.MAINHAND)
+        Multimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
+        if (slot == EntityEquipmentSlot.MAINHAND)
         {
             multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", (double)this.damageVsEntity, 0));
             multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", (double)this.attackSpeed, 0));
@@ -73,7 +77,7 @@ public class ItemNullWrench extends EnergyItems {
      */
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker)
     {
-        stack.damageItem(0/*1*/, attacker);
+        stack.damageItem(0, attacker);
         return true;
     }
     
@@ -99,37 +103,6 @@ public class ItemNullWrench extends EnergyItems {
         }
         else
         {
-            /*int hook = ForgeEventFactory.onHoeUse(stack, playerIn, worldIn, pos);
-            if (hook != 0) {
-                return hook > 0 ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
-            }
-
-            IBlockState iblockstate = worldIn.getBlockState(pos);
-            Block block = iblockstate.getBlock();
-            if (facing != EnumFacing.DOWN && worldIn.isAirBlock(pos.up()))
-            {
-                if (block == Blocks.GRASS || block == Blocks.GRASS_PATH)
-                {
-                    this.setBlock(stack, playerIn, worldIn, pos, Blocks.FARMLAND.getDefaultState());
-                    return EnumActionResult.SUCCESS;
-                }
-                
-                if (block == Blocks.DIRT)
-                {
-                    switch ((BlockDirt.DirtType)iblockstate.getValue(BlockDirt.VARIANT))
-                    {
-                        case DIRT:
-                            this.setBlock(stack, playerIn, worldIn, pos, Blocks.FARMLAND.getDefaultState());
-                            return EnumActionResult.SUCCESS;
-                        case COARSE_DIRT:
-                            this.setBlock(stack, playerIn, worldIn, pos, Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT));
-                            return EnumActionResult.SUCCESS;
-                    }
-                }
-            }*/
-            
-            // Explosion explosion = worldIn.createExplosion(playerIn, playerIn.posX, playerIn.posY, playerIn.posZ, 10.0F, true);
-            
             return EnumActionResult.SUCCESS;
         }
     }

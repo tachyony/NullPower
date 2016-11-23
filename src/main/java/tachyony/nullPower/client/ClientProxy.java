@@ -66,6 +66,7 @@ public class ClientProxy extends CommonProxy {
         registerItemRenderer(mesher, NullPower.huntingRifleC);
         registerItemRenderer(mesher, NullPower.huntingRifleD);
         registerItemRenderer(mesher, NullPower.itemDynamitePickaxe);
+        registerItemRenderer(mesher, NullPower.itemNullWrench);
         registerItemRenderer(mesher, NullPower.enderIron);
         registerItemRenderer(mesher, NullPower.enderIronDust);
         

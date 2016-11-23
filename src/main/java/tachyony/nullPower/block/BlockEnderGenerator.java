@@ -94,7 +94,7 @@ public class BlockEnderGenerator extends BlockContainer implements ITileEntityPr
         }
         
         Item item = playerItem.getItem();
-        if (!(item instanceof ItemDynamitePickaxe))
+        if (!(item instanceof EnergyItems))
         {
             return false;
         }

@@ -18,6 +18,7 @@ package tachyony.nullPower;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -48,6 +49,7 @@ import tachyony.nullPower.entity.EntityRifleBolt;
 import tachyony.nullPower.item.ItemDynamitePickaxe;
 import tachyony.nullPower.item.ItemEnderReed;
 import tachyony.nullPower.item.ItemHuntingRifle;
+import tachyony.nullPower.item.ItemNullWrench;
 import tachyony.nullPower.item.NullArmor;
 import tachyony.nullPower.tile.TileEntityEnderGenerator;
 
@@ -123,6 +125,11 @@ public class NullPower {
      * Useless tool
      */
     public static Item itemDynamitePickaxe;
+    
+    /**
+     * A wrench
+     */
+    public static Item itemNullWrench;
 
     /**
      * Ender reed
@@ -214,6 +221,7 @@ public class NullPower {
         huntingRifleC = new ItemHuntingRifle(enderIronMaterial).setRegistryName("huntingRifleC");
         huntingRifleD = new ItemHuntingRifle(cheatMaterial).setRegistryName("huntingRifleD");
         itemDynamitePickaxe = new ItemDynamitePickaxe().setRegistryName("dynamitePickaxe");
+        itemNullWrench = new ItemNullWrench().setRegistryName("nullWrench");
         
         // Mod items for crafting
         enderIron = new Item().setCreativeTab(CreativeTabs.MATERIALS).setRegistryName("enderIron");
@@ -243,6 +251,7 @@ public class NullPower {
         huntingRifleC.setUnlocalizedName(Reference.MODID + "." + "huntingRifleC");
         huntingRifleD.setUnlocalizedName(Reference.MODID + "." + "huntingRifleD");
         itemDynamitePickaxe.setUnlocalizedName(Reference.MODID + "." + "itemDynamitePickaxe");
+        itemNullWrench.setUnlocalizedName(Reference.MODID + "." + "itemNullWrench");
         enderIron.setUnlocalizedName(Reference.MODID + "." + "enderIron");
         enderIronDust.setUnlocalizedName(Reference.MODID + "." + "enderIronDust");
         
@@ -279,6 +288,7 @@ public class NullPower {
         GameRegistry.register(enderGeneratorCore);
         GameRegistry.register(enderGeneratorCoreAdvanced);
         GameRegistry.register(itemDynamitePickaxe);
+        GameRegistry.register(itemNullWrench);
         GameRegistry.register(nullHelmet);
         GameRegistry.register(nullChestplate);
         GameRegistry.register(nullLeggings);
@@ -301,8 +311,10 @@ public class NullPower {
         
         GameRegistry.addRecipe(new ItemStack(rifleAmmo, 16, 0), "ci ", "   ",
                 "   ", 'c', Items.CLAY_BALL, 'i', enderIron);
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemDynamitePickaxe,
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemNullWrench,
                 1, 0), "eee", " s ", " s ", 'e', enderIron, 's', "stickWood"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(itemDynamitePickaxe,
+                1, 0), "eee", " s ", " s ", 'e', Blocks.TNT, 's', "stickWood"));
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(huntingRifle,
                 1, 0), "iii", "css", "w  ", 'i', enderIron, 'c',
                 enderGeneratorCore, 's', "stickWood", 'w', "plankWood"));
