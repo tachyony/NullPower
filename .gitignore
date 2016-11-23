@@ -14,6 +14,7 @@
 .settings/org.eclipse.ltk.core.refactoring.prefs
 .settings/org.eclipse.mylyn.tasks.ui.prefs
 bin/assets/nullpower/*
+/build/
 build/classes/main/*
 build/libs/nullpower-1.10.2.1.jar
 build/libs/nullpower-1.10.2.1-sources.jar
@@ -69,10 +70,14 @@ eclipse/assets/saves/*
 eclipse/assets/sound/*
 eclipse/assets/sounds/*
 run/crash-reports/*
-run/config/splash.properties
-run/config/nullpower.cfg
 run/config/forgeChunkLoading.cfg
 run/config/forge.cfg
+run/config/JEI/jei.cfg
+run/config/JEI/itemBlacklist.cfg
+run/config/JEI/searchColors.cfg
+run/config/JEI/worldSettings.cfg
+run/config/nullpower.cfg
+run/config/splash.properties
 run/logs/*
 run/mods/*
 run/options.txt
@@ -80,4 +85,3 @@ run/saves/*
 run/screenshots/*
 run/usercache.json
 run/usernamecache.json
-/build/

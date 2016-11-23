@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -30,6 +31,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tachyony.nullPower.CommonProxy;
 import tachyony.nullPower.NullPower;
+import tachyony.nullPower.Reference;
 import tachyony.nullPower.entity.EntityRifleBolt;
 
 /**
@@ -68,9 +70,9 @@ public class ClientProxy extends CommonProxy {
         registerItemRenderer(mesher, NullPower.enderIronDust);
         
         registerBlock(NullPower.blockEnderGenerator);
-        //registerItemRenderer(mesher, NullPower.itemBlockEnderGenerator);
+        registerItemBlock(mesher, NullPower.itemBlockEnderGenerator);
         registerBlock(NullPower.blockEnderReed);
-        //registerItemRenderer(mesher, NullPower.itemBlockEnderReed);
+        registerItemBlock(mesher, NullPower.itemBlockEnderReed);
         
         registerItemRenderer(mesher, NullPower.itemEnderReed);
         registerItemRenderer(mesher, NullPower.enderGeneratorCore);
@@ -109,7 +111,28 @@ public class ClientProxy extends CommonProxy {
         mesher.register(item, meta, new ModelResourceLocation(name, "inventory"));
     }
     
+    public static void registerItemBlock(ItemModelMesher mesher, ItemBlock block) {
+        
+    }
+    
     public static void registerBlock(Block block) {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
+        Item item = Item.getItemFromBlock(block);
+        Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+        .register(item, 0, new ModelResourceLocation(
+            item.getRegistryName(), "inventory"));  
+        
+        Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+            .register(item, 0, new ModelResourceLocation(
+                Reference.MODID + ":" + item.getRegistryName().toString().substring(5), 
+                "inventory"));      
+        
+        ModelLoader.setCustomModelResourceLocation(item, 0,
+            new ModelResourceLocation(block.getRegistryName(), "inventory"));
+        
+        String r = item.getRegistryName().toString();
+        ModelResourceLocation loc = new ModelResourceLocation(
+                r, "inventory");
+        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(
+            item, 0, loc);
     }
 }

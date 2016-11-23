@@ -15,6 +15,7 @@
  */
 package tachyony.nullPower.powerNetwork;
 
+import tachyony.nullPower.Reference;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldSavedData;
 
@@ -22,17 +23,22 @@ import net.minecraft.world.WorldSavedData;
  * 
  */
 public class PowerNetwork extends WorldSavedData {
+    private static final String DATA_NAME = Reference.MODID + "_CurrentPower";
+    
     /**
      * 
      */
     public int currentPower;
 
+    public PowerNetwork() {
+        super(DATA_NAME);
+    }
+    
     /**
      * @param par1Str
      */
     public PowerNetwork(String par1Str) {
         super(par1Str);
-        currentPower = 0;
     }
 
     @Override

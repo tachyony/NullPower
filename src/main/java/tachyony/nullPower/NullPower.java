@@ -222,12 +222,10 @@ public class NullPower {
         blockEnderGenerator = new BlockEnderGenerator(Material.IRON).setHardness(1F).setCreativeTab(CreativeTabs.MATERIALS);
         blockEnderGenerator.setRegistryName("blockEnderGenerator");
         itemBlockEnderGenerator = new ItemBlock(blockEnderGenerator);
-        itemBlockEnderGenerator.setRegistryName("itemBlockEnderGenerator");
         
         blockEnderReed = new BlockEnderReed().setHardness(1F).setCreativeTab(CreativeTabs.MATERIALS);
         blockEnderReed.setRegistryName("blockEnderReed");
         itemBlockEnderReed = new ItemBlock(blockEnderReed);
-        itemBlockEnderReed.setRegistryName("itemBlockEnderReed");
         
         itemEnderReed = new ItemEnderReed(blockEnderReed).setRegistryName("enderReed").setCreativeTab(CreativeTabs.MATERIALS);
         enderGeneratorCore = new Item().setRegistryName("enderGeneratorCore").setCreativeTab(CreativeTabs.MATERIALS);
@@ -271,9 +269,11 @@ public class NullPower {
         GameRegistry.register(enderIronDust);
         
         GameRegistry.register(blockEnderGenerator);
-        GameRegistry.register(itemBlockEnderGenerator);
+        GameRegistry.register(itemBlockEnderGenerator.setRegistryName(
+                blockEnderGenerator.getRegistryName()));
         GameRegistry.register(blockEnderReed);
-        GameRegistry.register(itemBlockEnderReed);
+        GameRegistry.register(itemBlockEnderReed.setRegistryName(
+                blockEnderReed.getRegistryName()));
         
         GameRegistry.register(itemEnderReed);
         GameRegistry.register(enderGeneratorCore);

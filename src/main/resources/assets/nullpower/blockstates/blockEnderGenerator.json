@@ -3,14 +3,16 @@
 	"defaults": {
 		"textures": {
 			"all": "nullpower:blocks/blockEnderGenerator"
-		}
+		},
+		"model": "cube_all",
+        "uvlock": true
 	},
 	"variants": {
-		"normal": {
+		"normal": [{
 			"model": "cube_all"
-		},
-		"inventory": {
+		}],
+		"inventory": [{
 			"model": "cube_all"
-		}
+		}]
 	}
 }
