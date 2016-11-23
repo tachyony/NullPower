@@ -1,5 +1,5 @@
 {
-    "parent": "nullpower:block/BlockEnderGenerator",
+    "parent": "nullpower:block/blockEnderGenerator",
 	"display": {
 	    "thirdperson": {
 	      "rotation": [ 10, -45, 170 ],

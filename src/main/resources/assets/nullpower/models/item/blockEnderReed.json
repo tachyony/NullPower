@@ -1,5 +1,5 @@
 {
-    "parent": "nullpower:block/BlockEnderReed",
+    "parent": "nullpower:block/blockEnderReed",
 	"display": {
 	    "thirdperson": {
 	      "rotation": [ 10, -45, 170 ],
