@@ -15,22 +15,28 @@
  */
 package tachyony.nullPower.item;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
+import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -44,7 +50,7 @@ import com.google.common.collect.Multimap;
 /**
  * Hunting rifle
  */
-public class ItemHuntingRifle extends Item {
+public class ItemHuntingRifle extends EnergyItems {
     private float attackDamage;
     
     private ToolMaterial toolMaterial;
@@ -64,32 +70,92 @@ public class ItemHuntingRifle extends Item {
 		this.attackDamage = 4.0F + this.toolMaterial.getDamageVsEntity();
 	}
     
+	protected boolean isArrow(@Nullable ItemStack stack)
+    {
+        return stack != null && stack.getItem() instanceof ItemRifleAmmo;
+    }
+	
+	private ItemStack findAmmo(EntityPlayer player)
+    {
+        if (this.isArrow(player.getHeldItem(EnumHand.OFF_HAND)))
+        {
+            return player.getHeldItem(EnumHand.OFF_HAND);
+        }
+        else if (this.isArrow(player.getHeldItem(EnumHand.MAIN_HAND)))
+        {
+            return player.getHeldItem(EnumHand.MAIN_HAND);
+        }
+        else
+        {
+            for (int i = 0; i < player.inventory.getSizeInventory(); ++i)
+            {
+                ItemStack itemstack = player.inventory.getStackInSlot(i);
+                if (this.isArrow(itemstack))
+                {
+                    return itemstack;
+                }
+            }
+
+            return null;
+        }
+    }
+	
 	@SuppressWarnings("unused")
     @Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
-    	if (playerIn.capabilities.isCreativeMode || true/*((playerIn.inventory.hasItemStack(NullPower.rifleAmmo) && playerIn.inventory.consumeInventoryItem(NullPower.rifleAmmo)))*/)
+	    boolean flag = playerIn.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, itemStackIn) > 0;
+        ItemStack itemstack = this.findAmmo(playerIn);
+        
+    	if ((itemstack != null) || flag)
         {
-    	    EntityRifleBolt entityBolt = new EntityRifleBolt(worldIn, playerIn, 4.0F);
-    	    entityBolt.setIsCritical(true);
-    	    int k = 0;//EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, itemStackIn);
-            entityBolt.setDamage(attackDamage + (double)k);
-    	    int l = 1;//EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, itemStackIn);
-    	    if (l > 0)
+    	    if (itemstack == null)
             {
-    	        entityBolt.setKnockbackStrength(l);
+                itemstack = new ItemStack(Items.ARROW);
             }
     	    
-    	    //if (EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, itemStackIn) > 0)
-            {
-    	        entityBolt.setFire(100);
-            }
-    	    
-    	    itemStackIn.damageItem(1, playerIn);
-    	    //worldIn.playSoundAtEntity(playerIn, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+    	    boolean flag1 = playerIn.capabilities.isCreativeMode || (itemstack.getItem() instanceof ItemRifleAmmo ? ((ItemRifleAmmo)itemstack.getItem()).isInfinite(itemstack, itemStackIn, playerIn) : false);
     	    if (!worldIn.isRemote)
             {
-    	        worldIn.spawnEntityInWorld(entityBolt);
+    	        ItemRifleAmmo itemarrow = (ItemRifleAmmo)((ItemRifleAmmo)(itemstack.getItem() instanceof ItemRifleAmmo ? itemstack.getItem() : Items.ARROW));
+        	    EntityRifleBolt entityBolt = new EntityRifleBolt(worldIn, playerIn, 4.0F);
+        	    entityBolt.setIsCritical(true);
+        	    
+        	    int k = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, itemStackIn);
+        	    if (k > 0)
+        	    {
+        	        entityBolt.setDamage(attackDamage + (double)k);
+        	    }
+
+                int l = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, itemStackIn);
+                if (l > 0)
+                {
+                    entityBolt.setKnockbackStrength(l);
+                }
+                
+                if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, itemStackIn) > 0)
+                {
+                    entityBolt.setFire(100);
+                }
+    	    
+        	    itemStackIn.damageItem(1, playerIn);
+        	    if (flag1)
+        	    {
+        	        entityBolt.canBePickedUp = 0;
+        	    }
+        	    
+        	    worldIn.spawnEntityInWorld(entityBolt);
+            }
+    	    
+    	    worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL, 1.0F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+    	    
+    	    if (!flag1)
+            {
+                --itemstack.stackSize;
+                if (itemstack.stackSize == 0)
+                {
+                    playerIn.inventory.deleteStack(itemstack);
+                }
             }
     	    
     	    return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
@@ -99,12 +165,6 @@ public class ItemHuntingRifle extends Item {
     	    return new ActionResult(EnumActionResult.FAIL, itemStackIn);
     	}
 	}
-	
-    /*obsolete @Override
-    public ItemStack onEaten(ItemStack p_77654_1_, World p_77654_2_, EntityPlayer p_77654_3_)
-    {
-        return p_77654_1_;
-    }*/
 	
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {

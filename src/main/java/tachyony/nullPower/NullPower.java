@@ -50,6 +50,7 @@ import tachyony.nullPower.item.ItemDynamitePickaxe;
 import tachyony.nullPower.item.ItemEnderReed;
 import tachyony.nullPower.item.ItemHuntingRifle;
 import tachyony.nullPower.item.ItemNullWrench;
+import tachyony.nullPower.item.ItemRifleAmmo;
 import tachyony.nullPower.item.NullArmor;
 import tachyony.nullPower.tile.TileEntityEnderGenerator;
 
@@ -213,7 +214,7 @@ public class NullPower {
         configuration.save();
 
         // Ranged weapons
-        rifleAmmo = new Item().setCreativeTab(CreativeTabs.MATERIALS).setRegistryName("rifleAmmo");   
+        rifleAmmo = new ItemRifleAmmo().setRegistryName("rifleAmmo");   
         EntityRegistry.registerModEntity(EntityRifleBolt.class, "RifleBoltD", 3, instance, 160, 1, true);
         
         huntingRifle = new ItemHuntingRifle(ToolMaterial.IRON).setRegistryName("huntingRifle");
