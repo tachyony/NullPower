@@ -33,7 +33,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import tachyony.nullPower.item.EnergyItems;
-import tachyony.nullPower.item.ItemDynamitePickaxe;
 import tachyony.nullPower.tile.TileEntityEnderGenerator;
 
 /**

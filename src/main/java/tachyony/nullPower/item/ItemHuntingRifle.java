@@ -64,7 +64,8 @@ public class ItemHuntingRifle extends Item {
 		this.attackDamage = 4.0F + this.toolMaterial.getDamageVsEntity();
 	}
     
-	@Override
+	@SuppressWarnings("unused")
+    @Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
     	if (playerIn.capabilities.isCreativeMode || true/*((playerIn.inventory.hasItemStack(NullPower.rifleAmmo) && playerIn.inventory.consumeInventoryItem(NullPower.rifleAmmo)))*/)
