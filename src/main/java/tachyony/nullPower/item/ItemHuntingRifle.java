@@ -115,7 +115,7 @@ public class ItemHuntingRifle extends EnergyItems {
             }
     	    
     	    boolean flag1 = playerIn.capabilities.isCreativeMode || (itemstack.getItem() instanceof ItemRifleAmmo ? ((ItemRifleAmmo)itemstack.getItem()).isInfinite(itemstack, itemStackIn, playerIn) : false);
-    	    if (!worldIn.isRemote)
+    	    //???if (!worldIn.isRemote)
             {
     	        ItemRifleAmmo itemarrow = (ItemRifleAmmo)((ItemRifleAmmo)(itemstack.getItem() instanceof ItemRifleAmmo ? itemstack.getItem() : Items.ARROW));
         	    EntityRifleBolt entityBolt = new EntityRifleBolt(worldIn, playerIn, 4.0F);
