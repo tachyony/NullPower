@@ -103,6 +103,10 @@ public class BlockEnderGenerator extends BlockContainer implements ITileEntityPr
             return true;
         }
         
+        // Set to different user if needed to align network correctly
+        ((EnergyItems)item).checkAndSetItemOwner(playerItem, player);
+        
+        // Set owner to current energy item
         tileEntity.setOwner(EnergyItems.getOwnerName(playerItem));
         player.addChatMessage(new TextComponentString("Current owner: " + tileEntity.getOwner()));
         world.notifyBlockUpdate(pos, state, state, 3);

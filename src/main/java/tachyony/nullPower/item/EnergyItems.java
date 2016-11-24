@@ -22,7 +22,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import tachyony.nullPower.powerNetwork.PowerNetwork;
-import tachyony.nullPower.powerNetwork.PowerNetworkHandler;
 
 /**
  * 
@@ -51,24 +50,27 @@ public class EnergyItems extends Item {
      * @param item 
      * @param player
      */
-    public static void checkAndSetItemOwner(ItemStack item, EntityPlayer player) {
-        if (item.getTagCompound() == null) {
-            item.setTagCompound(new NBTTagCompound());
+    public void checkAndSetItemOwner(ItemStack itemStack, EntityPlayer player) {
+        if (itemStack.getTagCompound() == null) {
+            itemStack.setTagCompound(new NBTTagCompound());
         }
         
-        if (item.getTagCompound().getString("ownerName").equals("")) {
-            NBTTagCompound nbtCompound = item.getTagCompound();
-            nbtCompound.setString("ownerName", PowerNetworkHandler.getUsername(player));
-            item.setTagCompound(nbtCompound);
+        // Set initial owner
+        if (itemStack.getTagCompound().getString("ownerName").equals(""))
+        {
+            NBTTagCompound nbtCompound = itemStack.getTagCompound();
+            nbtCompound.setString("ownerName", player.getUniqueID().toString());
+            itemStack.setTagCompound(nbtCompound);
+        }
+        else if (itemStack.getTagCompound().getString("ownerName") != player.getUniqueID().toString())
+        {
+            // Set to current owner if different
+            NBTTagCompound nbtCompound = itemStack.getTagCompound();
+            nbtCompound.setString("ownerName", player.getUniqueID().toString());
+            itemStack.setTagCompound(nbtCompound);
         }
         
-        initializePlayer(player);
-    }
-    
-    /**
-     * @param player
-     */
-    public static void initializePlayer(EntityPlayer player) {
+        // Set currentPower if needed
         NBTTagCompound tag = player.getEntityData();
         if (tag.getInteger("currentPower") == 0) {
             tag.setInteger("currentPower", 0);
@@ -76,14 +78,14 @@ public class EnergyItems extends Item {
     }
     
     /**
-     * @param item
+     * @param itemStack
      * @return Owner
      */
-    public static String getOwnerName(ItemStack item) {
-        if (item.getTagCompound() == null) {
-            item.setTagCompound(new NBTTagCompound());
+    public static String getOwnerName(ItemStack itemStack) {
+        if (itemStack.getTagCompound() == null) {
+            itemStack.setTagCompound(new NBTTagCompound());
         }
         
-        return item.getTagCompound().getString("ownerName");
+        return itemStack.getTagCompound().getString("ownerName");
     }
 }

@@ -118,7 +118,7 @@ public class ItemDynamitePickaxe extends EnergyItems {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
     {
-        EnergyItems.checkAndSetItemOwner(itemStack, player);
+        checkAndSetItemOwner(itemStack, player);
         if (player.worldObj.isRemote)
         {
             return new ActionResult(EnumActionResult.PASS, itemStack);
