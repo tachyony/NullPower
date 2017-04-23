@@ -19,13 +19,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import tachyony.nullPower.powerNetwork.PowerNetwork;
 
 /**
  * Ender generator
  */
-public class TileEntityEnderGenerator extends TileEntity implements ITickable {    
+public class TileEntityEnderGenerator extends TileEntity implements ITickable, IEnergyStorage {    
     private String owner;
     
     /**
@@ -116,5 +117,60 @@ public class TileEntityEnderGenerator extends TileEntity implements ITickable {
      */
     private int addEnergy() {
         return 100;
+    }
+
+    @Override
+    public int receiveEnergy(int maxReceive, boolean simulate) {
+        if (owner == "")
+        {
+            return 0;
+        }
+        
+        return 0;
+    }
+
+    @Override
+    public int extractEnergy(int maxExtract, boolean simulate) {
+        if (owner == "")
+        {
+            return 0;
+        }
+        
+        return 0;
+    }
+
+    @Override
+    public int getEnergyStored() {
+        if (owner == "")
+        {
+            return 0;
+        }
+        
+        return 0;
+    }
+
+    @Override
+    public int getMaxEnergyStored() {
+        return MAXNETWORKPOWER;
+    }
+
+    @Override
+    public boolean canExtract() {
+        if (owner == "")
+        {
+            return false;
+        }
+        
+        return false;
+    }
+
+    @Override
+    public boolean canReceive() {
+        if (owner == "")
+        {
+            return false;
+        }
+        
+        return false;
     }
 }
