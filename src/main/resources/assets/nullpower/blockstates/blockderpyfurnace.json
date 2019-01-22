@@ -1,0 +1,26 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"all": "nullpower:blocks/blockderpyfurnace"
+		},
+		"model": "cube_all",
+        "uvlock": true
+	},
+	"variants": {
+		"normal": [{
+			"model": "cube_all"
+		}],
+		"inventory": [{
+			"model": "cube_all"
+		}],
+        "burning=false,facing=north": { "model": "nullpower:blockderpyfurnace" },
+        "burning=false,facing=east": { "model": "nullpower:blockderpyfurnace", "y": 90 },
+        "burning=false,facing=south": { "model": "nullpower:blockderpyfurnace", "y": 180 },
+        "burning=false,facing=west": { "model": "nullpower:blockderpyfurnace", "y": 270 },
+        "burning=true,facing=north": { "model": "nullpower:lit_blockderpyfurnace" },
+        "burning=true,facing=east": { "model": "nullpower:lit_blockderpyfurnace", "y": 90 },
+        "burning=true,facing=south": { "model": "nullpower:lit_blockderpyfurnace", "y": 180 },
+        "burning=true,facing=west": { "model": "nullpower:lit_blockderpyfurnace", "y":270  }
+	}
+}

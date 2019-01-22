@@ -1,0 +1,36 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"textures": {
+			"cross": "nullpower:blocks/blockEnderReed"
+		},
+		"model": "reeds",
+        "uvlock": true
+	},
+	"variants": {
+		"normal": [{
+			"model": "reeds"
+		}],
+		"inventory": [{
+			"model": "reeds"
+		}],
+		"age": {
+			0: { "model": "reeds" },
+	        1: { "model": "reeds" },
+	        2: { "model": "reeds" },
+	        3: { "model": "reeds" },
+	        4: { "model": "reeds" },
+	        5: { "model": "reeds" },
+	        6: { "model": "reeds" },
+	        7: { "model": "reeds" },
+	        8: { "model": "reeds" },
+	        9: { "model": "reeds" },
+	        10: { "model": "reeds" },
+	        11: { "model": "reeds" },
+	        12: { "model": "reeds" },
+	        13: { "model": "reeds" },
+	        14: { "model": "reeds" },
+	        15: { "model": "reeds" }
+        }
+	}
+}
