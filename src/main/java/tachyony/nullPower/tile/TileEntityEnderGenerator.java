@@ -17,47 +17,25 @@ package tachyony.nullPower.tile;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import tachyony.nullPower.powerNetwork.PowerNetwork;
 
 /**
  * Ender generator
  */
 public class TileEntityEnderGenerator extends TileEntity implements ITickable, IEnergyStorage {    
-    private String owner;
-    
-    /**
-     * 
-     */
-    public int MAXNETWORKPOWER = 10000000;
-    
-    /**
+	private EnergyStorage storage = new EnergyStorage(Integer.MAX_VALUE);
+	
+	/**
      * 
      */
     public TileEntityEnderGenerator()
     {
         super();
-        owner = "";
-    }
-
-    /**
-     * @param owner
-     */
-    public void setOwner(String owner)
-    {
-        this.owner = owner;
-    }
-    
-    /**
-     * @param owner
-     * @return Owner
-     */
-    public String getOwner()
-    {
-        return owner;
     }
 
     @Override
@@ -73,104 +51,67 @@ public class TileEntityEnderGenerator extends TileEntity implements ITickable, I
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound par1) {
         super.writeToNBT(par1);
-        par1.setString("owner", owner);
+        //par1.setString("owner", owner);
         return par1;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound par1) {
         super.readFromNBT(par1);
-        owner = par1.getString("owner");
+        //owner = par1.getString("owner");
     }
 
     @Override
     public void update() {
-        if (worldObj.isRemote)
-        {
-            return;
-        }
-        
-        int worldTime = (int)(worldObj.getWorldTime() % 24000);
-        if (worldTime % 1 == 0)
-        {
-            String ownerName = owner;
-            if (ownerName.equals("")) {
-                return;
-            }
-            
-            World world = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers[0];
-            PowerNetwork data = (PowerNetwork)world.loadItemData(PowerNetwork.class, ownerName);
-            if (data == null) {
-                data = new PowerNetwork(ownerName);
-                world.setItemData(ownerName, data);
-            }
-            
-            int powerAdd = Math.min(addEnergy(), MAXNETWORKPOWER - data.currentPower);
-            data.currentPower = powerAdd + data.currentPower;
-            data.markDirty();
-        }
-    }
-
-    /**
-     * Power to add
-     * @return Added power
-     */
-    private int addEnergy() {
-        return 100;
+    	this.receiveEnergy(Integer.MAX_VALUE, false);
     }
 
     @Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) 
+	{
+		if(capability == CapabilityEnergy.ENERGY)
+			return (T)this.storage;
+		
+		return super.getCapability(capability, facing);
+	}
+	
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
+	{
+		if(capability == CapabilityEnergy.ENERGY)
+			return true;
+		
+		return super.hasCapability(capability, facing);
+	}
+
+    
+    @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        if (owner == "")
-        {
-            return 0;
-        }
-        
-        return 0;
+        return this.storage.receiveEnergy(maxReceive, simulate);
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        if (owner == "")
-        {
-            return 0;
-        }
-        
-        return 0;
+        return this.storage.extractEnergy(maxExtract, simulate);
     }
 
     @Override
     public int getEnergyStored() {
-        if (owner == "")
-        {
-            return 0;
-        }
-        
-        return 0;
+        return this.storage.getEnergyStored();
     }
 
     @Override
     public int getMaxEnergyStored() {
-        return MAXNETWORKPOWER;
+        return this.storage.getMaxEnergyStored();
     }
 
     @Override
     public boolean canExtract() {
-        if (owner == "")
-        {
-            return false;
-        }
-        
-        return false;
+        return this.storage.canReceive();
     }
 
     @Override
     public boolean canReceive() {
-        if (owner == "")
-        {
-            return false;
-        }
-        
-        return false;
+    	return this.storage.canExtract();
     }
 }

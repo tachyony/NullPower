@@ -21,16 +21,17 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import tachyony.nullPower.Reference;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -38,7 +39,7 @@ import com.google.common.collect.Multimap;
 /**
  * LOL
  */
-public class ItemNullWrench extends EnergyItems {
+public class ItemNullWrench extends Item/*EnergyItems*/ {
     protected float damageVsEntity;
     
     protected float attackSpeed;
@@ -53,6 +54,8 @@ public class ItemNullWrench extends EnergyItems {
         this.damageVsEntity = 0f;
         this.attackSpeed = -3f;
 		this.setCreativeTab(CreativeTabs.TOOLS);
+		setRegistryName("nullWrench");
+        setUnlocalizedName(Reference.MODID + "." + "itemNullWrench");
 	}
 	
     /**
@@ -64,8 +67,8 @@ public class ItemNullWrench extends EnergyItems {
         Multimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
         if (slot == EntityEquipmentSlot.MAINHAND)
         {
-            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", (double)this.damageVsEntity, 0));
-            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", (double)this.attackSpeed, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", (double)this.damageVsEntity, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", (double)this.attackSpeed, 0));
         }
 
         return multimap;
@@ -96,8 +99,8 @@ public class ItemNullWrench extends EnergyItems {
      * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
      */
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!playerIn.canPlayerEdit(pos.offset(facing), facing, stack))
+    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (!playerIn.canPlayerEdit(pos.offset(facing), facing, playerIn.getHeldItem(hand)))
         {
             return EnumActionResult.FAIL;
         }
@@ -108,16 +111,17 @@ public class ItemNullWrench extends EnergyItems {
     }
     
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStack, World world, EntityPlayer player, EnumHand hand)
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
     {
-        checkAndSetItemOwner(itemStack, player);
-        if (player.worldObj.isRemote)
+    	ItemStack itemStack = player.getHeldItem(hand);
+    	/*checkAndSetItemOwner(itemStack, player);*/
+        if (world.isRemote)
         {
             return new ActionResult(EnumActionResult.PASS, itemStack);
         }
         
-        String ownerName = this.getOwnerName(itemStack);
-        player.addChatMessage(new TextComponentString("Current Power: " + ownerName + ": " + EnergyItems.getCurrentPower(ownerName)));
+        /*String ownerName = this.getOwnerName(itemStack);
+        player.addChatMessage(new TextComponentString("Current Power: " + ownerName + ": " + EnergyItems.getCurrentPower(ownerName)));*/
         return new ActionResult(EnumActionResult.SUCCESS, itemStack);
     }
 }

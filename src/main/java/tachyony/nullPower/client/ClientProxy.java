@@ -16,31 +16,27 @@
 package tachyony.nullPower.client;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tachyony.nullPower.CommonProxy;
-import tachyony.nullPower.NullPower;
-import tachyony.nullPower.Reference;
-import tachyony.nullPower.entity.EntityRifleBolt;
+import tachyony.nullPower.ObjectRegistrar;
 
 /**
  * Client proxy
  */
+@Mod.EventBusSubscriber(Side.CLIENT)
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
-    private final Minecraft mc = Minecraft.getMinecraft();
-    
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
@@ -56,50 +52,34 @@ public class ClientProxy extends CommonProxy {
 	    super.postInit(event);
     }
 	
-	@Override
-    public void registerRenderers() {
-        ItemModelMesher mesher = mc.getRenderItem().getItemModelMesher();
-        
-        registerItemRenderer(mesher, NullPower.rifleAmmo);
+	@SubscribeEvent
+	public static void registerModels(ModelRegistryEvent event) {
+        /*registerItemRenderer(mesher, NullPower.rifleAmmo);
         registerItemRenderer(mesher, NullPower.huntingRifle);
         registerItemRenderer(mesher, NullPower.huntingRifleB);
         registerItemRenderer(mesher, NullPower.huntingRifleC);
-        registerItemRenderer(mesher, NullPower.huntingRifleD);
-        registerItemRenderer(mesher, NullPower.itemDynamitePickaxe);
-        registerItemRenderer(mesher, NullPower.itemNullWrench);
-        registerItemRenderer(mesher, NullPower.enderIron);
-        registerItemRenderer(mesher, NullPower.enderIronDust);
+        registerItemRenderer(mesher, NullPower.huntingRifleD);*/
+        registerItemRenderer(ObjectRegistrar.itemDynamitePickaxe);
+        registerItemRenderer(ObjectRegistrar.itemNullWrench);
+        registerItemRenderer(ObjectRegistrar.psuedoEnderPearl);
+        registerItemRenderer(ObjectRegistrar.ingotBronze);
+        registerItemRenderer(ObjectRegistrar.enderIron);
+        registerItemRenderer(ObjectRegistrar.enderIronDust);
         
-        registerBlock(NullPower.blockEnderGenerator);
-        registerItemBlock(mesher, NullPower.itemBlockEnderGenerator);
-        registerBlock(NullPower.blockEnderReed);
-        registerItemBlock(mesher, NullPower.itemBlockEnderReed);
+        registerBlock(ObjectRegistrar.blockEnderGenerator);
+        registerBlock(ObjectRegistrar.blockEnderReed);
+        registerBlock(ObjectRegistrar.blockMiningSludge);
+        registerBlock(ObjectRegistrar.blockDerpyFurnace);
         
-        registerItemRenderer(mesher, NullPower.itemEnderReed);
-        registerItemRenderer(mesher, NullPower.enderGeneratorCore);
-        registerItemRenderer(mesher, NullPower.enderGeneratorCoreAdvanced);
-        registerItemRenderer(mesher, NullPower.nullHelmet);
-        registerItemRenderer(mesher, NullPower.nullChestplate);
-        registerItemRenderer(mesher, NullPower.nullLeggings);
-        registerItemRenderer(mesher, NullPower.nullBoots);
+        registerItemRenderer(ObjectRegistrar.itemEnderReed);
+        registerItemRenderer(ObjectRegistrar.enderGeneratorCore);
+        registerItemRenderer(ObjectRegistrar.enderGeneratorCoreAdvanced);
+        registerItemRenderer(ObjectRegistrar.nullHelmet);
+        registerItemRenderer(ObjectRegistrar.nullChestplate);
+        registerItemRenderer(ObjectRegistrar.nullLeggings);
+        registerItemRenderer(ObjectRegistrar.nullBoots);
         
-        RenderingRegistry.registerEntityRenderingHandler(EntityRifleBolt.class, new RenderSnowball(mc.getRenderManager(), NullPower.rifleAmmo, mc.getRenderItem()));
-    }
-
-    /**
-     * Registers an item with no subtypes using the unlocalized name as the texture name
-     */
-    private void registerItemRenderer(ItemModelMesher mesher, Item item) {
-        registerItemRenderer(mesher, item, 0);
-    }
-    
-    /**
-     * Registers a specific item subtype using the unlocalized name as the texture name
-     * @param meta  Always 0 if only one type, otherwise the subtype's metadata value
-     */
-    private void registerItemRenderer(ItemModelMesher mesher, Item item, int meta) {
-        String name = item.getRegistryName().toString();
-        registerItemRenderer(mesher, item, name, meta);
+        //RenderingRegistry.registerEntityRenderingHandler(EntityRifleBolt.class, new RenderSnowball(mc.getRenderManager(), NullPower.rifleAmmo, mc.getRenderItem()));
     }
     
     /**
@@ -107,33 +87,13 @@ public class ClientProxy extends CommonProxy {
      * @param name  Exact name of the texture file to be used, including the "modid:" prefix
      * @param meta  Always 0 if only one type, otherwise the subtype's metadata value
      */
-    private void registerItemRenderer(ItemModelMesher mesher, Item item, String name, int meta) {
-        NullPower.logger.info("Registering renderer for " + name);
-        mesher.register(item, meta, new ModelResourceLocation(name, "inventory"));
-    }
-    
-    public static void registerItemBlock(ItemModelMesher mesher, ItemBlock block) {
-        
+    private static void registerItemRenderer(Item item) {
+    	ResourceLocation name = item.getRegistryName();
+        ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(name, "inventory"));
     }
     
     public static void registerBlock(Block block) {
         Item item = Item.getItemFromBlock(block);
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-        .register(item, 0, new ModelResourceLocation(
-            item.getRegistryName(), "inventory"));  
-        
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-            .register(item, 0, new ModelResourceLocation(
-                Reference.MODID + ":" + item.getRegistryName().toString().substring(5), 
-                "inventory"));      
-        
-        ModelLoader.setCustomModelResourceLocation(item, 0,
-            new ModelResourceLocation(block.getRegistryName(), "inventory"));
-        
-        String r = item.getRegistryName().toString();
-        ModelResourceLocation loc = new ModelResourceLocation(
-                r, "inventory");
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(
-            item, 0, loc);
+        ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(block.getRegistryName(), "inventory"));
     }
 }

@@ -9,15 +9,19 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import tachyony.nullPower.NullPower;
+import tachyony.nullPower.ObjectRegistrar;
+import tachyony.nullPower.Reference;
 
 public class NullArmor extends ItemArmor {
     private final ArmorMaterial material;
 
-    public NullArmor(ArmorMaterial materialIn, int renderId, EntityEquipmentSlot partId) {
-        super(materialIn, renderId, partId);
-        this.material = materialIn;
-        this.maxStackSize = 1;
-        this.setCreativeTab(CreativeTabs.COMBAT);
+    public NullArmor(int renderId, EntityEquipmentSlot partId, String name) {
+        super(NullPower.nullArmour, renderId, partId);
+        material = NullPower.nullArmour;
+        maxStackSize = 1;
+        setCreativeTab(CreativeTabs.COMBAT);
+        setRegistryName(name);
+        setUnlocalizedName(Reference.MODID + "." + name);
     }
     
     /**
@@ -26,7 +30,7 @@ public class NullArmor extends ItemArmor {
     @Override
     public int getItemEnchantability()
     {
-        return this.material.getEnchantability();
+        return material.getEnchantability();
     }
     
     /**
@@ -35,7 +39,7 @@ public class NullArmor extends ItemArmor {
     @Override
     public ItemArmor.ArmorMaterial getArmorMaterial()
     {
-        return this.material;
+        return material;
     }
     
     /**
@@ -44,7 +48,7 @@ public class NullArmor extends ItemArmor {
     @Override
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
     {
-        return this.material.getRepairItem() == repair.getItem() ? true : super.getIsRepairable(toRepair, repair);
+    	return ObjectRegistrar.enderIron == repair.getItem() ? true : super.getIsRepairable(toRepair, repair);
     }
     
     @Override
@@ -54,23 +58,21 @@ public class NullArmor extends ItemArmor {
             (player.getItemStackFromSlot(EntityEquipmentSlot.CHEST) != null) &&
             (player.getItemStackFromSlot(EntityEquipmentSlot.LEGS) != null) &&
             (player.getItemStackFromSlot(EntityEquipmentSlot.FEET) != null) &&
-            player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem().equals(NullPower.nullHelmet) &&
-            player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem().equals(NullPower.nullChestplate) &&
-            player.getItemStackFromSlot(EntityEquipmentSlot.LEGS).getItem().equals(NullPower.nullLeggings) &&
-            player.getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem().equals(NullPower.nullBoots))
+            player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem().equals(ObjectRegistrar.nullHelmet) &&
+            player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem().equals(ObjectRegistrar.nullChestplate) &&
+            player.getItemStackFromSlot(EntityEquipmentSlot.LEGS).getItem().equals(ObjectRegistrar.nullLeggings) &&
+            player.getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem().equals(ObjectRegistrar.nullBoots))
         {
-            //int resistance = 11;
-            //player.addPotionEffect(new PotionEffect(Potion.getPotionById(resistance), 20, 0, false, false));
-            //int regeneration = 10;
-            //player.addPotionEffect(new PotionEffect(Potion.getPotionById(regeneration), 20, 0, false, false));
-            //int absorbtion = 22;
-            //player.addPotionEffect(new PotionEffect(Potion.getPotionById(absorbtion), 20, 0, false, false));
-            int jump = 8;
-            player.addPotionEffect(new PotionEffect(Potion.getPotionById(jump), 20, 1, false, false));
-            int saturation = 23;
-            player.addPotionEffect(new PotionEffect(Potion.getPotionById(saturation), 20, 0, false, false));
             int speed = 1;
             player.addPotionEffect(new PotionEffect(Potion.getPotionById(speed), 20, 1, false, false));
+            int jump = 8;
+            player.addPotionEffect(new PotionEffect(Potion.getPotionById(jump), 20, 1, false, false));
+            int resistance = 11;
+            player.addPotionEffect(new PotionEffect(Potion.getPotionById(resistance), 20, 0, false, false));
+            int absorbtion = 22;
+            player.addPotionEffect(new PotionEffect(Potion.getPotionById(absorbtion), 20, 0, false, false));
+            int saturation = 23;
+            player.addPotionEffect(new PotionEffect(Potion.getPotionById(saturation), 20, 0, false, false));
         }
     }
 }

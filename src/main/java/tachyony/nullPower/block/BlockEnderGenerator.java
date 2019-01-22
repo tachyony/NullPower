@@ -15,24 +15,21 @@
  */
 package tachyony.nullPower.block;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import tachyony.nullPower.item.EnergyItems;
+import tachyony.nullPower.Reference;
 import tachyony.nullPower.tile.TileEntityEnderGenerator;
 
 /**
@@ -42,8 +39,12 @@ public class BlockEnderGenerator extends BlockContainer implements ITileEntityPr
     /**
      * @param material Material
      */
-    public BlockEnderGenerator(Material material) {
-      super(material);
+    public BlockEnderGenerator() {
+    	super(Material.IRON);
+    	setHardness(1F);
+    	setCreativeTab(CreativeTabs.MATERIALS);
+    	setRegistryName("blockEnderGenerator");
+    	setUnlocalizedName(Reference.MODID + "." + "blockEnderGenerator");
     }
     
     /**
@@ -78,8 +79,7 @@ public class BlockEnderGenerator extends BlockContainer implements ITileEntityPr
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem,
-            EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         TileEntityEnderGenerator tileEntity = (TileEntityEnderGenerator)world.getTileEntity(pos);
         if  ((tileEntity == null) || player.isSneaking()) {
@@ -92,23 +92,23 @@ public class BlockEnderGenerator extends BlockContainer implements ITileEntityPr
             return false;
         }
         
-        Item item = playerItem.getItem();
+        /*Item item = player.getHeldItem(hand).getItem();
         if (!(item instanceof EnergyItems))
         {
             return false;
-        }
+        }*/
         
         if (world.isRemote)
         {
             return true;
         }
         
-        // Set to different user if needed to align network correctly
+        /*/ Set to different user if needed to align network correctly
         ((EnergyItems)item).checkAndSetItemOwner(playerItem, player);
         
         // Set owner to current energy item
         tileEntity.setOwner(EnergyItems.getOwnerName(playerItem));
-        player.addChatMessage(new TextComponentString("Current owner: " + tileEntity.getOwner()));
+        player.addChatMessage(new TextComponentString("Current owner: " + tileEntity.getOwner()));*/
         world.notifyBlockUpdate(pos, state, state, 3);
         return true;
     }

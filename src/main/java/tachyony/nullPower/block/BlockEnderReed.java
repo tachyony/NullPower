@@ -23,8 +23,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,10 +38,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import tachyony.nullPower.NullPower;
+import tachyony.nullPower.ObjectRegistrar;
+import tachyony.nullPower.Reference;
 
 /**
  * Ender reed.
@@ -55,8 +59,12 @@ public class BlockEnderReed extends Block implements IPlantable {
     public BlockEnderReed()
     {
         super(Material.PLANTS);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)));
-        this.setTickRandomly(true);
+        setHardness(1F);
+        setCreativeTab(CreativeTabs.MATERIALS);
+        setRegistryName("blockEnderReed");
+        setUnlocalizedName(Reference.MODID + "." + "blockEnderReed");
+        setDefaultState(this.blockState.getBaseState().withProperty(AGE, Integer.valueOf(0)));
+        setTickRandomly(true);
     }
 
     @Override
@@ -71,7 +79,7 @@ public class BlockEnderReed extends Block implements IPlantable {
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand)
     {
-        if (world.getBlockState(pos.down()).getBlock() == Blocks.REEDS || this.checkForDrop(world, pos, state))
+        if (world.getBlockState(pos.down()).getBlock() == ObjectRegistrar.blockEnderReed || this.checkForDrop(world, pos, state))
         {
             if (world.isAirBlock(pos.up()))
             {
@@ -84,14 +92,19 @@ public class BlockEnderReed extends Block implements IPlantable {
                 if (i < 11)
                 {
                     int j = ((Integer)state.getValue(AGE)).intValue();
-                    if (j == 15)
+                    if(ForgeHooks.onCropsGrowPre(world, pos, state, true))
                     {
-                        world.setBlockState(pos.up(), this.getDefaultState());
-                        world.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(0)), 4);
-                    }
-                    else
-                    {
-                        world.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(j + 1)), 4);
+	                    if (j == 15)
+	                    {
+	                        world.setBlockState(pos.up(), this.getDefaultState());
+	                        world.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(0)), 4);
+	                    }
+	                    else
+	                    {
+	                        world.setBlockState(pos, state.withProperty(AGE, Integer.valueOf(j + 1)), 4);
+	                    }
+	                    
+	                    ForgeHooks.onCropsGrowPost(world, pos, state, world.getBlockState(pos));
                     }
                 }
             }
@@ -110,11 +123,7 @@ public class BlockEnderReed extends Block implements IPlantable {
             return true;
         }
         
-        if (block == this)
-        {
-            return true;
-        }
-        else if (block == Blocks.OBSIDIAN)
+        if ((block == this) || (block == Blocks.OBSIDIAN) || (block == Blocks.MAGMA) || (block == Blocks.LAPIS_BLOCK))
         {
             return true;
         }
@@ -130,7 +139,7 @@ public class BlockEnderReed extends Block implements IPlantable {
      * block, etc.
      */
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn)
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
         this.checkForDrop(worldIn, pos, state);
     }
@@ -164,7 +173,7 @@ public class BlockEnderReed extends Block implements IPlantable {
      */
     @Override
     @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
     {
         return NULL_AABB;
     }
@@ -175,7 +184,7 @@ public class BlockEnderReed extends Block implements IPlantable {
     @Nullable
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return NullPower.itemEnderReed;
+        return ObjectRegistrar.itemEnderReed;
     }
 
     /**
@@ -207,7 +216,7 @@ public class BlockEnderReed extends Block implements IPlantable {
      */
     @Override
     public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
-        return new ItemStack(NullPower.itemEnderReed);
+        return new ItemStack(ObjectRegistrar.itemEnderReed);
     }
     
     /**
@@ -246,8 +255,24 @@ public class BlockEnderReed extends Block implements IPlantable {
         return this.getDefaultState();
     }
 
+    @Override
     protected BlockStateContainer createBlockState()
     {
         return new BlockStateContainer(this, new IProperty[] {AGE});
+    }
+    
+    /**
+     * Get the geometry of the queried face at the given position and state. This is used to decide whether things like
+     * buttons are allowed to be placed on the face, or how glass panes connect to the face, among other things.
+     * <p>
+     * Common values are {@code SOLID}, which is the default, and {@code UNDEFINED}, which represents something that
+     * does not fit the other descriptions and will generally cause other things not to connect to the face.
+     * 
+     * @return an approximation of the form of the given face
+     */
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
+    {
+        return BlockFaceShape.UNDEFINED;
     }
 }

@@ -15,12 +15,15 @@
  */
 package tachyony.nullPower.item;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSnow;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -31,20 +34,23 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import tachyony.nullPower.NullPower;
+import tachyony.nullPower.Reference;
 
 /**
  * Ender reed
  */
 public class ItemEnderReed extends Item {
-    private Block spawn;
-
+	private final Block block;
+	
     /**
      * @param spawn What the block is
      */
-    public ItemEnderReed(Block spawn) {
+    public ItemEnderReed(Block block) {
         super();
-        this.spawn = spawn;
+        setCreativeTab(CreativeTabs.MATERIALS);
+        setRegistryName("enderReed");
+        setUnlocalizedName(Reference.MODID + "." + "itemEnderReed");
+        this.block = block;
     }
 
     /**
@@ -53,41 +59,48 @@ public class ItemEnderReed extends Item {
      * false if it don't. This is for ITEMS, not BLOCKS
      */
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing,
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing,
             float hitX, float hitY, float hitZ) {
-        IBlockState iblockstate = worldIn.getBlockState(pos);
+    	IBlockState iblockstate = world.getBlockState(pos);
         Block block = iblockstate.getBlock();
         
         if (block == Blocks.SNOW_LAYER && ((Integer)iblockstate.getValue(BlockSnow.LAYERS)).intValue() < 1)
         {
             facing = EnumFacing.UP;
         }
-        else if (!block.isReplaceable(worldIn, pos))
+        else if (!block.isReplaceable(world, pos))
         {
             pos = pos.offset(facing);
         }
-
-        if (playerIn.canPlayerEdit(pos, facing, stack) && stack.stackSize != 0 &&
-                worldIn.canBlockBePlaced(NullPower.blockEnderReed, pos, false, facing, (Entity)null, stack))
+        
+        ItemStack itemstack = player.getHeldItem(hand);
+        
+        if (!itemstack.isEmpty() && player.canPlayerEdit(pos, facing, itemstack) && world.mayPlace(this.block, pos, false, facing, (Entity)null))
         {
-            IBlockState iblockstate1 = NullPower.blockEnderReed.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, 0, playerIn);
-            if (!worldIn.setBlockState(pos, iblockstate1, 11))
+            IBlockState iblockstate1 = this.block.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, 0, player, hand);
+            
+            if (!world.setBlockState(pos, iblockstate1, 11))
             {
                 return EnumActionResult.FAIL;
             }
             else
             {
-                iblockstate1 = worldIn.getBlockState(pos);
-                if (iblockstate1.getBlock() == NullPower.blockEnderReed)
+                iblockstate1 = world.getBlockState(pos);
+                if (iblockstate1.getBlock() == this.block)
                 {
-                    ItemBlock.setTileEntityNBT(worldIn, playerIn, pos, stack);
-                    iblockstate1.getBlock().onBlockPlacedBy(worldIn, pos, iblockstate1, playerIn, stack);
+                    ItemBlock.setTileEntityNBT(world, player, pos, itemstack);
+                    iblockstate1.getBlock().onBlockPlacedBy(world, pos, iblockstate1, player, itemstack);
+                    
+                    if (player instanceof EntityPlayerMP)
+                    {
+                        CriteriaTriggers.PLACED_BLOCK.trigger((EntityPlayerMP)player, pos, itemstack);
+                    }
                 }
 
-                SoundType soundtype = NullPower.blockEnderReed.getSoundType();
-                worldIn.playSound(playerIn, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F,
+                SoundType soundtype = iblockstate1.getBlock().getSoundType(iblockstate1, world, pos, player);
+                world.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F,
                         soundtype.getPitch() * 0.8F);
-                --stack.stackSize;
+                itemstack.shrink(1);
                 return EnumActionResult.SUCCESS;
             }
         }
