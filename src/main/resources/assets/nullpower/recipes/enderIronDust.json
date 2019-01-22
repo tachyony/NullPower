@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        " r ",
+        "rwr",
+        " r "
+    ],
+    "key":
+    {
+        "r":
+        {
+            "item": "nullpower:enderReed"
+        },
+        "w":
+        {
+            "item": "minecraft:water_bucket"
+        }
+    },
+    "result":
+    {
+        "item": "nullpower:enderIronDust",
+        "count": 1
+    }
+}

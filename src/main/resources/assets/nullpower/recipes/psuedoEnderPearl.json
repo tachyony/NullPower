@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "   ",
+        " sb",
+        "   "
+    ],
+    "key":
+    {
+        "s":
+        {
+		    "type": "forge:ore_dict",
+		    "ore": "slimeball"
+        },
+        "b":
+        {
+            "type": "forge:ore_dict",
+            "ore": "dyeBlack"
+        }
+    },
+    "result":
+    {
+        "item": "nullpower:psuedoEnderPearl",
+        "count": 1
+    }
+}

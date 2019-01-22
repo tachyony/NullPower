@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "eae",
+        "aaa",
+        "eae"
+    ],
+    "key":
+    {
+        "a":
+        {
+            "item": "nullpower:endergeneratorcoreadvanced"
+        },
+        "e":
+        {
+            "item": "nullpower:endergeneratorcore"
+        }
+    },
+    "result":
+    {
+        "item": "nullpower:blockEnderGenerator",
+        "count": 1
+    }
+}

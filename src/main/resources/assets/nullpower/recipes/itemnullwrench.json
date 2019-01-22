@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "eee",
+        " s ",
+        " s "
+    ],
+    "key":
+    {
+        "e":
+        {
+            "item": "nullpower:enderIron"
+        },
+        "s":
+        {
+            "type": "forge:ore_dict",
+            "ore": "stickWood"
+        }
+    },
+    "result":
+    {
+        "item": "nullpower:nullWrench",
+        "count": 1
+    }
+}

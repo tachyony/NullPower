@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "iei",
+        "eae",
+        "iei"
+    ],
+    "key":
+    {
+        "a":
+        {
+            "item": "nullpower:endergeneratorcoreadvanced"
+        },
+        "e":
+        {
+            "item": "nullpower:endergeneratorcore"
+        },
+        "i":
+        {
+            "item": "nullpower:enderIron"
+        }
+    },
+    "result":
+    {
+        "item": "nullpower:blockderpyfurnace",
+        "count": 1
+    }
+}

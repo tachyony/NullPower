@@ -1,0 +1,12 @@
+{
+    "parent": "block/orientable",
+    "textures": {
+        "particle": "nullpower:blocks/blockderpyfurnace",
+        "up": "nullpower:blocks/blockderpyfurnace",
+        "down": "nullpower:blocks/blockderpyfurnace",
+        "north": "nullpower:blocks/blockderpyfurnace",
+        "east": "nullpower:blocks/blockderpyfurnace",
+        "south": "nullpower:blocks/blockderpyfurnace",
+        "west": "nullpower:blocks/blockderpyfurnace"
+}
+}

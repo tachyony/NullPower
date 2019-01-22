@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        " e ",
+        "iri",
+        " i "
+    ],
+    "key":
+    {
+        "e":
+        {
+            "type": "forge:ore_dict",
+            "ore": "nullenderpearl"
+        },
+        "r":
+        {
+            "type": "forge:ore_dict",
+            "ore": "sugarcane"
+        },
+        "i":
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotIron"
+        }
+    },
+    "result":
+    {
+        "item": "nullpower:enderReed",
+        "count": 1
+    }
+}

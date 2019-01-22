@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "rrr",
+        "rsr",
+        "rrr"
+    ],
+    "key":
+    {
+        "s":
+        {
+            "item": "minecraft:wheat_seeds"
+        },
+        "r":
+        {
+            "item": "minecraft:rotten_flesh"
+        }
+    },
+    "result":
+    {
+        "item": "nullpower:blockminingsludge",
+        "count": 1
+    }
+}

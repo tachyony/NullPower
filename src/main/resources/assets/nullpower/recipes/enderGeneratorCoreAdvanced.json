@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "iei",
+        "eie",
+        "iei"
+    ],
+    "key":
+    {
+        "e":
+        {
+            "item": "nullpower:enderGeneratorCore"
+        },
+        "i":
+        {
+            "item": "nullpower:enderIron"
+        }
+    },
+    "result":
+    {
+        "item": "nullpower:enderGeneratorCoreAdvanced",
+        "count": 1
+    }
+}
