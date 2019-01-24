@@ -16,7 +16,6 @@
 package tachyony.nullPower.block;
 
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -35,7 +34,7 @@ import tachyony.nullPower.tile.TileEntityEnderGenerator;
 /**
  * Ender generator
  */
-public class BlockEnderGenerator extends BlockContainer implements ITileEntityProvider {
+public class BlockEnderGenerator extends BlockContainer /*implements ITileEntityProvider because warning*/ {
     /**
      * @param material Material
      */

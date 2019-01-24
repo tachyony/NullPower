@@ -39,6 +39,7 @@ import tachyony.nullPower.item.IngotBronze;
 import tachyony.nullPower.item.ItemDynamitePickaxe;
 import tachyony.nullPower.item.ItemEnderReed;
 import tachyony.nullPower.item.ItemNullWrench;
+import tachyony.nullPower.item.ItemRifleAmmo;
 import tachyony.nullPower.item.NullArmor;
 import tachyony.nullPower.item.PsuedoEnderPearl;
 import tachyony.nullPower.tile.TileEntityDerpyFurnace;
@@ -84,6 +85,7 @@ public class CommonProxy {
     	 event.getRegistry().register(new ItemDynamitePickaxe());
     	 event.getRegistry().register(new ItemNullWrench());
     	 event.getRegistry().register(new ItemEnderReed(ObjectRegistrar.blockEnderReed));
+    	 event.getRegistry().register(new ItemRifleAmmo());
     	 event.getRegistry().register(new EnderGeneratorCore());
     	 event.getRegistry().register(new EnderGeneratorCoreAdvanced());
     	 

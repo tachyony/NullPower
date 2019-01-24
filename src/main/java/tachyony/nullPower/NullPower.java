@@ -91,7 +91,6 @@ public class NullPower {
         Config.readConfig();
 
         // Ranged weapons
-        /*rifleAmmo = new ItemRifleAmmo().setRegistryName("rifleAmmo");*/
         //EntityRegistry.registerModEntity(EntityRifleBolt.class, "RifleBoltD", 3, instance, 160, 1, true);
         
         /*huntingRifle = new ItemHuntingRifle(ToolMaterial.IRON).setRegistryName("huntingRifle");
@@ -99,14 +98,13 @@ public class NullPower {
         huntingRifleC = new ItemHuntingRifle(enderIronMaterial).setRegistryName("huntingRifleC");
         huntingRifleD = new ItemHuntingRifle(cheatMaterial).setRegistryName("huntingRifleD");*/
         
-        /*rifleAmmo.setUnlocalizedName(Reference.MODID + "." + "rifleAmmo");
+        /*
         huntingRifle.setUnlocalizedName(Reference.MODID + "." + "huntingRifle");
         huntingRifleB.setUnlocalizedName(Reference.MODID + "." + "huntingRifleB");
         huntingRifleC.setUnlocalizedName(Reference.MODID + "." + "huntingRifleC");
         huntingRifleD.setUnlocalizedName(Reference.MODID + "." + "huntingRifleD");*/
         
         // Register items
-        //GameRegistry.register(rifleAmmo);
         //GameRegistry.register(huntingRifle);
         //GameRegistry.register(huntingRifleB);
         //GameRegistry.register(huntingRifleC);

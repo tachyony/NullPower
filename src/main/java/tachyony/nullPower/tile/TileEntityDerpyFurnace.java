@@ -12,8 +12,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnaceFuel;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBoat;
@@ -26,7 +24,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.walkers.ItemStackDataLists;
@@ -39,28 +36,33 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import tachyony.nullPower.block.BlockDerpyFurnace;
 
 public class TileEntityDerpyFurnace extends TileEntityLockable implements ITickable, ISidedInventory
 {
     private static final int[] SLOTS_TOP = new int[] {0};
+    
     private static final int[] SLOTS_BOTTOM = new int[] {2, 1};
+    
     private static final int[] SLOTS_SIDES = new int[] {1};
     
-    /* The ItemStacks that hold the items currently being used in the furnace
-    private NonNullList<ItemStack> furnaceItemStacks = NonNullList.<ItemStack>withSize(3, ItemStack.EMPTY);*/
-    
-    private Slot slot0 = new Slot(inventoryIn, 0, 0, 0);
-	private Slot slot1 = new Slot(inventoryIn, 1, 0, 50);
-	private Slot slot2 = new Slot(inventoryIn, 2, 50, 0);
+    /**
+     * The ItemStacks that hold the items currently being used in the furnace
+     */
+    private ItemStackHandler itemStackHandler = new ItemStackHandler(3);
 	
     /** The number of ticks that the furnace will keep burning */
     private int furnaceBurnTime;
+    
     /** The number of ticks that a fresh copy of the currently-burning item would keep the furnace burning for */
     private int currentItemBurnTime;
+    
     private int cookTime;
+    
     private int totalCookTime = 200;
+    
     private String furnaceCustomName;
 
     /**
@@ -76,7 +78,7 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
     @Override
     public boolean isEmpty()
     {
-    	if (slot0.getHasStack() || slot1.getHasStack() || slot2.getHasStack())
+    	if (this.itemStackHandler.getStackInSlot(0).isEmpty() || this.itemStackHandler.getStackInSlot(1).isEmpty() || this.itemStackHandler.getStackInSlot(2).isEmpty())
     	{
         	return false;
         }
@@ -94,15 +96,21 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
     {
         if (index == 0)
         {
-        	return slot0.getStack();
+        	return this.itemStackHandler.getStackInSlot(0);
         }
         else if (index == 1)
         {
-        	return slot1.getStack();
+        	return this.itemStackHandler.getStackInSlot(1);
         }
         else if (index == 2)
         {
-        	return slot2.getStack();
+        	return this.itemStackHandler.getStackInSlot(2);
+        	///Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft:stone"));
+        	///ItemStack itemStack = new ItemStack(item, 1, 1); // item, amount(1), metadata
+        }
+        else
+        {
+        	return ItemStack.EMPTY;
         }
     }
 
@@ -114,15 +122,19 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
     {
         if (index == 0)
         {
-        	return slot0.decrStackSize(count);
+        	return this.itemStackHandler.extractItem(0, count, false);
         }
         else if (index == 1)
         {
-        	return slot1.decrStackSize(count);
+        	return this.itemStackHandler.extractItem(1, count, false);
         }
         else if (index == 2)
         {
-        	return slot2.decrStackSize(count);
+        	return this.itemStackHandler.extractItem(2, count, false);
+        }
+        else
+        {
+        	return ItemStack.EMPTY;
         }
     }
 
@@ -132,19 +144,9 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
     @Override
     public ItemStack removeStackFromSlot(int index)
     {
-        //return ItemStackHelper.getAndRemove(this.furnaceItemStacks, index);
-        if (index == 0)
-        {
-        	return slot0.removeStackFromSlot();
-        }
-        else if (index == 1)
-        {
-        	return slot1.removeStackFromSlot();
-        }
-        else if (index == 2)
-        {
-        	return slot2.removeStackFromSlot();
-        }
+    	ItemStack itemStack = this.getStackInSlot(index);
+    	this.itemStackHandler.setStackInSlot(index, ItemStack.EMPTY);
+        return itemStack;
     }
 
     /**
@@ -153,9 +155,9 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
     @Override
     public void setInventorySlotContents(int index, ItemStack stack)
     {
-        ItemStack itemstack = getStackInSlot(index);
-        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
-        this.furnaceItemStacks.set(index, stack);
+        ItemStack itemStack = getStackInSlot(index);
+        boolean flag = !stack.isEmpty() && stack.isItemEqual(itemStack) && ItemStack.areItemStackTagsEqual(stack, itemStack);
+        this.itemStackHandler.setStackInSlot(index, stack);
 
         if (stack.getCount() > this.getInventoryStackLimit())
         {
@@ -213,12 +215,12 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
     public void readFromNBT(NBTTagCompound compound)
     {
         super.readFromNBT(compound);
-        this.furnaceItemStacks = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        ItemStackHelper.loadAllItems(compound, this.furnaceItemStacks);
+        this.itemStackHandler = new ItemStackHandler(3);
+        this.itemStackHandler.deserializeNBT(compound.getCompoundTag("inventory"));
         this.furnaceBurnTime = compound.getInteger("BurnTime");
         this.cookTime = compound.getInteger("CookTime");
         this.totalCookTime = compound.getInteger("CookTimeTotal");
-        this.currentItemBurnTime = getItemBurnTime(this.furnaceItemStacks.get(1));
+        this.currentItemBurnTime = getItemBurnTime(this.itemStackHandler.getStackInSlot(1));
 
         if (compound.hasKey("CustomName", 8))
         {
@@ -233,7 +235,7 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
         compound.setInteger("BurnTime", (short)this.furnaceBurnTime);
         compound.setInteger("CookTime", (short)this.cookTime);
         compound.setInteger("CookTimeTotal", (short)this.totalCookTime);
-        ItemStackHelper.saveAllItems(compound, this.furnaceItemStacks);
+        compound.setTag("inventory", this.itemStackHandler.serializeNBT());
 
         if (this.hasCustomName())
         {
@@ -288,9 +290,9 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
 
         if (!this.world.isRemote)
         {
-            ItemStack itemstack = this.furnaceItemStacks.get(1);
+            ItemStack itemstack = this.itemStackHandler.getStackInSlot(1);
 
-            if (this.isBurning() || !itemstack.isEmpty() && !((ItemStack)this.furnaceItemStacks.get(0)).isEmpty())
+            if (this.isBurning() || !itemstack.isEmpty() && !(this.itemStackHandler.getStackInSlot(0).isEmpty()))
             {
                 if (!this.isBurning() && this.canSmelt())
                 {
@@ -309,7 +311,7 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
                             if (itemstack.isEmpty())
                             {
                                 ItemStack item1 = item.getContainerItem(itemstack);
-                                this.furnaceItemStacks.set(1, item1);
+                                this.itemStackHandler.setStackInSlot(1, item1);
                             }
                         }
                     }
@@ -322,7 +324,7 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
                     if (this.cookTime == this.totalCookTime)
                     {
                         this.cookTime = 0;
-                        this.totalCookTime = this.getCookTime(this.furnaceItemStacks.get(0));
+                        this.totalCookTime = this.getCookTime(this.itemStackHandler.getStackInSlot(0));
                         this.smeltItem();
                         flag1 = true;
                     }
@@ -360,14 +362,14 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
      */
     private boolean canSmelt()
     {
-        if (((ItemStack)this.furnaceItemStacks.get(0)).isEmpty())
+        if (this.itemStackHandler.getStackInSlot(0).isEmpty())
         {
             return false;
         }
         else
         {
         	// Not smelting it, compare source item instead
-            ItemStack itemstack = /*FurnaceRecipes.instance().getSmeltingResult(*/slot0.getStack()/*)*/;
+            ItemStack itemstack = this.itemStackHandler.getStackInSlot(0);
 
             if (itemstack.isEmpty())
             {
@@ -375,7 +377,7 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
             }
             else
             {
-                ItemStack itemstack1 = slot2.getStack();
+                ItemStack itemstack1 = this.itemStackHandler.getStackInSlot(2);
 
                 if (itemstack1.isEmpty())
                 {
@@ -404,28 +406,28 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
     {
         if (this.canSmelt())
         {
-            ItemStack itemstack = slot0.getStack();
+            ItemStack itemstack = this.itemStackHandler.getStackInSlot(0);
             
             // Smelting result, or source item in our case
             //ItemStack itemstack1 = FurnaceRecipes.instance().getSmeltingResult(itemstack);
             ItemStack itemstack1 = itemstack;
             
-            ItemStack itemstack2 = this.furnaceItemStacks.get(2);
+            ItemStack itemstack2 = this.itemStackHandler.getStackInSlot(2);
 
             if (itemstack2.isEmpty())
             {
             	ItemStack copied = itemstack1.copy();
             	copied.setCount(1);
-                this.furnaceItemStacks.set(2, copied);
+                this.itemStackHandler.setStackInSlot(2, copied);
             }
             else if (itemstack2.getItem() == itemstack1.getItem())
             {
                 itemstack2.grow(1);
             }
 
-            if (itemstack.getItem() == Item.getItemFromBlock(Blocks.SPONGE) && itemstack.getMetadata() == 1 && !slot1.getHasStack() && slot1.getStack().getItem() == Items.BUCKET)
+            if (itemstack.getItem() == Item.getItemFromBlock(Blocks.SPONGE) && itemstack.getMetadata() == 1 && !this.itemStackHandler.getStackInSlot(1).isEmpty() && this.itemStackHandler.getStackInSlot(1).getItem() == Items.BUCKET)
             {
-                this.furnaceItemStacks.set(1, new ItemStack(Items.WATER_BUCKET));
+                this.itemStackHandler.setStackInSlot(1, new ItemStack(Items.WATER_BUCKET));
             }
 
             // Remove one from source item, not wanted in this case
@@ -524,7 +526,7 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
         }
         else
         {
-            return player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
+            return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
         }
     }
 
@@ -555,7 +557,7 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
         }
         else
         {
-            ItemStack itemstack = slot1.getStack();
+            ItemStack itemstack = this.itemStackHandler.getStackInSlot(1);
             return isItemFuel(stack) || SlotFurnaceFuel.isBucket(stack) && itemstack.getItem() != Items.BUCKET;
         }
     }
@@ -647,6 +649,9 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
                 break;
             case 3:
                 this.totalCookTime = value;
+                break;
+            default:
+            	break;
         }
     }
 
@@ -659,11 +664,15 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
     @Override
     public void clear()
     {
-        this.furnaceItemStacks.clear();
+    	for(int i = 0; i < this.getSizeInventory(); i++) {
+    		this.itemStackHandler.setStackInSlot(i, ItemStack.EMPTY);
+    	}
     }
 
     IItemHandler handlerTop = new SidedInvWrapper(this, EnumFacing.UP);
+    
     IItemHandler handlerBottom = new SidedInvWrapper(this, EnumFacing.DOWN);
+    
     IItemHandler handlerSide = new SidedInvWrapper(this, EnumFacing.WEST);
 
     @Override

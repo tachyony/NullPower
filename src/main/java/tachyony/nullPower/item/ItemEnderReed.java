@@ -64,7 +64,7 @@ public class ItemEnderReed extends Item {
     	IBlockState iblockstate = world.getBlockState(pos);
         Block block = iblockstate.getBlock();
         
-        if (block == Blocks.SNOW_LAYER && ((Integer)iblockstate.getValue(BlockSnow.LAYERS)).intValue() < 1)
+        if (block == Blocks.SNOW_LAYER && (iblockstate.getValue(BlockSnow.LAYERS)).intValue() < 1)
         {
             facing = EnumFacing.UP;
         }

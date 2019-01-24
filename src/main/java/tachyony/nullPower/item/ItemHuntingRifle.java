@@ -32,6 +32,8 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -42,7 +44,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import tachyony.nullPower.entity.EntityRifleBolt;
+import tachyony.nullPower.Reference;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -50,7 +52,7 @@ import com.google.common.collect.Multimap;
 /**
  * Hunting rifle
  */
-public class ItemHuntingRifle extends EnergyItems {
+public class ItemHuntingRifle extends Item {
     private float attackDamage;
     
     private ToolMaterial toolMaterial;
@@ -60,14 +62,16 @@ public class ItemHuntingRifle extends EnergyItems {
      * @param toolMaterial Material
      * @param otherDamage Damage
      */
-	public ItemHuntingRifle(ToolMaterial toolMaterial) {
+	public ItemHuntingRifle(ToolMaterial toolMaterialIn) {
 		super();
-		this.toolMaterial = toolMaterial;
-		this.maxStackSize = 1;
-		this.bFull3D = true;
-		this.setMaxDamage(this.toolMaterial.getMaxUses());
-		this.setCreativeTab(CreativeTabs.COMBAT);
-		this.attackDamage = 4.0F + this.toolMaterial.getDamageVsEntity();
+		this.toolMaterial = toolMaterialIn;
+		maxStackSize = 1;
+		bFull3D = true;
+		setMaxDamage(toolMaterial.getMaxUses());
+		setCreativeTab(CreativeTabs.COMBAT);
+		setRegistryName("huntingRifle");
+        setUnlocalizedName(Reference.MODID + ".huntingRifle");
+		attackDamage = 4.0F + toolMaterial.getAttackDamage();
 	}
     
 	protected boolean isArrow(@Nullable ItemStack stack)
@@ -100,9 +104,8 @@ public class ItemHuntingRifle extends EnergyItems {
         }
     }
 	
-	@SuppressWarnings("unused")
     @Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
 	    boolean flag = playerIn.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, itemStackIn) > 0;
         ItemStack itemstack = this.findAmmo(playerIn);
@@ -117,7 +120,7 @@ public class ItemHuntingRifle extends EnergyItems {
     	    boolean flag1 = playerIn.capabilities.isCreativeMode || (itemstack.getItem() instanceof ItemRifleAmmo ? ((ItemRifleAmmo)itemstack.getItem()).isInfinite(itemstack, itemStackIn, playerIn) : false);
     	    //???if (!worldIn.isRemote)
             {
-    	        ItemRifleAmmo itemarrow = (ItemRifleAmmo)((ItemRifleAmmo)(itemstack.getItem() instanceof ItemRifleAmmo ? itemstack.getItem() : Items.ARROW));
+    	        ItemRifleAmmo itemarrow = ((ItemRifleAmmo)(itemstack.getItem() instanceof ItemRifleAmmo ? itemstack.getItem() : Items.ARROW));
         	    EntityRifleBolt entityBolt = new EntityRifleBolt(worldIn, playerIn, 4.0F);
         	    entityBolt.setIsCritical(true);
         	    
@@ -151,18 +154,18 @@ public class ItemHuntingRifle extends EnergyItems {
     	    
     	    if (!flag1)
             {
-                --itemstack.stackSize;
-                if (itemstack.stackSize == 0)
+                itemstack.shrink(1);
+                if (itemstack.isEmpty())
                 {
                     playerIn.inventory.deleteStack(itemstack);
                 }
             }
     	    
-    	    return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
+    	    return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
         }
     	else
     	{
-    	    return new ActionResult(EnumActionResult.FAIL, itemStackIn);
+    	    return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStackIn);
     	}
 	}
 	
@@ -175,15 +178,14 @@ public class ItemHuntingRifle extends EnergyItems {
 	/**
 	* Override to add custom weapon damage field rather than vanilla ItemSword's field
 	*/
-	@SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack)
     {
         Multimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
         if (slot == EntityEquipmentSlot.MAINHAND)
         {
-            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double)attackDamage, 0));
-            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4000000953674316D, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4000000953674316D, 0));
         }
 
         return multimap;
@@ -195,7 +197,7 @@ public class ItemHuntingRifle extends EnergyItems {
 	@Override
     public boolean onBlockDestroyed(ItemStack stack, World worldIn, IBlockState state, BlockPos pos, EntityLivingBase entityLiving)
     {
-        if ((double)state.getBlockHardness(worldIn, pos) != 0.0D)
+        if (state.getBlockHardness(worldIn, pos) != 0.0D)
         {
             stack.damageItem(2, entityLiving);
         }
@@ -235,6 +237,7 @@ public class ItemHuntingRifle extends EnergyItems {
      * Return the name for this tool's material.
      * @return Material name
      */
+    @Override
     public String getToolMaterialName()
     {
         return this.toolMaterial.toString();
@@ -282,9 +285,10 @@ public class ItemHuntingRifle extends EnergyItems {
     /**
      * Returns the amount of damage this item will deal. One heart of damage is equal to 2 damage points.
      */
+    @Override
     public float getDamageVsEntity()
     {
-        return this.toolMaterial.getDamageVsEntity();
+        return this.toolMaterial.getAttackDamage();
     }
     
     /**

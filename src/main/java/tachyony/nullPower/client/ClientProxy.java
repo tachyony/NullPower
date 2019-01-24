@@ -54,8 +54,8 @@ public class ClientProxy extends CommonProxy {
 	
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event) {
-        /*registerItemRenderer(mesher, NullPower.rifleAmmo);
-        registerItemRenderer(mesher, NullPower.huntingRifle);
+        registerItemRenderer(ObjectRegistrar.rifleAmmo);
+        /*registerItemRenderer(mesher, NullPower.huntingRifle);
         registerItemRenderer(mesher, NullPower.huntingRifleB);
         registerItemRenderer(mesher, NullPower.huntingRifleC);
         registerItemRenderer(mesher, NullPower.huntingRifleD);*/

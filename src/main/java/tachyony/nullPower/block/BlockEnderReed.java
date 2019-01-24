@@ -86,12 +86,11 @@ public class BlockEnderReed extends Block implements IPlantable {
                 int i;
                 for (i = 1; world.getBlockState(pos.down(i)).getBlock() == this; ++i)
                 {
-                    ;
                 }
 
                 if (i < 11)
                 {
-                    int j = ((Integer)state.getValue(AGE)).intValue();
+                    int j = (state.getValue(AGE)).intValue();
                     if(ForgeHooks.onCropsGrowPre(world, pos, state, true))
                     {
 	                    if (j == 15)
@@ -173,7 +172,7 @@ public class BlockEnderReed extends Block implements IPlantable {
      */
     @Override
     @Nullable
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos)
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockStateIn, IBlockAccess worldIn, BlockPos pos)
     {
         return NULL_AABB;
     }
@@ -241,7 +240,7 @@ public class BlockEnderReed extends Block implements IPlantable {
     @Override
     public int getMetaFromState(IBlockState state)
     {
-        return ((Integer)state.getValue(AGE)).intValue();
+        return (state.getValue(AGE)).intValue();
     }
     
     @Override
