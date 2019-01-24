@@ -45,6 +45,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import tachyony.nullPower.Reference;
+import tachyony.nullPower.entity.EntityRifleBolt;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -62,15 +63,15 @@ public class ItemHuntingRifle extends Item {
      * @param toolMaterial Material
      * @param otherDamage Damage
      */
-	public ItemHuntingRifle(ToolMaterial toolMaterialIn) {
+	public ItemHuntingRifle(ToolMaterial toolMaterialIn, String name) {
 		super();
 		this.toolMaterial = toolMaterialIn;
 		maxStackSize = 1;
 		bFull3D = true;
 		setMaxDamage(toolMaterial.getMaxUses());
 		setCreativeTab(CreativeTabs.COMBAT);
-		setRegistryName("huntingRifle");
-        setUnlocalizedName(Reference.MODID + ".huntingRifle");
+		setRegistryName(name);
+        setUnlocalizedName(Reference.MODID + "." + name);
 		attackDamage = 4.0F + toolMaterial.getAttackDamage();
 	}
     
@@ -105,8 +106,9 @@ public class ItemHuntingRifle extends Item {
     }
 	
     @Override
-	public ActionResult<ItemStack> onItemRightClick( World worldIn, EntityPlayer playerIn, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand)
     {
+    	ItemStack itemStackIn = playerIn.getHeldItem(hand);
 	    boolean flag = playerIn.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, itemStackIn) > 0;
         ItemStack itemstack = this.findAmmo(playerIn);
         
@@ -118,9 +120,10 @@ public class ItemHuntingRifle extends Item {
             }
     	    
     	    boolean flag1 = playerIn.capabilities.isCreativeMode || (itemstack.getItem() instanceof ItemRifleAmmo ? ((ItemRifleAmmo)itemstack.getItem()).isInfinite(itemstack, itemStackIn, playerIn) : false);
-    	    //???if (!worldIn.isRemote)
+    	    if (!worldIn.isRemote)
             {
-    	        ItemRifleAmmo itemarrow = ((ItemRifleAmmo)(itemstack.getItem() instanceof ItemRifleAmmo ? itemstack.getItem() : Items.ARROW));
+    	        @SuppressWarnings("unused")
+				ItemRifleAmmo itemarrow = ((ItemRifleAmmo)(itemstack.getItem() instanceof ItemRifleAmmo ? itemstack.getItem() : Items.ARROW));
         	    EntityRifleBolt entityBolt = new EntityRifleBolt(worldIn, playerIn, 4.0F);
         	    entityBolt.setIsCritical(true);
         	    
@@ -147,7 +150,7 @@ public class ItemHuntingRifle extends Item {
         	        entityBolt.canBePickedUp = 0;
         	    }
         	    
-        	    worldIn.spawnEntityInWorld(entityBolt);
+        	    worldIn.spawnEntity(entityBolt);
             }
     	    
     	    worldIn.playSound((EntityPlayer)null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL, 1.0F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
@@ -161,11 +164,11 @@ public class ItemHuntingRifle extends Item {
                 }
             }
     	    
-    	    return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
+    	    return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
         }
     	else
     	{
-    	    return new ActionResult<ItemStack>(EnumActionResult.FAIL, itemStackIn);
+    	    return new ActionResult<>(EnumActionResult.FAIL, itemStackIn);
     	}
 	}
 	
@@ -237,7 +240,6 @@ public class ItemHuntingRifle extends Item {
      * Return the name for this tool's material.
      * @return Material name
      */
-    @Override
     public String getToolMaterialName()
     {
         return this.toolMaterial.toString();
@@ -268,7 +270,7 @@ public class ItemHuntingRifle extends Item {
     }
     
     @Override
-    public float getStrVsBlock(ItemStack stack, IBlockState state)
+    public float getDestroySpeed(ItemStack stack, IBlockState state)
     {
         Block block = state.getBlock();
         if (block == Blocks.WEB)
@@ -285,8 +287,7 @@ public class ItemHuntingRifle extends Item {
     /**
      * Returns the amount of damage this item will deal. One heart of damage is equal to 2 damage points.
      */
-    @Override
-    public float getDamageVsEntity()
+    public float getAttackDamage()
     {
         return this.toolMaterial.getAttackDamage();
     }

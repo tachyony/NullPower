@@ -16,6 +16,7 @@
 package tachyony.nullPower;
 
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
@@ -63,13 +64,13 @@ public class NullPower {
     
     /**
      * Tool material
-     *
-    public static ToolMaterial enderIronMaterial = EnumHelper.addToolMaterial("EnderIron", 4, 1561, 12.0F, 6.0F, 22);*/
+     */
+    public static ToolMaterial enderIronMaterial = EnumHelper.addToolMaterial("EnderIron", 4, 1561, 12.0F, 6.0F, 22);
     
     /**
      * Tool material
-     *
-    public static ToolMaterial cheatMaterial = EnumHelper.addToolMaterial("CheatIron", 4, 8000, 40.0F, 100.0F, 30);*/
+     */
+    public static ToolMaterial cheatMaterial = EnumHelper.addToolMaterial("CheatIron", 4, 8000, 40.0F, 100.0F, 30);
     
     /**
      * Null armour material
@@ -92,23 +93,6 @@ public class NullPower {
 
         // Ranged weapons
         //EntityRegistry.registerModEntity(EntityRifleBolt.class, "RifleBoltD", 3, instance, 160, 1, true);
-        
-        /*huntingRifle = new ItemHuntingRifle(ToolMaterial.IRON).setRegistryName("huntingRifle");
-        huntingRifleB = new ItemHuntingRifle(ToolMaterial.DIAMOND).setRegistryName("huntingRifleB");
-        huntingRifleC = new ItemHuntingRifle(enderIronMaterial).setRegistryName("huntingRifleC");
-        huntingRifleD = new ItemHuntingRifle(cheatMaterial).setRegistryName("huntingRifleD");*/
-        
-        /*
-        huntingRifle.setUnlocalizedName(Reference.MODID + "." + "huntingRifle");
-        huntingRifleB.setUnlocalizedName(Reference.MODID + "." + "huntingRifleB");
-        huntingRifleC.setUnlocalizedName(Reference.MODID + "." + "huntingRifleC");
-        huntingRifleD.setUnlocalizedName(Reference.MODID + "." + "huntingRifleD");*/
-        
-        // Register items
-        //GameRegistry.register(huntingRifle);
-        //GameRegistry.register(huntingRifleB);
-        //GameRegistry.register(huntingRifleC);
-        //GameRegistry.register(huntingRifleD);
     }
 
     /**

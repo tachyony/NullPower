@@ -18,6 +18,7 @@ package tachyony.nullPower;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -38,6 +39,7 @@ import tachyony.nullPower.item.EnderIronDust;
 import tachyony.nullPower.item.IngotBronze;
 import tachyony.nullPower.item.ItemDynamitePickaxe;
 import tachyony.nullPower.item.ItemEnderReed;
+import tachyony.nullPower.item.ItemHuntingRifle;
 import tachyony.nullPower.item.ItemNullWrench;
 import tachyony.nullPower.item.ItemRifleAmmo;
 import tachyony.nullPower.item.NullArmor;
@@ -88,6 +90,11 @@ public class CommonProxy {
     	 event.getRegistry().register(new ItemRifleAmmo());
     	 event.getRegistry().register(new EnderGeneratorCore());
     	 event.getRegistry().register(new EnderGeneratorCoreAdvanced());
+    	 
+    	 event.getRegistry().register(new ItemHuntingRifle(ToolMaterial.IRON, "huntingRifle"));
+    	 event.getRegistry().register(new ItemHuntingRifle(ToolMaterial.DIAMOND, "huntingRifleB"));
+    	 event.getRegistry().register(new ItemHuntingRifle(NullPower.enderIronMaterial, "huntingRifleC"));
+    	 event.getRegistry().register(new ItemHuntingRifle(NullPower.cheatMaterial, "huntingRifleD"));
     	 
     	 event.getRegistry().register(new NullArmor(NullPower.nullArmourRenderer, EntityEquipmentSlot.HEAD, "nullHelmet"));
     	 event.getRegistry().register(new NullArmor(NullPower.nullArmourRenderer, EntityEquipmentSlot.CHEST, "nullChestplate"));
