@@ -24,6 +24,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.DataFixer;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.datafix.walkers.ItemStackDataLists;
@@ -32,6 +33,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -105,8 +107,6 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
         else if (index == 2)
         {
         	return this.itemStackHandler.getStackInSlot(2);
-        	///Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft:stone"));
-        	///ItemStack itemStack = new ItemStack(item, 1, 1); // item, amount(1), metadata
         }
         else
         {
@@ -305,9 +305,8 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
 
                         if (!itemstack.isEmpty())
                         {
-                            Item item = itemstack.getItem();
+                        	Item item = itemstack.getItem();
                             itemstack.shrink(1);
-
                             if (itemstack.isEmpty())
                             {
                                 ItemStack item1 = item.getContainerItem(itemstack);
@@ -369,9 +368,9 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
         else
         {
         	// Not smelting it, compare source item instead
-            ItemStack itemstack = this.itemStackHandler.getStackInSlot(0);
-
-            if (itemstack.isEmpty())
+            ItemStack itemStack = this.itemStackHandler.getStackInSlot(0);
+        	
+            if (itemStack.isEmpty())
             {
                 return false;
             }
@@ -383,17 +382,17 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
                 {
                     return true;
                 }
-                else if (!itemstack1.isItemEqual(itemstack))
+                else if (!itemstack1.isItemEqual(itemStack))
                 {
                     return false;
                 }
-                else if (itemstack1.getCount() + itemstack.getCount() <= this.getInventoryStackLimit() && itemstack1.getCount() + itemstack.getCount() <= itemstack1.getMaxStackSize())  // Forge fix: make furnace respect stack sizes in furnace recipes
+                else if (itemstack1.getCount() + itemStack.getCount() <= this.getInventoryStackLimit() && itemstack1.getCount() + itemStack.getCount() <= itemstack1.getMaxStackSize())  // Forge fix: make furnace respect stack sizes in furnace recipes
                 {
                     return true;
                 }
                 else
                 {
-                    return itemstack1.getCount() + itemstack.getCount() <= itemstack.getMaxStackSize(); // Forge fix: make furnace respect stack sizes in furnace recipes
+                    return itemstack1.getCount() + itemStack.getCount() <= itemStack.getMaxStackSize(); // Forge fix: make furnace respect stack sizes in furnace recipes
                 }
             }
         }
@@ -409,26 +408,33 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
             ItemStack itemstack = this.itemStackHandler.getStackInSlot(0);
             
             // Smelting result, or source item in our case
-            //ItemStack itemstack1 = FurnaceRecipes.instance().getSmeltingResult(itemstack);
-            ItemStack itemstack1 = itemstack;
+            //ItemStack itemStack1 = FurnaceRecipes.instance().getSmeltingResult(itemstack);
+            ItemStack itemStack1 = itemstack;
+        	///Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft:stone"));
+        	///ItemStack itemStack1 = new ItemStack(item, 1, 1); // item, amount(1), metadata
+            ///Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation("nullpower:enderreed"));
+            ///Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation("nullpower:blockendergenerator"));
+            ///ItemStack itemStack1 = new ItemStack(item, 1, 0); // item, amount(1), metadata
+            ///itemStack1.setTagCompound(nbt);
             
             ItemStack itemstack2 = this.itemStackHandler.getStackInSlot(2);
 
             if (itemstack2.isEmpty())
             {
-            	ItemStack copied = itemstack1.copy();
+            	ItemStack copied = itemStack1.copy();
             	copied.setCount(1);
                 this.itemStackHandler.setStackInSlot(2, copied);
             }
-            else if (itemstack2.getItem() == itemstack1.getItem())
+            else if (itemstack2.getItem() == itemStack1.getItem())
             {
                 itemstack2.grow(1);
             }
 
-            if (itemstack.getItem() == Item.getItemFromBlock(Blocks.SPONGE) && itemstack.getMetadata() == 1 && !this.itemStackHandler.getStackInSlot(1).isEmpty() && this.itemStackHandler.getStackInSlot(1).getItem() == Items.BUCKET)
-            {
-                this.itemStackHandler.setStackInSlot(1, new ItemStack(Items.WATER_BUCKET));
-            }
+            // Disable functionality
+            //if (itemstack.getItem() == Item.getItemFromBlock(Blocks.SPONGE) && itemstack.getMetadata() == 1 && !this.itemStackHandler.getStackInSlot(1).isEmpty() && this.itemStackHandler.getStackInSlot(1).getItem() == Items.BUCKET)
+            //{
+            //    this.itemStackHandler.setStackInSlot(1, new ItemStack(Items.WATER_BUCKET));
+            //}
 
             // Remove one from source item, not wanted in this case
             //itemstack.shrink(1);

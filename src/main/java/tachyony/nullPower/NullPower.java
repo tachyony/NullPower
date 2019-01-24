@@ -19,6 +19,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
@@ -28,7 +29,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import tachyony.nullPower.entity.EntityRifleBolt;
 import tachyony.nullPower.handler.GuiHandler;
 
 import org.apache.logging.log4j.Level;
@@ -92,7 +95,7 @@ public class NullPower {
         Config.readConfig();
 
         // Ranged weapons
-        //EntityRegistry.registerModEntity(EntityRifleBolt.class, "RifleBoltD", 3, instance, 160, 1, true);
+        EntityRegistry.registerModEntity(new ResourceLocation("EntityRifleBolt"), EntityRifleBolt.class, "RifleBoltD", 3, instance, 160, 1, true);
     }
 
     /**
