@@ -17,8 +17,8 @@ public class NullArmor extends ItemArmor {
 
     public NullArmor(int renderId, EntityEquipmentSlot partId, String name) {
         super(NullPower.nullArmour, renderId, partId);
-        material = NullPower.nullArmour;
-        maxStackSize = 1;
+        this.material = NullPower.nullArmour;
+        this.maxStackSize = 1;
         setCreativeTab(CreativeTabs.COMBAT);
         setRegistryName(name);
         setUnlocalizedName(Reference.MODID + "." + name);
@@ -30,7 +30,7 @@ public class NullArmor extends ItemArmor {
     @Override
     public int getItemEnchantability()
     {
-        return material.getEnchantability();
+        return this.material.getEnchantability();
     }
     
     /**
@@ -39,7 +39,7 @@ public class NullArmor extends ItemArmor {
     @Override
     public ItemArmor.ArmorMaterial getArmorMaterial()
     {
-        return material;
+        return this.material;
     }
     
     /**

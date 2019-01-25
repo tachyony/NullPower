@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        " r ",
+        "rir",
+        " r "
+    ],
+    "key":
+    {
+        "r":
+        {
+            "item": "nullpower:enderReed"
+        },
+        "i":
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotBronze"
+        }
+    },
+    "result":
+    {
+        "item": "nullpower:enderIronDust",
+        "count": 1
+    }
+}

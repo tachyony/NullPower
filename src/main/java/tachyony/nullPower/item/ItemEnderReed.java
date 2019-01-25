@@ -59,16 +59,15 @@ public class ItemEnderReed extends Item {
      * false if it don't. This is for ITEMS, not BLOCKS
      */
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing,
-            float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
     	IBlockState iblockstate = world.getBlockState(pos);
-        Block block = iblockstate.getBlock();
+        Block blockIn = iblockstate.getBlock();
         
-        if (block == Blocks.SNOW_LAYER && (iblockstate.getValue(BlockSnow.LAYERS)).intValue() < 1)
+        if (blockIn == Blocks.SNOW_LAYER && (iblockstate.getValue(BlockSnow.LAYERS)).intValue() < 1)
         {
             facing = EnumFacing.UP;
         }
-        else if (!block.isReplaceable(world, pos))
+        else if (!blockIn.isReplaceable(world, pos))
         {
             pos = pos.offset(facing);
         }

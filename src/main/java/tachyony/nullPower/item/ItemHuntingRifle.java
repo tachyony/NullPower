@@ -65,13 +65,13 @@ public class ItemHuntingRifle extends Item {
 	public ItemHuntingRifle(ToolMaterial toolMaterialIn, String name) {
 		super();
 		this.toolMaterial = toolMaterialIn;
-		maxStackSize = 1;
-		bFull3D = true;
-		setMaxDamage(toolMaterial.getMaxUses());
+		this.maxStackSize = 1;
+		this.bFull3D = true;
+		setMaxDamage(this.toolMaterial.getMaxUses());
 		setCreativeTab(CreativeTabs.COMBAT);
 		setRegistryName(name);
         setUnlocalizedName(Reference.MODID + "." + name);
-		attackDamage = 4.0F + toolMaterial.getAttackDamage();
+		this.attackDamage = 4.0F + this.toolMaterial.getAttackDamage();
 	}
     
 	protected boolean isArrow(@Nullable ItemStack stack)
@@ -129,7 +129,7 @@ public class ItemHuntingRifle extends Item {
         	    int k = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, itemStackIn);
         	    if (k > 0)
         	    {
-        	        entityBolt.setDamage(attackDamage + (double)k);
+        	        entityBolt.setDamage(this.attackDamage + (double)k);
         	    }
 
                 int l = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, itemStackIn);
@@ -186,7 +186,7 @@ public class ItemHuntingRifle extends Item {
         Multimap<String, AttributeModifier> multimap = HashMultimap.<String, AttributeModifier>create();
         if (slot == EntityEquipmentSlot.MAINHAND)
         {
-            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", this.attackDamage, 0));
             multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -2.4000000953674316D, 0));
         }
 

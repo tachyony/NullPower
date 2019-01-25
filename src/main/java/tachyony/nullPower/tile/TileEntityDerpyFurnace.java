@@ -405,27 +405,44 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
     {
         if (this.canSmelt())
         {
-            ItemStack itemstack = this.itemStackHandler.getStackInSlot(0);
-            
             // Smelting result, or source item in our case
             //ItemStack itemStack1 = FurnaceRecipes.instance().getSmeltingResult(itemstack);
-            ItemStack itemStack1 = itemstack;
-        	///Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft:stone"));
-        	///ItemStack itemStack1 = new ItemStack(item, 1, 1); // item, amount(1), metadata
-            ///Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation("nullpower:enderreed"));
-            ///Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation("nullpower:blockendergenerator"));
-            ///ItemStack itemStack1 = new ItemStack(item, 1, 0); // item, amount(1), metadata
-            ///itemStack1.setTagCompound(nbt);
+            ItemStack itemStack = this.itemStackHandler.getStackInSlot(0);
+            if ((itemStack.getItem() == Items.WRITTEN_BOOK) || (itemStack.getItem() == Items.WRITABLE_BOOK))
+            {
+            	String text = itemStack.getTagCompound().getTagList("pages", 8).getStringTagAt(0);
+            	if (itemStack.getItem() == Items.WRITTEN_BOOK)
+            	{
+            		ITextComponent iTextComponent = ITextComponent.Serializer.jsonToComponent(text);
+            		text = iTextComponent.getUnformattedText();
+            	}
+            	
+            	String itemName = text;
+            	int meta = 0;
+            	int hasMeta = text.indexOf('@');
+            	if (hasMeta != -1)
+            	{
+            		itemName = text.substring(0, hasMeta);
+            		String intStr = text.substring(hasMeta + 1, hasMeta +2);
+            		meta = Integer.parseInt(intStr);
+            	}
+            	
+            	Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName));
+            	if (item != null)
+            	{
+            		itemStack = new ItemStack(item, 1, meta);
+            	}
+            }
             
             ItemStack itemstack2 = this.itemStackHandler.getStackInSlot(2);
 
             if (itemstack2.isEmpty())
             {
-            	ItemStack copied = itemStack1.copy();
+            	ItemStack copied = itemStack.copy();
             	copied.setCount(1);
                 this.itemStackHandler.setStackInSlot(2, copied);
             }
-            else if (itemstack2.getItem() == itemStack1.getItem())
+            else if (itemstack2.getItem() == itemStack.getItem())
             {
                 itemstack2.grow(1);
             }
@@ -690,17 +707,18 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
 			return false;
 	}
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     @javax.annotation.Nullable
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
     {
         if (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             if (facing == EnumFacing.DOWN)
-                return (T) handlerBottom;
+                return (T) this.handlerBottom;
             else if (facing == EnumFacing.UP)
-                return (T) handlerTop;
+                return (T) this.handlerTop;
             else
-                return (T) handlerSide;
+                return (T) this.handlerSide;
         return super.getCapability(capability, facing);
     }
 }

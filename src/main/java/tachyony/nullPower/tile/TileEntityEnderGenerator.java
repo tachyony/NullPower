@@ -66,7 +66,8 @@ public class TileEntityEnderGenerator extends TileEntity implements ITickable, I
     	this.receiveEnergy(Integer.MAX_VALUE, false);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
 	public <T> T getCapability(Capability<T> capability, EnumFacing facing) 
 	{
 		if(capability == CapabilityEnergy.ENERGY)
