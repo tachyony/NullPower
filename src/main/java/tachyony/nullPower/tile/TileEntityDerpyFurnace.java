@@ -410,27 +410,30 @@ public class TileEntityDerpyFurnace extends TileEntityLockable implements ITicka
             ItemStack itemStack = this.itemStackHandler.getStackInSlot(0);
             if ((itemStack.getItem() == Items.WRITTEN_BOOK) || (itemStack.getItem() == Items.WRITABLE_BOOK))
             {
-            	String text = itemStack.getTagCompound().getTagList("pages", 8).getStringTagAt(0);
-            	if (itemStack.getItem() == Items.WRITTEN_BOOK)
+            	if (itemStack.hasTagCompound())
             	{
-            		ITextComponent iTextComponent = ITextComponent.Serializer.jsonToComponent(text);
-            		text = iTextComponent.getUnformattedText();
-            	}
-            	
-            	String itemName = text;
-            	int meta = 0;
-            	int hasMeta = text.indexOf('@');
-            	if (hasMeta != -1)
-            	{
-            		itemName = text.substring(0, hasMeta);
-            		String intStr = text.substring(hasMeta + 1, hasMeta +2);
-            		meta = Integer.parseInt(intStr);
-            	}
-            	
-            	Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName));
-            	if (item != null)
-            	{
-            		itemStack = new ItemStack(item, 1, meta);
+	            	String text = itemStack.getTagCompound().getTagList("pages", 8).getStringTagAt(0);
+	            	if (itemStack.getItem() == Items.WRITTEN_BOOK)
+	            	{
+	            		ITextComponent iTextComponent = ITextComponent.Serializer.jsonToComponent(text);
+	            		text = iTextComponent.getUnformattedText();
+	            	}
+	            	
+	            	String itemName = text;
+	            	int meta = 0;
+	            	int hasMeta = text.indexOf('@');
+	            	if (hasMeta != -1)
+	            	{
+	            		itemName = text.substring(0, hasMeta);
+	            		String intStr = text.substring(hasMeta + 1, hasMeta +2);
+	            		meta = Integer.parseInt(intStr);
+	            	}
+	            	
+	            	Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName));
+	            	if (item != null)
+	            	{
+	            		itemStack = new ItemStack(item, 1, meta);
+	            	}
             	}
             }
             

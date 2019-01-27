@@ -18,3 +18,4 @@ CREDITS.txt
 /run/
 .settings/org.eclipse.buildship.core.prefs
 /logs/
+/.gradle/
